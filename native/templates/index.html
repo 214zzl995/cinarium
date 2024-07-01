@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Cinarum</title>
+
+    <head>
+        <link rel="shortcut icon"
+            href="https://dwdev-generic.pkg.coding.net/smovbook/smovbookm/ic_smov_ico.jpg?version=latest"
+            type="image/jpeg" />
+    </head>
+</head>
+
+<body>
+    <main class="main">
+        <section class="logo">
+            <img src="https://dwdev-generic.pkg.coding.net/smovbook/smovbookm/ic_smov_ico.jpg?version=latest" alt="">
+        </section>
+
+        <section class="name">
+            SmovBookM:{{version}}
+        </section>
+        <section>
+            <button id="download">
+                <div class="svg-wrapper-1">
+                    <div class="svg-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="none" d="M0 0h24v24H0z"></path>
+                            <path fill="currentColor"
+                                d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+                <span>Download</span>
+            </button>
+        </section>
+
+        <footer id="myLink">
+            <p>@leri</p>
+        </footer>
+    </main>
+</body>
+
+</html>
+
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.10.0/jquery.js"></script>
+
+<script>
+    const myLink = document.getElementById("myLink");
+
+    myLink.onclick = () => {
+        window.location.href = "https://github.com/214zzl995";
+    }
+
+    const downloadBtn = document.getElementById("download");
+
+    downloadBtn.onclick = () => {
+        //设置按钮状态
+        downloadBtn.classList.add("buttonActive")
+
+        const url = "https://dwdev-generic.pkg.coding.net/smovbook/smovbookm/app-release.apk?version={{version}}"
+
+        download(url)
+
+    }
+
+    function download(src) {
+
+        const iframe = document.createElement("iframe");
+        iframe.setAttribute("hidden", "hidden");
+        document.body.appendChild(iframe);
+        iframe.onload = () => {
+            if (iframe) {
+                iframe.setAttribute('src', 'about:blank');
+            }
+        };
+
+        iframe.setAttribute("src", src);
+    };
+
+
+
+</script>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background: #dee1f9;
+    }
+
+    .main {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-content: space-around;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .main>* {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .name {
+        font-weight: 600;
+    }
+
+    .logo {
+        margin-bottom: 20px;
+    }
+
+    .logo>img {
+        width: 200px;
+        height: 200px;
+        border-radius: 2rem;
+    }
+
+    footer {
+        cursor: pointer;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 2rem;
+        background: #4458a924;
+        backdrop-filter: blur(7px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-top: #4458a97b solid 1px;
+    }
+</style>
+
+<style>
+    button {
+        width: 8em;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 20px;
+        background: royalblue;
+        color: white;
+        padding: 0.7em 1em;
+        padding-left: 0.9em;
+        display: flex;
+        align-items: center;
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.2s;
+    }
+
+    button span {
+        display: block;
+        margin-left: 0.3em;
+        transition: all 0.3s ease-in-out;
+    }
+
+    button svg {
+        display: block;
+        transform-origin: center center;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    button:hover .svg-wrapper,
+    .buttonActive .svg-wrapper {
+        animation: fly-1 0.6s ease-in-out infinite alternate;
+    }
+
+    button:hover svg,
+    .buttonActive svg {
+        transform: translateX(2.5em) rotate(45deg) scale(1.1);
+    }
+
+    button:hover span,
+    .buttonActive span {
+        transform: translateX(6em);
+    }
+
+    button:active {
+        transform: scale(0.95);
+    }
+
+    @keyframes fly-1 {
+        from {
+            transform: translateY(0.1em);
+        }
+
+        to {
+            transform: translateY(-0.1em);
+        }
+    }
+</style>
