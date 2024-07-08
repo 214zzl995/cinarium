@@ -1,11 +1,12 @@
-use cinarium_crawler::Template;
+pub use cinarium_crawler::Template;
+use flutter_rust_bridge::frb;
+use parking_lot::Mutex;
 use regex::Regex;
 use std::{
     io::Cursor,
     path::{Path, PathBuf},
-    sync::OnceLock,
 };
-use tokio::{fs::File, io::AsyncWriteExt};
+use tokio::{fs::File, io::AsyncWriteExt, sync::OnceCell};
 use walkdir::WalkDir;
 
 use crate::{
@@ -15,27 +16,21 @@ use crate::{
 
 use super::TaskMetadata;
 
-static CRAWLER_TEMPLATES: OnceLock<Vec<CrawlerTemplate>> = OnceLock::new();
+static CRAWLER_TEMPLATES: OnceCell<Mutex<Vec<CrawlerTemplate>>> = OnceCell::const_new();
 
 #[derive(Debug, Clone)]
+#[frb(non_opaque)]
 pub struct CrawlerTemplate {
+    pub id: u32,
     pub base_url: String,
+    pub json_raw: String,
     pub template: Template<VideoDataInterim>,
-    pub error: Option<String>,
+    pub priority: u8,
+    pub enabled: bool,
 }
 
-pub fn init_crawler_templates() -> anyhow::Result<()> {
-    let mut templates = Vec::new();
-
-    let template = CrawlerTemplate {
-        base_url: "https://www.javdb.com".to_string(),
-        template: Template::<VideoDataInterim>::from_json(include_str!(
-            "../../cinarium-crawler/default/db.json"
-        ))?,
-        error: None,
-    };
-
-    templates.push(template);
+pub async fn init_crawler_templates() -> anyhow::Result<()> {
+    let templates = Mutex::new(CrawlerTemplate::get_crawler_templates().await?);
 
     CRAWLER_TEMPLATES.set(templates).unwrap();
 
@@ -43,11 +38,36 @@ pub fn init_crawler_templates() -> anyhow::Result<()> {
 }
 
 pub fn get_crawler_templates() -> anyhow::Result<Vec<CrawlerTemplate>> {
-    if CRAWLER_TEMPLATES.get().is_none() {
-        init_crawler_templates()?;
+    if !CRAWLER_TEMPLATES.initialized() {
+        panic!("Crawler templates not initialized")
     }
+    Ok(CRAWLER_TEMPLATES.get().unwrap().lock().clone())
+}
 
-    Ok(CRAWLER_TEMPLATES.get().unwrap().clone())
+pub async fn change_crawler_templates_priority(prioritys: Vec<(u32, u8)>) -> anyhow::Result<()> {
+    {
+        let mut templates = CRAWLER_TEMPLATES.get().unwrap().lock();
+        for (id, priority) in prioritys.clone() {
+            if let Some(template) = templates.iter_mut().find(|t| t.id == id) {
+                template.priority = priority;
+            }
+        }
+    }
+    CrawlerTemplate::update_priority(&prioritys).await?;
+
+    Ok(())
+}
+
+pub async fn switch_crawler_templates_enabled(id: u32) -> anyhow::Result<()> {
+    {
+        let mut templates = CRAWLER_TEMPLATES.get().unwrap().lock();
+        if let Some(template) = templates.iter_mut().find(|t| t.id == id) {
+            template.enabled = !template.enabled;
+        }
+    }
+    CrawlerTemplate::switch_enabled(&id).await?;
+
+    Ok(())
 }
 
 impl Metadata {
@@ -152,11 +172,13 @@ impl VideoDataInterim {
     }
 
     pub(super) async fn crawler(name: &str) -> anyhow::Result<Self> {
+        let mut templates = get_crawler_templates()?;
+        templates.sort_by(|a, b| a.priority.cmp(&b.priority));
         for CrawlerTemplate {
             base_url,
             mut template,
             ..
-        } in get_crawler_templates()?
+        } in templates
         {
             template.add_parameters("crawl_name", name);
             template.add_parameters("base_url", &base_url);
@@ -166,7 +188,7 @@ impl VideoDataInterim {
             match template.crawler(&url).await {
                 Ok(data) => return Ok(data),
                 Err(err) => {
-                    tracing::error!(
+                    tracing::error!(target:"cinarium-task",
                         "Template:Crawl Failed,Error Reason:{},Switch to Next Template",
                         err
                     );

@@ -109,6 +109,15 @@ create table task_msg
     foreign key ( task_id ) references task ( id ) on delete cascade
 );
 
+create table crawl_template
+(
+    id   INTEGER primary key,
+    json_raw  text,
+    base_url text,
+    priority integer default 0,
+    enabled  boolean default true
+);
+
 create trigger if not exists update_video_updated_at
     after update
     on video

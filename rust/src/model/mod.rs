@@ -3,10 +3,10 @@ use tokio::sync::OnceCell;
 
 mod source;
 mod task;
-mod video;
+pub(crate) mod video;
 
 pub use task::{change_task_status, delete_task, get_tasks};
-pub use video::{DetailVideo, HomeVideo, Metadata, TaskVideo, VideoDataInterim};
+pub use video::{DetailVideo, HomeVideo, Metadata, UntreatedVideo, VideoDataInterim};
 pub use source::Source;
 
 static POOL: OnceCell<SqlitePool> = OnceCell::const_new();

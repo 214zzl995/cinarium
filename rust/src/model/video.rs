@@ -7,10 +7,12 @@ use std::{
 use crate::anyhow::Context;
 use crate::model::get_pool;
 use cinarium_crawler_derive::Crawler;
+use flutter_rust_bridge::frb;
 use serde::{Deserialize, Serialize};
 use sqlx::{QueryBuilder, Sqlite, Transaction};
 
 #[derive(Debug, Deserialize, Serialize, Clone, sqlx::FromRow)]
+#[frb(non_opaque)]
 pub struct HomeVideo {
     pub id: u32,
     pub name: String,
@@ -20,7 +22,8 @@ pub struct HomeVideo {
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone, sqlx::FromRow)]
-pub struct TaskVideo {
+#[frb(non_opaque)]
+pub struct UntreatedVideo {
     pub id: u32,
     pub crawl_name: String,
     pub is_hidden: bool,
@@ -29,6 +32,7 @@ pub struct TaskVideo {
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone, sqlx::FromRow)]
+#[frb(non_opaque)]
 pub struct DetailVideo {
     pub id: u32,
     pub name: String,
@@ -39,6 +43,7 @@ pub struct DetailVideo {
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone, sqlx::FromRow)]
+#[frb(non_opaque)]
 pub struct Metadata {
     pub hash: String,
     pub filename: String,
@@ -50,6 +55,7 @@ pub struct Metadata {
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone, sqlx::FromRow)]
+#[frb(non_opaque)]
 pub struct VideoData {
     pub title: String,
     pub release_time: String,
@@ -138,7 +144,7 @@ impl HomeVideo {
     }
 }
 
-impl TaskVideo {
+impl UntreatedVideo {
     pub async fn query_all() -> anyhow::Result<Vec<Self>> {
         let task_videos = sqlx::query_as(
             r#"
@@ -215,7 +221,7 @@ impl TaskVideo {
         Ok(id.id)
     }
 
-    pub async fn hidden_videos(ids: Vec<u32>) -> anyhow::Result<()> {
+    pub async fn switch_videos_hidden(ids: Vec<u32>) -> anyhow::Result<()> {
         let ids = ids
             .iter()
             .map(|x| x.to_string())
@@ -225,7 +231,7 @@ impl TaskVideo {
         sqlx::query!(
             r#"
                     update video
-                    set is_hidden = true
+                    set is_hidden = not is_hidden
                     where id in ($1)
                 "#,
             ids
@@ -395,6 +401,7 @@ impl Metadata {
     }
 
     pub async fn insert_replace_batch(videos: &Vec<Metadata>) -> anyhow::Result<()> {
+        let mut transaction = get_pool().await.begin().await?;
         let mut query_builder: QueryBuilder<Sqlite> = QueryBuilder::new(
             r#"
                 insert or replace into video (hash, filename, path, size, extension, is_deleted)
@@ -413,8 +420,9 @@ impl Metadata {
 
         let query = query_builder.build();
 
-        query.execute(get_pool().await).await?;
+        query.execute(&mut *transaction).await?;
 
+        transaction.commit().await?;
         Ok(())
     }
 

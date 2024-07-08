@@ -1,8 +1,9 @@
+use cinarium_crawler::Template;
 use cinarium_runner::{Task, TaskStatus};
 
-use crate::task::TaskMetadata;
+use crate::task::{crawler::CrawlerTemplate, TaskMetadata};
 
-use super::get_pool;
+use super::{get_pool, VideoDataInterim};
 
 pub async fn get_tasks() -> anyhow::Result<Vec<(String, Task<TaskMetadata>)>> {
     let pool = get_pool().await;
@@ -86,5 +87,96 @@ impl TaskMetadata {
         .id;
 
         Ok(id)
+    }
+}
+
+impl CrawlerTemplate {
+    pub async fn get_crawler_templates() -> anyhow::Result<Vec<Self>> {
+        let db_template = sqlx::query!(
+            r#"
+                select id as "id!: u32", base_url as "base_url!: String", json_raw as "json_raw!: String", priority as "priority!: u8", enabled as "enabled!: bool"
+                from crawl_template
+            "#
+        )
+        .fetch_all(get_pool().await)
+        .await?;
+
+        let templates: Vec<CrawlerTemplate> = db_template
+            .into_iter()
+            .map(|template| {
+                let id = template.id;
+                let base_url = template.base_url;
+                let json_raw = template.json_raw;
+                let priority = template.priority;
+                let enabled = template.enabled;
+
+                let template = CrawlerTemplate {
+                    id,
+                    base_url,
+                    json_raw: json_raw.clone(),
+                    template: Template::<VideoDataInterim>::from_json(&json_raw).unwrap(),
+                    priority,
+                    enabled,
+                };
+
+                template
+            })
+            .collect();
+
+        Ok(templates)
+    }
+
+    pub async fn insert(&self) -> anyhow::Result<()> {
+        let pool = get_pool().await;
+        sqlx::query!(
+            r#"
+                insert into crawl_template (id, base_url, json_raw, priority, enabled)
+                values ($1, $2, $3, $4, true)
+            "#,
+            self.id,
+            self.base_url,
+            self.json_raw,
+            self.priority
+        )
+        .execute(pool)
+        .await?;
+        Ok(())
+    }
+
+    pub async fn update_priority(prioritys: &Vec<(u32, u8)>) -> anyhow::Result<()> {
+        let mut tx = get_pool().await.begin().await?;
+        for (id, priority) in prioritys {
+            let id = id.clone() as i64;
+            let priority = priority.clone() as i64;
+            sqlx::query!(
+                r#"
+                    update crawl_template
+                    set priority = $1
+                    where id = $2
+                "#,
+                priority,
+                id
+            )
+            .execute(&mut *tx)
+            .await?;
+        }
+        tx.commit().await?;
+
+        Ok(())
+    }
+
+    pub async fn switch_enabled(id: &u32) -> anyhow::Result<()> {
+        let pool = get_pool().await;
+        sqlx::query!(
+            r#"
+                update crawl_template
+                set enabled = not enabled
+                where id = $1
+            "#,
+            id
+        )
+        .execute(pool)
+        .await?;
+        Ok(())
     }
 }

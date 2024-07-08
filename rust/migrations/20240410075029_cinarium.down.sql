@@ -11,3 +11,4 @@ drop table source;
 drop table task;
 drop table task_msg;
 drop table video;
+drop table crawl_template;

@@ -4,7 +4,7 @@ mod api;
 mod app;
 mod log;
 mod model;
-mod naitive;
+mod native;
 mod notify;
 mod task;
 
@@ -12,10 +12,12 @@ use std::{net::TcpListener, path::PathBuf};
 
 use anyhow::Context;
 use app::HttpConfig;
-use model::{Metadata, TaskVideo, VideoDataInterim};
+use model::{Metadata, UntreatedVideo, VideoDataInterim};
 use prettytable::{row, Table};
 use structopt::StructOpt;
 use task::TaskMetadata;
+
+pub use task::crawler::Template;
 
 #[derive(StructOpt, Debug)]
 #[structopt(name = "cinarium")]
@@ -70,6 +72,7 @@ async fn main() {
     log::register_log().unwrap();
     app::init_cinarium_config().await.unwrap();
     notify::init_source_notify().await.unwrap();
+    task::crawler::init_crawler_templates().await.unwrap();
 
     let res = match opt {
         Opt::Api { .. } => api::run_web_api().await,
@@ -162,9 +165,9 @@ async fn crawler(
         }
     } else {
         if let Some(hash) = hash {
-            TaskVideo::update_crawl_name_with_hash(&hash, &crawl_name).await
+            UntreatedVideo::update_crawl_name_with_hash(&hash, &crawl_name).await
         } else if let Some(path) = path {
-            TaskVideo::update_crawl_name_with_path(&path, &crawl_name).await
+            UntreatedVideo::update_crawl_name_with_path(&path, &crawl_name).await
         } else {
             Err(anyhow::anyhow!("Please provide a hash or path"))
         }?

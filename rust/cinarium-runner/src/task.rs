@@ -10,13 +10,13 @@ tokio::task_local! {
    pub static TASK_RUNTIME: (String, mpsc::UnboundedSender<(String, TaskLog)>);
 }
 
-#[derive(Clone, Debug, Hash, Deserialize, Serialize)]
+#[derive(Clone, Debug, Hash)]
 pub struct Task<T> {
-    pub(crate) status: TaskStatus,
-    pub(crate) schedule: u8,
-    pub(crate) last_log: String,
-    pub(crate) create_at: DateTime<Local>,
-    pub(crate) metadata: T,
+    pub status: TaskStatus,
+    pub schedule: u8,
+    pub last_log: String,
+    pub create_at: DateTime<Local>,
+    pub metadata: T,
 }
 
 #[derive(Eq, Hash, PartialEq, Clone, Debug, Deserialize, Serialize)]

@@ -1,3 +1,4 @@
+use flutter_rust_bridge::frb;
 use parking_lot::Mutex;
 use serde::{Deserialize, Serialize};
 
@@ -18,11 +19,13 @@ pub struct CinariumConfig {
 }
 
 #[derive(Deserialize, Serialize, Clone, Debug)]
+#[frb(non_opaque)]
 pub struct HttpConfig {
     pub port: u16,
 }
 
 #[derive(Deserialize, Serialize, Clone, Debug)]
+#[frb(non_opaque)]
 pub struct TaskConfig {
     pub thread: usize,
     pub tidy_folder: PathBuf,
@@ -44,7 +47,7 @@ pub fn get_cinarium_config() -> CinariumConfig {
     CINARIUM_CONFIG.get().unwrap().lock().clone()
 }
 
-pub async fn update_http_config(http: &HttpConfig) -> anyhow::Result<CinariumConfig> {
+pub async fn update_http_config(http: &HttpConfig) -> anyhow::Result<()> {
     let config = {
         let mut config = CINARIUM_CONFIG.get().unwrap().lock();
         config.http = http.clone();
@@ -52,10 +55,10 @@ pub async fn update_http_config(http: &HttpConfig) -> anyhow::Result<CinariumCon
     };
 
     config.update_file().await?;
-    Ok(config.clone())
+    Ok(())
 }
 
-pub async fn update_task_config(task: &TaskConfig) -> anyhow::Result<CinariumConfig> {
+pub async fn update_task_config(task: &TaskConfig) -> anyhow::Result<()> {
     let config = {
         let mut config = CINARIUM_CONFIG.get().unwrap().lock();
         config.task = task.clone();
@@ -63,7 +66,7 @@ pub async fn update_task_config(task: &TaskConfig) -> anyhow::Result<CinariumCon
     };
 
     config.update_file().await?;
-    Ok(config.clone())
+    Ok(())
 }
 
 impl CinariumConfig {

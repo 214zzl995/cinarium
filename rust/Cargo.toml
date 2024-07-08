@@ -38,7 +38,7 @@ prost = "0.11"
 prost-types = "0.11"
 futures-util = "0.3.21"
 dashmap = "5"
-chrono = { version = "0.4", features = ["serde"] }
+chrono = "= 0.4.38"
 uuid = { version = "1.4", features = ["v4", "fast-rng", "macro-diagnostics"] }
 anyhow = { version = "1.0" }
 sqlx = { version = "0.7", features = [
@@ -65,6 +65,7 @@ version = "0.1.1"
 [build-dependencies]
 flutter_rust_bridge_codegen = "2"
 prost-build = "0.12"
+anyhow = { workspace = true }
 winres = { git = "https://github.com/Nilstrieb/winres", branch = "linking-flags" }
 
 [dependencies]
@@ -96,7 +97,7 @@ tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
 tracing-appender = "0.2.3"
 uuid = { workspace = true }
-flutter_rust_bridge = "2"
+flutter_rust_bridge = { version = "2", features = ["default", "chrono"] }
 rfd = "0.11.4"
 open = "5.0.0"
 walkdir = "2"
@@ -110,6 +111,7 @@ notify = { version = "6.1.1", default-features = false, features = [
 ] }
 file-id = "0.2.1"
 prettytable-rs = "0.10.0"
+rand = { workspace = true }
 
 [dev-dependencies]
 dotenvy = { workspace = true }

@@ -192,8 +192,8 @@ where
             .collect()
     }
 
-    pub fn add_task(&self, id: &str, task: Task<T>) -> anyhow::Result<String> {
-        self.inner.tasks.insert(id.to_string(), task);
+    pub fn add_task(&self, id: &str, task: &Task<T>) -> anyhow::Result<()> {
+        self.inner.tasks.insert(id.to_string(), task.clone());
 
         if self
             .inner
@@ -203,7 +203,7 @@ where
             self.inner.add_task_notify.notify_one();
         }
 
-        Ok(id.to_string())
+        Ok(())
     }
 
     pub fn init_tasks(&self, task: Vec<(String, Task<T>)>) {
@@ -367,7 +367,7 @@ fn tsts() {
                 "test".to_string(),
             );
             let id = uuid::Uuid::new_v4().to_string();
-            runner.add_task(&id, task).unwrap();
+            runner.add_task(&id, &task).unwrap();
         }
 
         tokio::time::sleep(std::time::Duration::from_secs(2)).await;

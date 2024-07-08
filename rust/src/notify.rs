@@ -5,18 +5,24 @@ use std::{
     sync::OnceLock,
 };
 
+use flutter_rust_bridge::DartFnFuture;
 use notify::{
     event::{ModifyKind, RenameMode},
     Config, Error, Event, RecommendedWatcher, Watcher,
 };
 use tokio::sync::{
+    broadcast,
     mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender},
-    Mutex,
+    oneshot, Mutex,
 };
 
-use crate::model::{Metadata, Source};
+use crate::{
+    model::{Metadata, Source},
+    native::ListenerHandle,
+};
 
 static SOURCE_NOTIFY: OnceLock<Mutex<SourceNotify>> = OnceLock::new();
+static LISTENER: OnceLock<broadcast::Sender<()>> = OnceLock::new();
 
 struct SourceNotify {
     watcher: RecommendedWatcher,
@@ -32,7 +38,7 @@ pub async fn init_source_notify() -> anyhow::Result<()> {
     SOURCE_NOTIFY
         .set(Mutex::new(SourceNotify::new(&sources, tx)?))
         .map_err(|_| anyhow::anyhow!("Failed to set source notify"))?;
-    
+
     let mut source_notify = SOURCE_NOTIFY.get().unwrap().lock().await;
     source_notify.full_scale_retrieval().await?;
     source_notify.listen(rx).await;
@@ -184,6 +190,15 @@ impl SourceNotify {
             Metadata::marking_delete_batch_with_hash(&deleted_videos).await?;
         }
 
+        if !new_videos.is_empty() || !deleted_videos.is_empty() {
+            let _ = LISTENER
+                .get_or_init(|| {
+                    let (tx, _) = broadcast::channel(1);
+                    tx
+                })
+                .send(());
+        }
+
         Ok(())
     }
 }
@@ -266,4 +281,30 @@ fn get_file_id_hash(path: &impl AsRef<Path>) -> anyhow::Result<String> {
     let mut hasher = std::hash::DefaultHasher::new();
     file_id.hash(&mut hasher);
     Ok(format!("{:x}", hasher.finish()))
+}
+
+pub fn listener_untreated_file(
+    dart_callback: impl Fn() -> DartFnFuture<()> + Send + Sync + 'static,
+) -> ListenerHandle {
+    let (handle_tx, handle_rx) = oneshot::channel::<()>();
+    tokio::spawn(async move {
+        let mut rx = LISTENER
+            .get_or_init(|| {
+                let (tx, _) = broadcast::channel(1);
+                tx
+            })
+            .subscribe();
+
+        let linstener = async {
+            while rx.recv().await.is_ok() {
+                dart_callback().await;
+            }
+        };
+
+        tokio::select! {
+            _ = handle_rx => {},
+            _ = linstener => {},
+        };
+    });
+    ListenerHandle::new(handle_tx)
 }
