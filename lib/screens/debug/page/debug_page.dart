@@ -1,10 +1,10 @@
 import 'dart:convert';
 
+import 'package:bridge/call_rust/native/system_api.dart';
 import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../ffi/ffi.io.dart';
 import '../controllers/debug_controller.dart';
 
 class DebugPage extends StatelessWidget {
@@ -17,31 +17,13 @@ class DebugPage extends StatelessWidget {
         builder: (context, _) {
           return Scaffold(
             body: Column(children: [
-              Row(
+              const Row(
                 children: [
-                  const Text("系统api测试:"),
-                  const SizedBox(
+                  Text("系统api测试:"),
+                  SizedBox(
                     width: 20,
                   ),
-                  ElevatedButton(
-                    onPressed: () => systemApi.appInit(),
-                    child: const Text("App初始化"),
-                  ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  ElevatedButton(
-                    onPressed: () => systemApi.initAppLog(),
-                    child: const Text("初始化用户日志"),
-                  ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  ElevatedButton(
-                    onPressed: () => systemApi.initDb(),
-                    child: const Text("初始化数据库"),
-                  ),
-                  const SizedBox(
+                  SizedBox(
                     width: 20,
                   ),
                 ],
@@ -56,21 +38,19 @@ class DebugPage extends StatelessWidget {
                     width: 20,
                   ),
                   ElevatedButton(
-                    onPressed: () => systemApi.runHfs(),
+                    onPressed: () => runWebApi(),
                     child: const Text("启动hfs"),
                   ),
                   const SizedBox(
                     width: 20,
                   ),
                   ElevatedButton(
-                    onPressed: () => {systemApi.stopHfs()},
+                    onPressed: () => stopWebApi(),
                     child: const Text("停止hfs"),
                   ),
                   const SizedBox(
                     width: 20,
                   ),
-                  Text(
-                      "当前hfs运行情况:${context.watch<DebugController>().hfsStatus}"),
                 ],
               ),
               const SizedBox(

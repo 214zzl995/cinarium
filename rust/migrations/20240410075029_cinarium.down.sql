@@ -1,14 +1,28 @@
 -- Add down migration script here
-drop table video_actors;
-drop table video_tags;
-drop table maker;
-drop table series;
-drop table tag;
-drop table actor;
-drop table publisher;
-drop table director;
-drop table source;
-drop table task;
-drop table task_msg;
-drop table video;
-drop table crawl_template;
+delete from video_actors;
+delete from video_tags;
+delete from video;
+delete from actor;
+delete from publisher;
+delete from director;
+delete from maker;
+delete from series;
+delete from tag;
+delete from source;
+delete from task_msg;
+delete from task;
+
+
+drop table if exists maker;
+drop table if exists series;
+drop table if exists tag;
+drop table if exists actor;
+drop table if exists publisher;
+drop table if exists director;
+drop table if exists source;
+drop table if exists task;
+drop table if exists task_msg;
+drop table if exists video_actors;
+drop table if exists video_tags;
+drop table if exists crawl_template;
+drop table if exists video;

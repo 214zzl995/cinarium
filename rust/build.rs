@@ -9,5 +9,4 @@ fn main() -> anyhow::Result<()> {
         Config::from_config_file("../flutter_rust_bridge.yaml")?.unwrap(),
         Default::default(),
     )
-    // Ok(())
 }

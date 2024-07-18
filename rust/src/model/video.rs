@@ -16,7 +16,10 @@ use sqlx::{QueryBuilder, Sqlite, Transaction};
 pub struct HomeVideo {
     pub id: u32,
     pub name: String,
+    pub title: String,
     pub release_time: String,
+    pub duration: u32,
+    pub thumbnail_ratio: f32,
     #[sqlx(flatten)]
     pub matedata: Metadata,
 }
@@ -96,6 +99,12 @@ pub struct VideoDataInterim {
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone, sqlx::FromRow)]
+pub struct RelatedAttr {
+    pub video_id: u32,
+    pub attr_id: u32,
+}
+
+#[derive(Debug, Deserialize, Serialize, Clone, sqlx::FromRow)]
 pub struct Attr {
     pub id: u32,
     pub name: String,
@@ -115,7 +124,7 @@ impl HomeVideo {
     pub async fn query_all() -> sqlx::Result<Vec<Self>> {
         let videos = sqlx::query_as(
             r#"
-                select id, name, release_time, filename, path, size, extension
+                select id, name, title, duration, thumbnail_ratio, release_time, hash, filename, path, size, extension
                 from video
                 where is_retrieve = true
             "#,
@@ -129,7 +138,7 @@ impl HomeVideo {
     pub async fn query_paging(page_size: &usize, page_num: &usize) -> sqlx::Result<Vec<Self>> {
         let videos = sqlx::query_as(
             r#"
-                select id, name, release_time, filename, path, size, extension
+                select id, name, title, duration, thumbnail_ratio, release_time, hash, filename, path, size, extension
                 from video
                 where is_retrieve = true
                 limit $1 offset $2
@@ -141,6 +150,96 @@ impl HomeVideo {
         .await?;
 
         Ok(videos)
+    }
+}
+
+impl RelatedAttr {
+    pub async fn query_all_video_actors() -> anyhow::Result<Vec<Self>> {
+        let actors = sqlx::query_as!(
+            Self,
+            r#"
+                select video_id as "video_id!:u32", actor_id as "attr_id!:u32"
+                from video_actors
+            "#,
+        )
+        .fetch_all(get_pool().await)
+        .await?;
+
+        Ok(actors)
+    }
+
+    pub async fn query_all_video_tags() -> anyhow::Result<Vec<Self>> {
+        let tags = sqlx::query_as!(
+            Self,
+            r#"
+                select video_id as "video_id!:u32", tag_id as "attr_id!:u32"
+                from video_tags
+            "#,
+        )
+        .fetch_all(get_pool().await)
+        .await?;
+
+        Ok(tags)
+    }
+
+    pub async fn query_all_video_makers() -> anyhow::Result<Vec<Self>> {
+        let makers = sqlx::query_as!(
+            Self,
+            r#"
+                select a.id as "video_id!:u32", b.id as "attr_id!:u32"
+                from video a, maker b
+                where a.maker_id = b.id
+            "#,
+        )
+        .fetch_all(get_pool().await)
+        .await?;
+
+        Ok(makers)
+    }
+
+    pub async fn query_all_video_publishers() -> anyhow::Result<Vec<Self>> {
+        let publishers = sqlx::query_as!(
+            Self,
+            r#"
+                select a.id as "video_id!:u32", b.id as "attr_id!:u32"
+                from video a, publisher b
+                where a.publisher_id = b.id
+            "#,
+        )
+        .fetch_all(get_pool().await)
+        .await?;
+
+        Ok(publishers)
+    }
+
+    pub async fn query_all_video_series() -> anyhow::Result<Vec<Self>> {
+        let series = sqlx::query_as!(
+            Self,
+            r#"
+                select a.id as "video_id!:u32", b.id as "attr_id!:u32"
+                from video a, series b
+                where a.series_id = b.id
+            "#,
+        )
+        .fetch_all(get_pool().await)
+        .await?;
+
+        Ok(series)
+    }
+
+    pub async fn query_all_video_directors() -> anyhow::Result<Vec<Self>> {
+        let directors = sqlx::query_as!(
+            Self,
+            r#"
+                select a.id as "video_id!:u32", b.id as "attr_id!:u32"
+                from video a, director b
+                where a.director_id = b.id
+            "#,
+        )
+        .fetch_all(get_pool().await)
+        .await?;
+
+        Ok(directors)
     }
 }
 
@@ -202,6 +301,7 @@ impl UntreatedVideo {
             .to_str()
             .unwrap();
         let path = path.parent().unwrap().to_string_lossy().to_string();
+
         let id = sqlx::query!(
             r#"
                 update video
@@ -553,6 +653,52 @@ impl Metadata {
 
         Ok(videos)
     }
+
+    pub async fn query_id_by_hash(hash: &str) -> anyhow::Result<Option<u32>> {
+        let id = sqlx::query!(
+            r#"
+                select id as "id!:u32"
+                from video
+                where hash = $1
+            "#,
+            hash
+        )
+        .fetch_optional(get_pool().await)
+        .await?
+        .map(|x| x.id);
+
+        Ok(id)
+    }
+
+    pub async fn query_id_by_path(path: &Path) -> anyhow::Result<Option<u32>> {
+        let filename = path
+            .file_stem()
+            .context("Unable to get file name")?
+            .to_str()
+            .unwrap();
+        let extension = path
+            .extension()
+            .context("Unable to get file extension")?
+            .to_str()
+            .unwrap();
+        let path = path.parent().unwrap().to_string_lossy().to_string();
+
+        let id = sqlx::query!(
+            r#"
+                select id as "id!:u32"
+                from video
+                where path = $1 and filename = $2 and extension = $3
+            "#,
+            path,
+            filename,
+            extension
+        )
+        .fetch_optional(get_pool().await)
+        .await?
+        .map(|x| x.id);
+
+        Ok(id)
+    }
 }
 
 impl VideoDataInterim {
@@ -888,5 +1034,103 @@ impl AttrInterim {
         };
 
         Ok(id)
+    }
+}
+
+impl Attr {
+    pub async fn query_all_actor() -> anyhow::Result<Vec<Self>> {
+        let actors = sqlx::query_as!(
+            Self,
+            r#"
+                select a.id as "id!:u32", name as "name!"
+                from tag a,video_tags 
+                where tag_id = a.id 
+                group by a.id,name
+            "#
+        )
+        .fetch_all(get_pool().await)
+        .await?;
+
+        Ok(actors)
+    }
+
+    pub async fn query_all_tag() -> anyhow::Result<Vec<Self>> {
+        let tags = sqlx::query_as!(
+            Self,
+            r#"
+                select a.id as "id!:u32", name as "name!"
+                from tag a,video_tags 
+                where tag_id = a.id 
+                group by a.id,name
+            "#
+        )
+        .fetch_all(get_pool().await)
+        .await?;
+
+        Ok(tags)
+    }
+
+    pub async fn query_all_maker() -> anyhow::Result<Vec<Self>> {
+        let makers = sqlx::query_as!(
+            Self,
+            r#"
+                select a.id as "id!:u32", a.name as "name!"
+                from maker a,video 
+                where maker_id = a.id 
+                group by a.id,a.name
+            "#
+        )
+        .fetch_all(get_pool().await)
+        .await?;
+
+        Ok(makers)
+    }
+
+    pub async fn query_all_publisher() -> anyhow::Result<Vec<Self>> {
+        let publishers = sqlx::query_as!(
+            Self,
+            r#"
+                select a.id as "id!:u32", a.name as "name!"
+                from publisher a,video 
+                where publisher_id = a.id 
+                group by a.id,a.name
+            "#
+        )
+        .fetch_all(get_pool().await)
+        .await?;
+
+        Ok(publishers)
+    }
+
+    pub async fn query_all_series() -> anyhow::Result<Vec<Self>> {
+        let series = sqlx::query_as!(
+            Self,
+            r#"
+                select a.id as "id!:u32", a.name as "name!"
+                from series a,video 
+                where series_id = a.id 
+                group by a.id,a.name
+            "#
+        )
+        .fetch_all(get_pool().await)
+        .await?;
+
+        Ok(series)
+    }
+
+    pub async fn query_all_director() -> anyhow::Result<Vec<Self>> {
+        let directors = sqlx::query_as!(
+            Self,
+            r#"
+                select a.id as "id!:u32", a.name as "name!"
+                from director a,video 
+                where director_id = a.id 
+                group by a.id,a.name
+            "#
+        )
+        .fetch_all(get_pool().await)
+        .await?;
+
+        Ok(directors)
     }
 }

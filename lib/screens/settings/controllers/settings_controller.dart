@@ -107,6 +107,7 @@ extension CrawlerTemplateExt on CrawlerTemplate {
   CrawlerTemplate copyWith({
     int? id,
     String? baseUrl,
+    String? searchUrl,
     String? jsonRaw,
     TemplateVideoDataInterim? template,
     int? priority,
@@ -115,6 +116,7 @@ extension CrawlerTemplateExt on CrawlerTemplate {
     return CrawlerTemplate(
       id: id ?? this.id,
       baseUrl: baseUrl ?? this.baseUrl,
+      searchUrl: searchUrl ?? this.searchUrl,
       jsonRaw: jsonRaw ?? this.jsonRaw,
       template: template ?? this.template,
       priority: priority ?? this.priority,

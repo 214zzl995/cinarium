@@ -94,7 +94,7 @@ impl CrawlerTemplate {
     pub async fn get_crawler_templates() -> anyhow::Result<Vec<Self>> {
         let db_template = sqlx::query!(
             r#"
-                select id as "id!: u32", base_url as "base_url!: String", json_raw as "json_raw!: String", priority as "priority!: u8", enabled as "enabled!: bool"
+                select id as "id!: u32", base_url as "base_url!: String",search_url as "search_url!: String", json_raw as "json_raw!: String", priority as "priority!: u8", enabled as "enabled!: bool"
                 from crawl_template
             "#
         )
@@ -109,10 +109,12 @@ impl CrawlerTemplate {
                 let json_raw = template.json_raw;
                 let priority = template.priority;
                 let enabled = template.enabled;
+                let search_url = template.search_url;
 
                 let template = CrawlerTemplate {
                     id,
                     base_url,
+                    search_url,
                     json_raw: json_raw.clone(),
                     template: Template::<VideoDataInterim>::from_json(&json_raw).unwrap(),
                     priority,

@@ -10,7 +10,6 @@ mod task;
 
 use std::{net::TcpListener, path::PathBuf};
 
-use anyhow::Context;
 use app::HttpConfig;
 use model::{Metadata, UntreatedVideo, VideoDataInterim};
 use prettytable::{row, Table};
@@ -18,6 +17,7 @@ use structopt::StructOpt;
 use task::TaskMetadata;
 
 pub use task::crawler::Template;
+
 
 #[derive(StructOpt, Debug)]
 #[structopt(name = "cinarium")]
@@ -51,12 +51,6 @@ enum Opt {
             required_if("new", "true")
         )]
         path: Option<PathBuf>,
-        #[structopt(
-            short,
-            long,
-            help = "Whether or not the video is non-database included"
-        )]
-        new: bool,
         crawl_name: String,
     },
     #[structopt(name = "list", about = "Files that have been monitored")]
@@ -80,8 +74,7 @@ async fn main() {
             hash,
             path,
             crawl_name,
-            new,
-        } => crawler(hash, path, crawl_name, new).await,
+        } => crawler(hash, path, crawl_name).await,
         Opt::List { search } => search_videos(&search).await,
     };
 
@@ -142,7 +135,6 @@ async fn crawler(
     hash: Option<String>,
     path: Option<PathBuf>,
     crawl_name: String,
-    new: bool,
 ) -> anyhow::Result<()> {
     if let Some(path) = &path {
         if !path.exists() {
@@ -154,23 +146,26 @@ async fn crawler(
         }
     }
 
-    let id = if new {
-        let path = path.context("Please provide a path")?;
-        match Metadata::try_from(&path)?
-            .insert_with_crawl_name(&crawl_name)
-            .await?
-        {
-            Some(id) => id,
-            None => return Err(anyhow::anyhow!("The video file already exists")),
-        }
-    } else {
-        if let Some(hash) = hash {
-            UntreatedVideo::update_crawl_name_with_hash(&hash, &crawl_name).await
-        } else if let Some(path) = path {
-            UntreatedVideo::update_crawl_name_with_path(&path, &crawl_name).await
+    let id = {
+        if let Some(hash) = &hash {
+            match Metadata::query_id_by_hash(&hash).await? {
+                Some(_) => UntreatedVideo::update_crawl_name_with_hash(&hash, &crawl_name).await?,
+                None => return Err(anyhow::anyhow!("The video file already exists")),
+            }
+        } else if let Some(path) = &path {
+            match Metadata::query_id_by_path(&path).await? {
+                Some(_) => UntreatedVideo::update_crawl_name_with_path(&path, &crawl_name).await?,
+                None => match Metadata::try_from(path)?
+                    .insert_with_crawl_name(&crawl_name)
+                    .await?
+                {
+                    Some(id) => id,
+                    None => return Err(anyhow::anyhow!("The video file already exists")),
+                },
+            }
         } else {
-            Err(anyhow::anyhow!("Please provide a hash or path"))
-        }?
+            return Err(anyhow::anyhow!("Please provide a hash or path"));
+        }
     };
 
     let task_metadata = TaskMetadata {

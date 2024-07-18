@@ -1,12 +1,13 @@
 pub use cinarium_crawler::Template;
 use flutter_rust_bridge::frb;
+use image::ImageFormat;
 use parking_lot::Mutex;
 use regex::Regex;
 use std::{
     io::Cursor,
     path::{Path, PathBuf},
 };
-use tokio::{fs::File, io::AsyncWriteExt, sync::OnceCell};
+use tokio::{fs::File, io::{AsyncWriteExt, BufWriter}, sync::OnceCell};
 use walkdir::WalkDir;
 
 use crate::{
@@ -23,6 +24,7 @@ static CRAWLER_TEMPLATES: OnceCell<Mutex<Vec<CrawlerTemplate>>> = OnceCell::cons
 pub struct CrawlerTemplate {
     pub id: u32,
     pub base_url: String,
+    pub search_url: String,
     pub json_raw: String,
     pub template: Template<VideoDataInterim>,
     pub priority: u8,
@@ -74,6 +76,7 @@ impl Metadata {
     pub(super) async fn migration(
         &self,
         video_data_interim: &mut VideoDataInterim,
+        video_id: &u32,
     ) -> anyhow::Result<()> {
         let tidy_path = get_cinarium_config().task.tidy_folder;
         let embedded_subtitles = self.filename.ends_with("-c") || self.filename.ends_with("-C");
@@ -116,6 +119,16 @@ impl Metadata {
             }
         };
 
+        Self {
+            filename: video_data_interim.name.clone(),
+            hash: self.hash.clone(),
+            path: to_path,
+            size: self.size,
+            extension: self.extension.clone(),
+        }
+        .update(video_id)
+        .await?;
+
         Ok(())
     }
 }
@@ -126,7 +139,9 @@ impl VideoDataInterim {
         let mut video_data_interim = Self::crawler(&task_metadata.name).await?;
         tracing::info!(target:"cinarium-task","Migrationimg: {} ...", &task_metadata.name);
         let video_matedata = Metadata::query_one(&task_metadata.video_id).await?;
-        video_matedata.migration(&mut video_data_interim).await?;
+        video_matedata
+            .migration(&mut video_data_interim, &task_metadata.video_id)
+            .await?;
         tracing::info!(target:"cinarium-task","Downloading Resources: {} ...", &task_metadata.name);
         video_data_interim.download_resources().await?;
         tracing::info!(target:"cinarium-task","Updating Video Data: {} ...", &task_metadata.name);
@@ -135,7 +150,7 @@ impl VideoDataInterim {
         Ok(())
     }
 
-    pub(super) async fn download_resources(&self) -> anyhow::Result<()> {
+    pub(super) async fn download_resources(&mut self) -> anyhow::Result<()> {
         let base_path = PathBuf::from(&get_cinarium_config().task.tidy_folder).join(&self.name);
         let main_with_thumb_path = base_path.join("img");
         let detail_path = main_with_thumb_path.join("detail");
@@ -168,6 +183,13 @@ impl VideoDataInterim {
             );
             save_image(image, &image_name, &detail_path).await?;
         }
+
+        let thumbnail = image::open(main_with_thumb_path.join("thumbnail.webp"))?;
+        let thumbnail_ratio = thumbnail.width() as f32 / thumbnail.height() as f32;
+        self.thumbnail_ratio = thumbnail_ratio;
+
+        self.num_detail_images = self.detail_imgs.len() as u8;
+
         Ok(())
     }
 
@@ -176,6 +198,7 @@ impl VideoDataInterim {
         templates.sort_by(|a, b| a.priority.cmp(&b.priority));
         for CrawlerTemplate {
             base_url,
+            search_url,
             mut template,
             ..
         } in templates
@@ -183,7 +206,7 @@ impl VideoDataInterim {
             template.add_parameters("crawl_name", name);
             template.add_parameters("base_url", &base_url);
 
-            let url = format!("{}/search?q={}&f=all", base_url, name);
+            let url = search_url.replace("${base_url}", &base_url).replace("${crawl_name}", name);
 
             match template.crawler(&url).await {
                 Ok(data) => return Ok(data),
@@ -275,14 +298,18 @@ pub async fn save_image(url: &str, name: &str, path: &Path) -> anyhow::Result<()
 
     let image = res?.bytes().await?;
 
-    let mut bytes: Vec<u8> = Vec::new();
+    let image = image::load_from_memory(&image)?;
 
-    image::load_from_memory(&image)?
-        .write_to(&mut Cursor::new(&mut bytes), image::ImageFormat::WebP)?;
+    let mut buffer = Cursor::new(Vec::new());
 
-    let mut file = File::create(&image_path).await?;
+    image.write_to(&mut buffer, ImageFormat::WebP)?;
 
-    file.write_all(&image).await?;
+    let file = File::create(&image_path).await?;
+
+    let mut buf_writer = BufWriter::new(file);
+
+    buf_writer.write_all(&buffer.into_inner()).await?;
+    buf_writer.flush().await?;
 
     Ok(())
 }

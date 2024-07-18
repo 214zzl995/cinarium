@@ -1,18 +1,15 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:bridge/call_rust/model/video.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
-import 'package:cinarium/ffi/ffi.io.dart';
-
-import '../../../ffi/db_api.dart';
 
 class MovCard extends StatelessWidget {
-  const MovCard(this.smov, this.height, this.width, {super.key});
+  const MovCard(this.video, this.thumbnailRatio, {super.key});
 
-  final Smov smov;
-  final double height;
-  final double width;
+  final HomeVideo video;
+  final double thumbnailRatio;
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +26,7 @@ class MovCard extends StatelessWidget {
             },
             child: GestureDetector(
                 onTap: () {
-                  //
-                  systemApi.openInDefaultSoftware(path:"${smov.path}\\${smov.filename}.${smov.extension}" );
+                  //systemApi.openInDefaultSoftware(path:"${smov.path}\\${smov.filename}.${smov.extension}" );
                 },
                 child: ValueListenableBuilder<bool>(
                   valueListenable: hover,
@@ -53,8 +49,7 @@ class MovCard extends StatelessWidget {
                                   .colorScheme
                                   .onSurfaceVariant),
                           child: AspectRatio(
-                            aspectRatio: smov.thumbsImg!.size.width /
-                                smov.thumbsImg!.size.height,
+                            aspectRatio: thumbnailRatio,
                             child: ValueListenableBuilder<bool>(
                               valueListenable: hover,
                               builder: (context, value, child) {
@@ -64,15 +59,14 @@ class MovCard extends StatelessWidget {
                                     duration: const Duration(milliseconds: 400),
                                     child: ExtendedImage(
                                       image: ExtendedResizeImage(
-                                        ExtendedFileImageProvider(
-                                          File(smov.thumbsImg!.path),
-                                          imageCacheName: smov.name,
+                                        ExtendedFileImageProvider(File("${video.matedata.path}/img/thumbnail.webp"),
+                                          imageCacheName: video.name,
                                         ),
                                         compressionRatio: null,
                                         // maxBytes: 125 << 10,
                                         width: null,
                                         height: null,
-                                        imageCacheName: smov.name,
+                                        imageCacheName: video.name,
                                       ),
                                       borderRadius: const BorderRadius.all(
                                           Radius.circular(11.0)),
@@ -91,7 +85,7 @@ class MovCard extends StatelessWidget {
                 height: CardParam.nameHeight,
                 padding: const EdgeInsets.only(left: 10),
                 decoration: const BoxDecoration(color: Colors.transparent),
-                child: Text(smov.name,
+                child: Text(video.name,
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
@@ -105,7 +99,7 @@ class MovCard extends StatelessWidget {
                 height: CardParam.nameHeight,
                 padding: const EdgeInsets.only(right: 10),
                 decoration: const BoxDecoration(color: Colors.transparent),
-                child: Text(smov.releaseTime.toString(),
+                child: Text(video.releaseTime.toString(),
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
@@ -131,7 +125,7 @@ class MovCard extends StatelessWidget {
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
               child: Container(
-                color: Theme.of(context).colorScheme.background.withOpacity(0),
+                color: Theme.of(context).colorScheme.surface.withOpacity(0),
                 // 此处添加其他子组件
               ),
             )));

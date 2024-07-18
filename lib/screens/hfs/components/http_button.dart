@@ -1,21 +1,20 @@
+import 'package:bridge/call_rust/native/system_api.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:native_interface/proto/hfs_msg.pb.dart';
 import 'package:provider/provider.dart';
 
-import '../../../ffi/ffi.io.dart';
 import '../../root/controllers/root_controller.dart';
 
-class HfsButton extends StatefulWidget {
-  const HfsButton({
+class HttpButton extends StatefulWidget {
+  const HttpButton({
     Key? key,
   }) : super(key: key);
 
   @override
-  HfsButtonState createState() => HfsButtonState();
+  HttpButtonState createState() => HttpButtonState();
 }
 
-class HfsButtonState extends State<HfsButton>
+class HttpButtonState extends State<HttpButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _lottieController;
 
@@ -24,7 +23,7 @@ class HfsButtonState extends State<HfsButton>
     super.initState();
     _lottieController = AnimationController(vsync: this);
     _lottieController.duration = const Duration(milliseconds: 200);
-    if (context.read<RootController>().hfsStatus == HfsStatus.Running &&
+    if (context.read<RootController>().httpStatus &&
         !_lottieController.isAnimating) {
       _lottieController.value = 1;
     }
@@ -41,21 +40,21 @@ class HfsButtonState extends State<HfsButton>
                 return;
               }
               if (_lottieController.value > 0) {
-                await systemApi.stopHfs();
+                await stopWebApi();
                 _lottieController.reverse();
                 return;
               }
-              await systemApi.runHfs();
+              await runWebApi();
               _lottieController.forward();
             },
             style: ButtonStyle(
-              shape: MaterialStateProperty.all(
+              shape: WidgetStateProperty.all(
                 RoundedRectangleBorder(
                   // Change your radius here
                   borderRadius: BorderRadius.circular(5),
                 ),
               ),
-              padding: MaterialStateProperty.all(const EdgeInsets.all(2)),
+              padding: WidgetStateProperty.all(const EdgeInsets.all(2)),
             ),
             child: Stack(
               children: [
@@ -76,14 +75,7 @@ class HfsButtonState extends State<HfsButton>
                     width: 10,
                     height: 10,
                     decoration: BoxDecoration(
-                      color: context.select<RootController,Color>((value) {
-                        switch (value.hfsStatus) {
-                          case  HfsStatus.Running:
-                            return Colors.transparent;
-                          default:
-                            return Colors.transparent;
-                        }
-                      }),
+                      color: Colors.transparent,
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: Container(),

@@ -5,6 +5,7 @@ use tokio::sync::oneshot;
 pub mod system_api;
 pub mod db_api;
 pub mod task_api;
+pub mod home_api;
 
 pub struct ListenerHandle(oneshot::Sender<()>);
 

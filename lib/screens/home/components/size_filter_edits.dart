@@ -67,10 +67,13 @@ class SizeFilterEditsState extends State<SizeFilterEdits> {
                               fontSize: 13))),
                   onChanged: (value) {
                     if (value.isEmpty) {
-                      context.read<HomeController>().addSizeFilter(0, null);
+                      context
+                          .read<HomeController>()
+                          .addSizeFilter(0 as BigInt, null);
                       return;
                     }
-                    final min = (double.parse(value) * 1073741824).toInt();
+                    final min =
+                        BigInt.from((double.parse(value) * 1073741824).toInt());
                     context.read<HomeController>().addSizeFilter(min, null);
                   },
                 ),
@@ -110,10 +113,13 @@ class SizeFilterEditsState extends State<SizeFilterEdits> {
                     ),
                     onChanged: (value) {
                       if (value.isEmpty) {
-                        context.read<HomeController>().addSizeFilter(null, 0);
+                        context
+                            .read<HomeController>()
+                            .addSizeFilter(null, 0 as BigInt);
                         return;
                       }
-                      final max = (double.parse(value) * 1073741824).toInt();
+                      final max = BigInt.from(
+                          (double.parse(value) * 1073741824).toInt());
                       context.read<HomeController>().addSizeFilter(null, max);
                     },
                   )),
@@ -140,7 +146,7 @@ class SizeFilterEditsState extends State<SizeFilterEdits> {
                   width: 90,
                   child: ElevatedButton(
                       onPressed: () {
-                        context.read<HomeController>().addSizeFilter(0, 0);
+                        context.read<HomeController>().addSizeFilter(0 as BigInt, 0 as BigInt);
                         _minEditingController.text = "";
                         _maxEditingController.text = "";
                       },

@@ -17,11 +17,11 @@ class SizeFilterPanel extends StatelessWidget {
             clipBehavior: Clip.none,
             alignment: Alignment.center,
             children: [
-              Selector<HomeController, (int, int)>(
+              Selector<HomeController, (BigInt, BigInt)>(
                   builder: (context, value, child) {
                     final min = value.$1;
                     final max = value.$2;
-                    if (min != 0 || max != 0) {
+                    if (min != 0 as BigInt || max != 0 as BigInt) {
                       return Positioned(
                           top: -5,
                           right: -5,

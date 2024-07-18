@@ -85,7 +85,8 @@ class AttrFilterPanel extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 ...List.of(filterList.entries)
-                                    .where((element) => element.value.value.name.toLowerCase()
+                                    .where((element) => element.value.value
+                                        .toLowerCase()
                                         .contains(value.toLowerCase()))
                                     .map((attr) => Row(children: [
                                           Checkbox(
@@ -113,7 +114,7 @@ class AttrFilterPanel extends StatelessWidget {
                                                                 .checked);
                                                   },
                                                   child: Text(
-                                                      attr.value.value.name
+                                                      attr.value.value
                                                           .replaceAll('\n', ''),
                                                       maxLines: 1,
                                                       overflow:

@@ -1,6 +1,5 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
-import 'package:native_interface/proto/hfs_msg.pbenum.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -41,9 +40,9 @@ class ServeIpBar extends StatelessWidget {
     return Container(
         width: 100,
         alignment: Alignment.centerLeft,
-        key: ValueKey<String>(context.watch<HfsController>().hfsStatus.name),
+        key: ValueKey<bool>(context.watch<HfsController>().httpStatus),
         child: Text(
-          context.watch<HfsController>().hfsStatus.name,
+          context.watch<HfsController>().httpStatus ? 'Running' : 'Stopped',
           style: const TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
@@ -52,7 +51,7 @@ class ServeIpBar extends StatelessWidget {
   }
 
   Widget _buildQrPanel(BuildContext context) {
-    return context.watch<HfsController>().hfsStatus == HfsStatus.Running
+    return context.watch<HfsController>().httpStatus
         ? Center(
             child: Row(children: [
               _buildCopyButton(context),
@@ -64,16 +63,20 @@ class ServeIpBar extends StatelessWidget {
                 child: TextButton(
                   onPressed: () {
                     final localIp = context.read<HfsController>().localIp;
-                    _qrClick(context, localIp,Theme.of(context).colorScheme.onBackground,Theme.of(context).colorScheme.outline);
+                    _qrClick(
+                        context,
+                        localIp,
+                        Theme.of(context).colorScheme.onSurface,
+                        Theme.of(context).colorScheme.outline);
                   },
                   style: ButtonStyle(
-                    shape: MaterialStateProperty.all(
+                    shape: WidgetStateProperty.all(
                       RoundedRectangleBorder(
                         // Change your radius here
                         borderRadius: BorderRadius.circular(5),
                       ),
                     ),
-                    padding: MaterialStateProperty.all(const EdgeInsets.all(2)),
+                    padding: WidgetStateProperty.all(const EdgeInsets.all(2)),
                   ),
                   child: const Icon(Icons.qr_code),
                 ),
@@ -98,7 +101,7 @@ class ServeIpBar extends StatelessWidget {
             });
           },
           style: ButtonStyle(
-            shape: MaterialStateProperty.all(
+            shape: WidgetStateProperty.all(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5),
               ),
@@ -138,7 +141,8 @@ class ServeIpBar extends StatelessWidget {
     );
   }
 
-  Future _qrClick(BuildContext context, String localIp,Color primaryColor,Color dataModuleColor) {
+  Future _qrClick(BuildContext context, String localIp, Color primaryColor,
+      Color dataModuleColor) {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -157,12 +161,11 @@ class ServeIpBar extends StatelessWidget {
                   eyeShape: QrEyeShape.circle,
                   color: primaryColor,
                 ),
-                dataModuleStyle:  QrDataModuleStyle(
+                dataModuleStyle: QrDataModuleStyle(
                   dataModuleShape: QrDataModuleShape.circle,
                   color: dataModuleColor,
                 ),
               )),
-
         );
       },
     );

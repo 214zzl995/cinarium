@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cinarium/screens/hfs/components/serve_ip_bar.dart';
-import '../components/hfs_button.dart';
+import '../components/http_button.dart';
 
 class HfsPage extends StatelessWidget {
   const HfsPage({Key? key}) : super(key: key);
@@ -13,7 +13,7 @@ class HfsPage extends StatelessWidget {
         child: Column(children: [
           Row(
             children: [
-              const HfsButton(),
+              const HttpButton(),
               Expanded(
                   child: Container(
                 alignment: Alignment.centerLeft,

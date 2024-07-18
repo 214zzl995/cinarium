@@ -1,44 +1,36 @@
-import 'package:flutter/cupertino.dart';
-import 'package:native_interface/native_listener.dart';
-import 'package:native_interface/proto/hfs_msg.pb.dart';
-import 'package:cinarium/ffi/ffi.io.dart';
+import 'dart:io';
 
-class HfsController with ChangeNotifier, HfsNativeListener {
-  //TODO: Implement SettingsController
+import 'package:bridge/call_rust/native.dart';
+import 'package:bridge/call_rust/native/system_api.dart';
+import 'package:flutter/cupertino.dart';
+
+class HfsController with ChangeNotifier {
+  late ListenerHandle _listenerHandle;
 
   HfsController() {
-    registerHfs();
-    init();
+    _listenerHandle = listenerHttpStatus(
+        dartCallback: (status) => {
+              _httpStatus = status,
+              notifyListeners(),
+            });
   }
 
-  void init() async {
-    _hfsStatus = await systemApi.getHfsStatus() ? HfsStatus.Running : HfsStatus.Stop;
-    updateIp();
-    notifyListeners();
-  }
-  
   void updateIp() async {
-    _localIp = await systemApi.getLocalIp();
+    _localIp = getLocalIp();
     notifyListeners();
   }
 
   @override
   void dispose() {
-    unregisterHfs();
+    _listenerHandle.dispose();
     super.dispose();
   }
 
-  HfsStatus _hfsStatus = HfsStatus.Stop;
+  bool _httpStatus = getHttpStatus();
 
   String _localIp = "";
 
-  @override
-  void onHfsStatusChange(HfsStatusChangeMsg hfsStatusMsg) {
-    _hfsStatus = hfsStatusMsg.status;
-    notifyListeners();
-  }
-
-  HfsStatus get hfsStatus => _hfsStatus;
+  bool get httpStatus => _httpStatus;
 
   String get localIp => _localIp;
 }

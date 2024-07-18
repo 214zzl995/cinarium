@@ -26,10 +26,12 @@ pub async fn stop_web_api() -> anyhow::Result<()> {
     crate::api::stop_web_api().await
 }
 
-pub fn get_hfs_status() -> anyhow::Result<bool> {
+#[frb(sync)]
+pub fn get_http_status() -> anyhow::Result<bool> {
     crate::api::web_api_status()
 }
 
+#[frb(sync)]
 pub fn get_local_ip() -> anyhow::Result<String> {
     let port = get_cinarium_config().http.port;
     let local = local_ipaddress::get().ok_or_else(|| anyhow::anyhow!("获取ip出错"))?;

@@ -1,15 +1,10 @@
 import 'dart:async';
 import 'package:bridge/call_rust/model/video.dart';
-import 'package:bridge/call_rust/native/db_api.dart';
+import 'package:bridge/call_rust/native/home_api.dart';
 import 'package:flutter/cupertino.dart';
 
-
 class HomeController extends ChangeNotifier {
-  late var count = 0;
-
-  List<HomeVideo> _dbVideoList = [];
-
-  List<HomeVideo> _movList = [];
+  late HomeVideoData _homeVideoData;
 
   bool _loading = false;
 
@@ -19,52 +14,37 @@ class HomeController extends ChangeNotifier {
   final Map<int, FilterValue> _directorFilter = {};
   final Map<int, FilterValue> _tagFilter = {};
   final Map<int, FilterValue> _seriesFilter = {};
-  final FilterSizeWithDuration _sizeFilter = FilterSizeWithDuration(0, 0);
-  final FilterSizeWithDuration _durationFilter = FilterSizeWithDuration(0, 0);
+  final FilterSize _sizeFilter = FilterSize(0 as BigInt, 0 as BigInt);
+  final FilterDuration _durationFilter = FilterDuration(0, 0);
   final FilterReleaseTime _releaseTimeFilter =
       FilterReleaseTime(DateTime(1970), DateTime.now());
 
   String _textFilter = "";
 
   HomeController() {
-    getNativeList();
+    getHomeVideos();
   }
 
-  void increment() {
-    count++;
-    notifyListeners();
-  }
-
-  Future<void> getNativeList() async {
+  Future<void> getHomeVideos() async {
     try {
       _loading = true;
       notifyListeners();
-      _dbVideoList = await getHomeVideos();
-      for (var video in _dbVideoList) {
-        for (var element in video.actors) {
-          final key = element.id;
-          if (!_actorFilter.containsKey(key)) {
-            _actorFilter[key] = FilterValue(element, false);
-          }
-        }
-        for (var element in video.tags) {
-          final key = element.id;
-          if (!_tagFilter.containsKey(key)) {
-            _tagFilter[key] = FilterValue(element, false);
-          }
-        }
-        if (video.series != null) {
-          final key = video.series!.id;
-          if (!_seriesFilter.containsKey(key)) {
-            _seriesFilter[key] = FilterValue(video.series!, false);
-          }
-        }
-        if (video.director != null) {
-          final key = video.director!.id;
-          if (!_directorFilter.containsKey(key)) {
-            _directorFilter[key] = FilterValue(video.director!, false);
-          }
-        }
+      _homeVideoData = await HomeVideoData.newInstance();
+
+      for (var element in _homeVideoData.actor.entries) {
+        _actorFilter[element.key] = FilterValue(element.value, false);
+      }
+
+      for (var element in _homeVideoData.director.entries) {
+        _directorFilter[element.key] = FilterValue(element.value, false);
+      }
+
+      for (var element in _homeVideoData.tag.entries) {
+        _tagFilter[element.key] = FilterValue(element.value, false);
+      }
+
+      for (var element in _homeVideoData.series.entries) {
+        _seriesFilter[element.key] = FilterValue(element.value, false);
       }
 
       refreshMovList();
@@ -77,84 +57,92 @@ class HomeController extends ChangeNotifier {
   }
 
   void refreshMovList() {
-    _movList = _dbVideoList.where((element) {
-      if (_actorFilter.values.any((element) => element.checked)) {
-        if (element.actors
-            .every((element) => !_actorFilter[element.id]!.checked)) {
-          return false;
-        }
-      }
+    List<HomeVideo> filterList = [];
 
-      if (_directorFilter.values.any((element) => element.checked)) {
-        if (element.director == null) return false;
-        if (!_directorFilter[element.director!.id]!.checked) {
-          return false;
-        }
-      }
+    if (_actorFilter.isNotEmpty) {
+      filterList.addAll(_actorFilter.entries
+          .where((element) => element.value.checked)
+          .where((e) => _homeVideoData.videos[e.key] != null)
+          .map((e) => _homeVideoData.videos[e.key]!));
+    }
 
-      if (_tagFilter.values.any((element) => element.checked)) {
-        if (element.tags.every((element) => !_tagFilter[element.id]!.checked)) {
-          return false;
-        }
-      }
+    if (_directorFilter.isNotEmpty) {
+      filterList.addAll(_directorFilter.entries
+          .where((element) => element.value.checked)
+          .where((e) => _homeVideoData.videos[e.key] != null)
+          .map((e) => _homeVideoData.videos[e.key]!));
+    }
 
-      if (_seriesFilter.values.any((element) => element.checked)) {
-        if (element.series == null) return false;
-        if (!_seriesFilter[element.series!.id]!.checked) {
-          return false;
-        }
-      }
+    if (_tagFilter.isNotEmpty) {
+      filterList.addAll(_tagFilter.entries
+          .where((element) => element.value.checked)
+          .where((e) => _homeVideoData.videos[e.key] != null)
+          .map((e) => _homeVideoData.videos[e.key]!));
+    }
 
-      if (_sizeFilter.min != 0 || _sizeFilter.max != 0) {
-        if (_sizeFilter.min == 0) {
-          if (element.size >= _sizeFilter.max) {
-            return false;
+    if (_seriesFilter.isNotEmpty) {
+      filterList.addAll(_seriesFilter.entries
+          .where((element) => element.value.checked)
+          .where((e) => _homeVideoData.videos[e.key] != null)
+          .map((e) => _homeVideoData.videos[e.key]!));
+    }
+
+    if (filterList.isNotEmpty) {
+      _homeVideoData.filterVideo = filterList.where((element) {
+        if (_sizeFilter.min != 0 as BigInt || _sizeFilter.max != 0 as BigInt) {
+          if (_sizeFilter.min == 0 as BigInt) {
+            if (element.matedata.size >= _sizeFilter.max) {
+              return false;
+            }
+          }
+
+          if (_sizeFilter.max == 0 as BigInt) {
+            if (element.matedata.size <= _sizeFilter.min) {
+              return false;
+            }
+          }
+
+          if (_sizeFilter.max != 0 as BigInt &&
+              _sizeFilter.min != 0 as BigInt) {
+            if (element.matedata.size <= _sizeFilter.min ||
+                element.matedata.size >= _sizeFilter.max) {
+              return false;
+            }
           }
         }
 
-        if (_sizeFilter.max == 0) {
-          if (element.size <= _sizeFilter.min) {
-            return false;
+        if (_durationFilter.min != 0 || _durationFilter.max != 0) {
+          if (_durationFilter.min == 0) {
+            if (element.duration >= _durationFilter.max) {
+              return false;
+            }
+          }
+
+          if (_durationFilter.max == 0) {
+            if (element.duration <= _durationFilter.min) {
+              return false;
+            }
+          }
+
+          if (_durationFilter.max != 0 && _durationFilter.min != 0) {
+            if (element.duration <= _durationFilter.min ||
+                element.duration >= _durationFilter.max) {
+              return false;
+            }
           }
         }
 
-        if (_sizeFilter.max != 0 && _sizeFilter.min != 0) {
-          if (element.size <= _sizeFilter.min ||
-              element.size >= _sizeFilter.max) {
+        if (_textFilter.isNotEmpty) {
+          if (!element.name.toLowerCase().contains(_textFilter.toLowerCase()) &&
+              !element.title
+                  .toLowerCase()
+                  .contains(_textFilter.toLowerCase())) {
             return false;
           }
         }
-      }
-
-      if (_durationFilter.min != 0 || _durationFilter.max != 0) {
-        if (_durationFilter.min == 0) {
-          if (element.duration >= _durationFilter.max) {
-            return false;
-          }
-        }
-
-        if (_durationFilter.max == 0) {
-          if (element.duration <= _durationFilter.min) {
-            return false;
-          }
-        }
-
-        if (_durationFilter.max != 0 && _durationFilter.min != 0) {
-          if (element.duration <= _durationFilter.min ||
-              element.duration >= _durationFilter.max) {
-            return false;
-          }
-        }
-      }
-
-      if (_textFilter.isNotEmpty) {
-        if (!element.name.toLowerCase().contains(_textFilter.toLowerCase()) &&
-            !element.title.toLowerCase().contains(_textFilter.toLowerCase())) {
-          return false;
-        }
-      }
-      return true;
-    }).toList();
+        return true;
+      }).toList();
+    }
 
     notifyListeners();
   }
@@ -213,7 +201,7 @@ class HomeController extends ChangeNotifier {
     refreshMovList();
   }
 
-  void addSizeFilter(int? min, int? max) {
+  void addSizeFilter(BigInt? min, BigInt? max) {
     if (min != null) {
       _sizeFilter.min = min;
     }
@@ -254,7 +242,7 @@ class HomeController extends ChangeNotifier {
 
   bool get loading => _loading;
 
-  List<Smov> get movList => _movList;
+  List<HomeVideo> get videoList => _homeVideoData.filterVideo;
 
   Map<int, FilterValue> get actorFilter => _actorFilter;
 
@@ -264,9 +252,9 @@ class HomeController extends ChangeNotifier {
 
   Map<int, FilterValue> get seriesFilter => _seriesFilter;
 
-  FilterSizeWithDuration get sizeFilter => _sizeFilter;
+  FilterSize get sizeFilter => _sizeFilter;
 
-  FilterSizeWithDuration get durationFilter => _durationFilter;
+  FilterDuration get durationFilter => _durationFilter;
 
   FilterReleaseTime get releaseTimeFilter => _releaseTimeFilter;
 
@@ -299,21 +287,23 @@ class FilterReleaseTime {
   }
 }
 
-class FilterSizeWithDuration {
+class FilterSize {
+  BigInt min;
+  BigInt max;
+
+  FilterSize(this.min, this.max);
+}
+
+class FilterDuration {
   int min;
   int max;
 
-  FilterSizeWithDuration(this.min, this.max);
+  FilterDuration(this.min, this.max);
 }
 
 class FilterValue {
-  final SmovAttr value;
+  final String value;
   bool checked;
 
   FilterValue(this.value, this.checked);
-
-  @override
-  String toString() {
-    return 'FilterValue{value.name: ${value.name}, checked: $checked}';
-  }
 }

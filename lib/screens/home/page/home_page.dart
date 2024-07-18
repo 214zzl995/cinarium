@@ -1,8 +1,9 @@
+import 'package:bridge/call_rust/model/video.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:cinarium/screens/home/components/mov_card.dart';
+import 'package:cinarium/screens/home/components/video_card.dart';
 import 'package:cinarium/screens/home/components/size_filter_panel.dart';
 import 'package:cinarium/screens/home/controllers/home_controller.dart';
 import 'package:waterfall_flow/waterfall_flow.dart';
@@ -40,8 +41,8 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildScrollingView(BuildContext context) {
-    return Selector<HomeController, List<Smov>>(
-        selector: (_, homeController) => homeController.movList,
+    return Selector<HomeController, List<HomeVideo>>(
+        selector: (_, homeController) => homeController.videoList,
         builder: (context, movList, child) {
           return AnimatedSwitcher(
               duration: const Duration(milliseconds: 500),
@@ -70,13 +71,9 @@ class HomePage extends StatelessWidget {
                       height: 0,
                     );
                   } else {
-                    final mov = context.read<HomeController>().movList[index];
+                    final video = context.read<HomeController>().videoList[index];
                     return SlideFadeTransition(
-                        offset: 0.3,
-                        child: MovCard(
-                            mov,
-                            mov.thumbsImg!.size.width.toDouble(),
-                            mov.thumbsImg!.size.height.toDouble()));
+                        offset: 0.3, child: MovCard(video, video.thumbnailRatio));
                   }
                 },
               ));
@@ -86,7 +83,7 @@ class HomePage extends StatelessWidget {
   Widget _buildBody() {
     return Selector<HomeController, (bool, bool)>(
         selector: (_, homeController) =>
-            (homeController.loading, homeController.movList.isEmpty),
+            (homeController.loading, homeController.videoList.isEmpty),
         builder: (selectorContext, data, __) {
           final loading = data.$1;
           final empty = data.$2;
