@@ -11,7 +11,7 @@ pub struct ListenerHandle(oneshot::Sender<()>);
 
 impl ListenerHandle {
     #[frb(sync)]
-    pub fn dispose(self) {
+    pub fn cancel(self) {
         self.0.send(()).unwrap();
     }
 

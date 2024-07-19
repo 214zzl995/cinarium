@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:cinarium/models/theme.dart';
 import 'package:cinarium/screens/settings/controllers/settings_controller.dart';
 import '../../../util/theme_extension_util.dart';
-import '../../hfs/controllers/hfs_controller.dart';
+import '../../hfs/controllers/http_controller.dart';
 import '../../home/controllers/home_controller.dart';
 import '../../pool/controllers/pool_controller.dart';
 import '../../retrieve/controllers/retrieve_controller.dart';
@@ -23,7 +23,7 @@ class RootPage extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => RootController()),
         ChangeNotifierProvider(create: (_) => RetrieveController()),
         ChangeNotifierProvider(create: (_) => HomeController()),
-        ChangeNotifierProvider(create: (_) => HfsController()),
+        ChangeNotifierProvider(create: (_) => HttpController()),
         ChangeNotifierProvider(create: (_) => SettingsController()),
         ChangeNotifierProvider(create: (_) => PoolController())
       ],

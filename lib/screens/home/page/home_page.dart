@@ -71,9 +71,11 @@ class HomePage extends StatelessWidget {
                       height: 0,
                     );
                   } else {
-                    final video = context.read<HomeController>().videoList[index];
+                    final video =
+                        context.read<HomeController>().videoList[index];
                     return SlideFadeTransition(
-                        offset: 0.3, child: MovCard(video, video.thumbnailRatio));
+                        offset: 0.3,
+                        child: MovCard(video, video.thumbnailRatio));
                   }
                 },
               ));

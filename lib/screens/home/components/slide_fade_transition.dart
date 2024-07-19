@@ -74,7 +74,7 @@ class SlideFadeTransitionState extends State<SlideFadeTransition>
       parent: _animationController,
     ));
 
-        _animationController.forward();
+    _animationController.forward();
   }
 
   @override

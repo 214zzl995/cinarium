@@ -1,17 +1,20 @@
 import 'dart:async';
 import 'dart:io';
 
-
 import 'package:system_tray/system_tray.dart';
 import 'package:window_manager/window_manager.dart';
 
 class TrayUtil {
   static String getTrayImagePath(String imageName) {
-    return Platform.isWindows ? 'assets/tray/$imageName.ico' : 'assets/tray/$imageName.png';
+    return Platform.isWindows
+        ? 'assets/tray/$imageName.ico'
+        : 'assets/tray/$imageName.png';
   }
 
   static String getImagePath(String imageName) {
-    return Platform.isWindows ? 'assets/tray/$imageName.bmp' : 'assets/tray/$imageName.png';
+    return Platform.isWindows
+        ? 'assets/tray/$imageName.bmp'
+        : 'assets/tray/$imageName.png';
   }
 
   static Future<void> initSystemTray() async {
@@ -54,7 +57,7 @@ class TrayUtil {
               menuItem.setLabel("Stop flash tray icon");
               timer = Timer.periodic(
                 const Duration(milliseconds: 500),
-                    (timer) {
+                (timer) {
                   toogleTrayIcon = !toogleTrayIcon;
                   systemTray.setImage(toogleTrayIcon
                       ? ""

@@ -65,7 +65,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.1.0';
 
   @override
-  int get rustContentHash => 1374355149;
+  int get rustContentHash => -1536741240;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -76,7 +76,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 }
 
 abstract class RustLibApi extends BaseApi {
-  void crateNativeListenerHandleDispose({required ListenerHandle that});
+  void crateNativeListenerHandleCancel({required ListenerHandle that});
 
   Future<List<HomeVideo>> crateNativeDbApiGetHomeVideos();
 
@@ -327,7 +327,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   });
 
   @override
-  void crateNativeListenerHandleDispose({required ListenerHandle that}) {
+  void crateNativeListenerHandleCancel({required ListenerHandle that}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
@@ -339,15 +339,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         decodeSuccessData: sse_decode_unit,
         decodeErrorData: null,
       ),
-      constMeta: kCrateNativeListenerHandleDisposeConstMeta,
+      constMeta: kCrateNativeListenerHandleCancelConstMeta,
       argValues: [that],
       apiImpl: this,
     ));
   }
 
-  TaskConstMeta get kCrateNativeListenerHandleDisposeConstMeta =>
+  TaskConstMeta get kCrateNativeListenerHandleCancelConstMeta =>
       const TaskConstMeta(
-        debugName: "ListenerHandle_dispose",
+        debugName: "ListenerHandle_cancel",
         argNames: ["that"],
       );
 
@@ -4279,7 +4279,7 @@ class ListenerHandleImpl extends RustOpaque implements ListenerHandle {
         RustLib.instance.api.rust_arc_decrement_strong_count_ListenerHandlePtr,
   );
 
-  void dispose() => RustLib.instance.api.crateNativeListenerHandleDispose(
+  void cancel() => RustLib.instance.api.crateNativeListenerHandleCancel(
         that: this,
       );
 }

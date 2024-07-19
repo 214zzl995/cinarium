@@ -15,10 +15,9 @@ class HfsSettingsPage extends StatelessWidget {
       itemBuilder: (context, index) {
         return Padding(
             padding:
-            const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+                const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
             child: settingsPanel[index]);
       },
     );
   }
 }
-

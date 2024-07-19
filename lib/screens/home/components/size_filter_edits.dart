@@ -146,7 +146,9 @@ class SizeFilterEditsState extends State<SizeFilterEdits> {
                   width: 90,
                   child: ElevatedButton(
                       onPressed: () {
-                        context.read<HomeController>().addSizeFilter(0 as BigInt, 0 as BigInt);
+                        context
+                            .read<HomeController>()
+                            .addSizeFilter(0 as BigInt, 0 as BigInt);
                         _minEditingController.text = "";
                         _maxEditingController.text = "";
                       },

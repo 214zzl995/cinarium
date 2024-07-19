@@ -41,7 +41,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.1.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1374355149;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1536741240;
 
 // Section: executor
 
@@ -49,14 +49,14 @@ flutter_rust_bridge::frb_generated_default_handler!();
 
 // Section: wire_funcs
 
-fn wire__crate__native__ListenerHandle_dispose_impl(
+fn wire__crate__native__ListenerHandle_cancel_impl(
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
     data_len_: i32,
 ) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
         flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "ListenerHandle_dispose",
+            debug_name: "ListenerHandle_cancel",
             port: None,
             mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
         },
@@ -74,7 +74,7 @@ fn wire__crate__native__ListenerHandle_dispose_impl(
             deserializer.end();
             transform_result_sse::<_, ()>((move || {
                 let output_ok = Result::<_, ()>::Ok({
-                    crate::native::ListenerHandle::dispose(api_that);
+                    crate::native::ListenerHandle::cancel(api_that);
                 })?;
                 Ok(output_ok)
             })())
@@ -4053,7 +4053,7 @@ fn pde_ffi_dispatcher_sync_impl(
 ) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
-        1 => wire__crate__native__ListenerHandle_dispose_impl(ptr, rust_vec_len, data_len),
+        1 => wire__crate__native__ListenerHandle_cancel_impl(ptr, rust_vec_len, data_len),
         6 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_actor_impl(
             ptr,
             rust_vec_len,

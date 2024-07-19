@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 class FileCol extends StatelessWidget {
-  const FileCol(
-      {super.key, this.flex, this.width,required this.value})
+  const FileCol({super.key, this.flex, this.width, required this.value})
       : assert(!(flex != null && width != null),
             'flex and width cannot be used together'),
         assert(flex != null || width != null,
@@ -25,7 +24,9 @@ class FileCol extends StatelessWidget {
     } else if (width != null) {
       return SizedBox(
         width: width,
-        child: Center(child:_buildValue(),),
+        child: Center(
+          child: _buildValue(),
+        ),
       );
     }
     throw UnimplementedError();

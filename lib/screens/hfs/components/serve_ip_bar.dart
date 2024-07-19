@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-import '../controllers/hfs_controller.dart';
+import '../controllers/http_controller.dart';
 
 class ServeIpBar extends StatelessWidget {
   const ServeIpBar({Key? key}) : super(key: key);
@@ -40,9 +40,9 @@ class ServeIpBar extends StatelessWidget {
     return Container(
         width: 100,
         alignment: Alignment.centerLeft,
-        key: ValueKey<bool>(context.watch<HfsController>().httpStatus),
+        key: ValueKey<bool>(context.watch<HttpController>().httpStatus),
         child: Text(
-          context.watch<HfsController>().httpStatus ? 'Running' : 'Stopped',
+          context.watch<HttpController>().httpStatus ? 'Running' : 'Stopped',
           style: const TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
@@ -51,7 +51,7 @@ class ServeIpBar extends StatelessWidget {
   }
 
   Widget _buildQrPanel(BuildContext context) {
-    return context.watch<HfsController>().httpStatus
+    return context.watch<HttpController>().httpStatus
         ? Center(
             child: Row(children: [
               _buildCopyButton(context),
@@ -62,7 +62,7 @@ class ServeIpBar extends StatelessWidget {
                 height: 30,
                 child: TextButton(
                   onPressed: () {
-                    final localIp = context.read<HfsController>().localIp;
+                    final localIp = context.read<HttpController>().localIp;
                     _qrClick(
                         context,
                         localIp,
@@ -92,7 +92,7 @@ class ServeIpBar extends StatelessWidget {
       height: 30,
       child: TextButton(
           onPressed: () {
-            FlutterClipboard.copy(context.read<HfsController>().localIp)
+            FlutterClipboard.copy(context.read<HttpController>().localIp)
                 .then((value) {
               copy.value = true;
               Future.delayed(const Duration(milliseconds: 2000), () {
@@ -135,7 +135,7 @@ class ServeIpBar extends StatelessWidget {
               const SizedBox(
                 width: 5,
               ),
-              Text(context.watch<HfsController>().localIp)
+              Text(context.watch<HttpController>().localIp)
             ],
           )),
     );

@@ -159,34 +159,26 @@ class AppPages {
                 GoRoute(
                   path: SettingRoutes.theme.router,
                   name: SettingRoutes.theme.name,
-                  pageBuilder: (context, state) =>
-                      FadeTransitionPage(
-                          key: state.pageKey,
-                          child: const ThemeSettingsPage()),
+                  pageBuilder: (context, state) => FadeTransitionPage(
+                      key: state.pageKey, child: const ThemeSettingsPage()),
                 ),
                 GoRoute(
                   path: SettingRoutes.system.router,
                   name: SettingRoutes.system.name,
-                  pageBuilder: (context, state) =>
-                      FadeTransitionPage(
-                          key: state.pageKey,
-                          child: const SystemSettingsPage()),
+                  pageBuilder: (context, state) => FadeTransitionPage(
+                      key: state.pageKey, child: const SystemSettingsPage()),
                 ),
                 GoRoute(
                   path: SettingRoutes.taskPool.router,
                   name: SettingRoutes.taskPool.name,
-                  pageBuilder: (context, state) =>
-                      FadeTransitionPage(
-                          key: state.pageKey,
-                          child: const TaskPoolSettingsPage()),
+                  pageBuilder: (context, state) => FadeTransitionPage(
+                      key: state.pageKey, child: const TaskPoolSettingsPage()),
                 ),
                 GoRoute(
                   path: SettingRoutes.httpFileServer.router,
                   name: SettingRoutes.httpFileServer.name,
-                  pageBuilder: (context, state) =>
-                      FadeTransitionPage(
-                          key: state.pageKey,
-                          child: const HfsSettingsPage()),
+                  pageBuilder: (context, state) => FadeTransitionPage(
+                      key: state.pageKey, child: const HfsSettingsPage()),
                 ),
               ])
         ]),

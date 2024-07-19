@@ -57,7 +57,8 @@ class SettingsController with ChangeNotifier {
 
   void changeCrawlerTemplatePriority(List<(int, int)> prioritys) {
     for (final pair in prioritys) {
-      final index = _crawlerTemplates.indexWhere((element) => element.id == pair.$1);
+      final index =
+          _crawlerTemplates.indexWhere((element) => element.id == pair.$1);
       final temp = _crawlerTemplates[index];
       final newTemp = temp.copyWith(priority: pair.$2);
       _crawlerTemplates[index] = newTemp;

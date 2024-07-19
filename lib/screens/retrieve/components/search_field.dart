@@ -95,7 +95,7 @@ class SearchFieldState extends State<SearchField> {
                         key: Key('emptyContainer'),
                         width: 0,
                         height: 0,
-                ),
+                      ),
                 transitionBuilder: (child, animation) => FadeTransition(
                       opacity: animation,
                       child: child,

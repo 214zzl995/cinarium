@@ -38,7 +38,7 @@ class RootController with ChangeNotifier {
 
   @override
   void dispose() {
-    _listenerHandle.dispose();
+    _listenerHandle.cancel();
     super.dispose();
   }
 }

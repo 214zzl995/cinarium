@@ -62,9 +62,7 @@ class DurationFilterPanel extends StatelessWidget {
               )
             ]);
       },
-      menuChildren: const [
-        DurationFilterEdits()
-      ],
+      menuChildren: const [DurationFilterEdits()],
     );
   }
 }

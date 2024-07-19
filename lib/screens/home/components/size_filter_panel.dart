@@ -62,9 +62,7 @@ class SizeFilterPanel extends StatelessWidget {
               )
             ]);
       },
-      menuChildren: const [
-        SizeFilterEdits()
-      ],
+      menuChildren: const [SizeFilterEdits()],
     );
   }
 }

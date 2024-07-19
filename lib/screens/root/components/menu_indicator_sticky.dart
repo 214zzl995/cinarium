@@ -7,7 +7,8 @@ import 'menu_param.dart';
 class MenuIndicatorSticky extends StatefulWidget {
   final double parentHeight;
 
-  const MenuIndicatorSticky({Key? key, required this.parentHeight}) : super(key: key);
+  const MenuIndicatorSticky({Key? key, required this.parentHeight})
+      : super(key: key);
 
   @override
   MenuIndicatorStickyState createState() => MenuIndicatorStickyState();
@@ -49,10 +50,7 @@ class MenuIndicatorStickyState extends State<MenuIndicatorSticky>
     //设置当前的路由下标
     //在initState中是可以使用read的 等效于 Provider.of() listen: false
     //官方例子 https://github.com/brianegan/flutter_architecture_samples/blob/41a033f6e67ec51bba2edf669cfcb857498db58c/change_notifier_provider/lib/edit_todo_screen.dart
-    index = context
-        .read<RootController>()
-        .route
-        .index;
+    index = context.read<RootController>().route.index;
 
     //此代码的意思是在 渲染第一帧后执行 等效于
     // Future.delayed(Duration.zero,() {
@@ -61,16 +59,13 @@ class MenuIndicatorStickyState extends State<MenuIndicatorSticky>
     //但时间点不同
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<RootController>().addListener(() {
-        final conIndex = context
-            .read<RootController>()
-            .route
-            .index;
+        final conIndex = context.read<RootController>().route.index;
         //如果路由下标发生变化则执行动画
         if (index != conIndex) {
           final waitTime = ((MenuParam.indicatorLongMilliseconds -
-              MenuParam.indicatorShortMilliseconds) +
-              (MenuParam.indicatorLongMilliseconds *
-                  MenuParam.indicatorDelayRate))
+                      MenuParam.indicatorShortMilliseconds) +
+                  (MenuParam.indicatorLongMilliseconds *
+                      MenuParam.indicatorDelayRate))
               .toInt();
 
           setDistance(conIndex);
@@ -106,8 +101,8 @@ class MenuIndicatorStickyState extends State<MenuIndicatorSticky>
     //计算当前位置
     indicatorTop = index * MenuParam.menuItemsHeight +
         (MenuParam.menuItemsHeight -
-            MenuParam.indicatorHeight -
-            MenuParam.menuItemsMarginBottom) /
+                MenuParam.indicatorHeight -
+                MenuParam.menuItemsMarginBottom) /
             2;
 
     //bottom 计算为 父布局高度 减 导航条top值
@@ -128,12 +123,12 @@ class MenuIndicatorStickyState extends State<MenuIndicatorSticky>
     //对贝塞尔理解有限 暂时只能这样 如果需要微软商店效果 两个贝塞尔曲线需要不同
     bottomAnimation = CurvedAnimation(
       parent: bottomAnimationController,
-      curve: const Cubic(1,-0.02,.57,1),
+      curve: const Cubic(1, -0.02, .57, 1),
     );
 
     topAnimation = CurvedAnimation(
       parent: topAnimationController,
-      curve: const Cubic(1,-0.02,.57,1),
+      curve: const Cubic(1, -0.02, .57, 1),
     );
 
     topAnimation.addListener(() {
@@ -160,8 +155,8 @@ class MenuIndicatorStickyState extends State<MenuIndicatorSticky>
   void setDistance(int rootIndex) {
     final endTop = rootIndex * MenuParam.menuItemsHeight +
         (MenuParam.menuItemsHeight -
-            MenuParam.indicatorHeight -
-            MenuParam.menuItemsMarginBottom) /
+                MenuParam.indicatorHeight -
+                MenuParam.menuItemsMarginBottom) /
             2;
 
     topDistance = endTop - indicatorTop;
@@ -194,15 +189,10 @@ class MenuIndicatorStickyState extends State<MenuIndicatorSticky>
         child: Container(
           width: MenuParam.indicatorWidth,
           decoration: BoxDecoration(
-              color: Theme
-                  .of(context)
-                  .colorScheme
-                  .primary,
+              color: Theme.of(context).colorScheme.primary,
               borderRadius: const BorderRadius.all(
                 Radius.circular(2),
               )),
         ));
   }
 }
-
-

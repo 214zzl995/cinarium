@@ -123,7 +123,7 @@ class ModeSetting extends StatelessWidget {
                         final theme = context.read<SmovbookTheme>();
                         theme.windowEffect = val!;
                         //设置效果
-                        theme.setEffect(val,context);
+                        theme.setEffect(val, context);
                       },
                     ),
                     Text(

@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 
 class DesktopUtil {
-
   bool get isDesktop {
     if (kIsWeb) return false;
     return [
@@ -10,7 +9,4 @@ class DesktopUtil {
       TargetPlatform.macOS,
     ].contains(defaultTargetPlatform);
   }
-
-
-
 }
