@@ -54,7 +54,6 @@ class ArtifactProvider {
   final CargokitUserOptions userOptions;
 
   Future<Map<Target, List<Artifact>>> getArtifacts(List<Target> targets) async {
-
     final result = await _getPrecompiledArtifacts(targets);
 
     final pendingTargets = List.of(targets);
@@ -75,13 +74,15 @@ class ArtifactProvider {
       final artifactNames = <String>{
         ...getArtifactNames(
           target: target,
-          libraryName: environment.crateInfo.packageName,
+          libraryName: environment.crateInfo.libName ??
+              environment.crateInfo.packageName,
           aritifactType: AritifactType.dylib,
           remote: false,
         ),
         ...getArtifactNames(
           target: target,
-          libraryName: environment.crateInfo.packageName,
+          libraryName: environment.crateInfo.libName ??
+              environment.crateInfo.packageName,
           aritifactType: AritifactType.staticlib,
           remote: false,
         )
@@ -110,13 +111,14 @@ class ArtifactProvider {
 
   Future<Map<Target, List<Artifact>>> _getPrecompiledArtifacts(
       List<Target> targets) async {
-
-    print('userOptions.usePrecompiledBinaries: ${userOptions.usePrecompiledBinaries}');
+    print(
+        'userOptions.usePrecompiledBinaries: ${userOptions.usePrecompiledBinaries}');
     if (userOptions.usePrecompiledBinaries == false) {
       _log.info('Precompiled binaries are disabled');
       return {};
     }
-    print('environment.crateOptions.precompiledBinaries: ${environment.crateOptions.precompiledBinaries}');
+    print(
+        'environment.crateOptions.precompiledBinaries: ${environment.crateOptions.precompiledBinaries}');
     if (environment.crateOptions.precompiledBinaries == null) {
       _log.fine('Precompiled binaries not enabled for this crate');
       return {};

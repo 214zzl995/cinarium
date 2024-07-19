@@ -23,21 +23,28 @@ class ManifestException {
 }
 
 class CrateInfo {
-  CrateInfo({required this.packageName});
+  CrateInfo({required this.packageName, required this.libName});
 
   final String packageName;
+
+  final String? libName;
 
   static CrateInfo parseManifest(String manifest, {final String? fileName}) {
     final toml = TomlDocument.parse(manifest);
     final package = toml.toMap()['package'];
+    final lib = toml.toMap()['lib'];
     if (package == null) {
       throw ManifestException('Missing package section', fileName: fileName);
     }
-    final name = package['name'];
-    if (name == null) {
-      throw ManifestException('Missing package name', fileName: fileName);
+
+    final packageName = package['name'];
+
+    final libName = lib['name'];
+    if (libName == null) {
+      throw ManifestException('Missing lib name', fileName: fileName);
     }
-    return CrateInfo(packageName: name);
+
+    return CrateInfo(packageName: packageName, libName: libName);
   }
 
   static CrateInfo load(String manifestDir) {
