@@ -8,6 +8,11 @@ cmake_minimum_required(VERSION 3.14)
 set(PROJECT_NAME "cinarium_core")
 project(${PROJECT_NAME} LANGUAGES CXX)
 
+message(STATUS ${EPHEMERAL_DIR})
+
+# Configuration provided via flutter tool.
+include(${CMAKE_SOURCE_DIR}/flutter/ephemeral/generated_config.cmake)
+
 include("../cargokit/cmake/cargokit.cmake")
 apply_cargokit(${PROJECT_NAME} ../../../../../../rust cinarium_core "")
 

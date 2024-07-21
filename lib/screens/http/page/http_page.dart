@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:cinarium/screens/hfs/components/serve_ip_bar.dart';
+import 'package:cinarium/screens/http/components/serve_ip_bar.dart';
 import '../components/http_button.dart';
 
-class HfsPage extends StatelessWidget {
-  const HfsPage({Key? key}) : super(key: key);
+class HttpPage extends StatelessWidget {
+  const HttpPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: Padding(
         padding: const EdgeInsets.all(30),
         child: Column(children: [
@@ -23,7 +25,7 @@ class HfsPage extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const ServeIpBar(),
+                // child: const ServeIpBar(),
               )),
             ],
           ),

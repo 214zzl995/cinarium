@@ -4,8 +4,14 @@
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
 import 'frb_generated.dart';
-import 'lib.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+
+// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<TaskConfig>>
+abstract class TaskConfig implements RustOpaqueInterface {
+  BigInt get thread;
+
+  String get tidyFolder;
+}
 
 class HttpConfig {
   final int port;
@@ -23,25 +29,4 @@ class HttpConfig {
       other is HttpConfig &&
           runtimeType == other.runtimeType &&
           port == other.port;
-}
-
-class TaskConfig {
-  final BigInt thread;
-  final PathBuf tidyFolder;
-
-  const TaskConfig({
-    required this.thread,
-    required this.tidyFolder,
-  });
-
-  @override
-  int get hashCode => thread.hashCode ^ tidyFolder.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is TaskConfig &&
-          runtimeType == other.runtimeType &&
-          thread == other.thread &&
-          tidyFolder == other.tidyFolder;
 }

@@ -272,6 +272,7 @@ impl UntreatedVideo {
         Ok(())
     }
 
+    #[allow(dead_code)]
     pub async fn update_crawl_name_with_hash(hash: &str, crawl_name: &str) -> anyhow::Result<u32> {
         let id = sqlx::query!(
             r#"
@@ -289,6 +290,7 @@ impl UntreatedVideo {
         Ok(id.id)
     }
 
+    #[allow(dead_code)]
     pub async fn update_crawl_name_with_path(path: &Path, crawl_name: &str) -> anyhow::Result<u32> {
         let filename = path
             .file_stem()
@@ -342,6 +344,7 @@ impl UntreatedVideo {
         Ok(())
     }
 
+    #[allow(dead_code)]
     pub async fn query_one(id: &u32) -> anyhow::Result<Self> {
         let task_video = sqlx::query_as(
             r#"
@@ -454,6 +457,7 @@ impl DetailVideo {
 }
 
 impl Metadata {
+    #[allow(dead_code)]
     pub async fn insert(&self) -> anyhow::Result<u32> {
         let path = self.path.to_string_lossy().to_string();
         let size = self.size as i64;
@@ -477,6 +481,7 @@ impl Metadata {
         Ok(id)
     }
 
+    #[allow(dead_code)]
     pub async fn insert_with_crawl_name(&self, crawl_name: &str) -> anyhow::Result<Option<u32>> {
         let path = self.path.to_string_lossy().to_string();
         let size = self.size as i64;
@@ -500,6 +505,7 @@ impl Metadata {
         Ok(id)
     }
 
+    #[allow(dead_code)]
     pub async fn insert_replace_batch(videos: &Vec<Metadata>) -> anyhow::Result<()> {
         let mut transaction = get_pool().await.begin().await?;
         let mut query_builder: QueryBuilder<Sqlite> = QueryBuilder::new(
@@ -526,6 +532,7 @@ impl Metadata {
         Ok(())
     }
 
+    #[allow(dead_code)]
     pub async fn marking_delete_batch_with_hash(hashs: &[String]) -> anyhow::Result<()> {
         let hashs = hashs.join("','");
 
@@ -543,6 +550,7 @@ impl Metadata {
         Ok(())
     }
 
+    #[allow(dead_code)]
     pub async fn marking_delete_with_path(path: &Path) -> anyhow::Result<()> {
         let filename = path
             .file_stem()
@@ -609,6 +617,7 @@ impl Metadata {
         Ok(())
     }
 
+    #[allow(dead_code)]
     pub async fn query_all_path() -> anyhow::Result<HashSet<(String, PathBuf)>> {
         let paths = sqlx::query!(
             r#"
@@ -623,6 +632,7 @@ impl Metadata {
         Ok(paths.into_iter().map(|x| (x.hash, x.path.into())).collect())
     }
 
+    #[allow(dead_code)]
     pub async fn query_by_filename(filename: &str) -> anyhow::Result<Vec<Self>> {
         let filename = format!("%{}%", filename);
         let videos = sqlx::query_as!(Self,
@@ -640,6 +650,7 @@ impl Metadata {
         Ok(videos)
     }
 
+    #[allow(dead_code)]
     pub async fn query_all() -> anyhow::Result<Vec<Self>> {
         let videos = sqlx::query_as!(Self,
             r#"
@@ -654,6 +665,7 @@ impl Metadata {
         Ok(videos)
     }
 
+    #[allow(dead_code)]
     pub async fn query_id_by_hash(hash: &str) -> anyhow::Result<Option<u32>> {
         let id = sqlx::query!(
             r#"
@@ -670,6 +682,7 @@ impl Metadata {
         Ok(id)
     }
 
+    #[allow(dead_code)]
     pub async fn query_id_by_path(path: &Path) -> anyhow::Result<Option<u32>> {
         let filename = path
             .file_stem()

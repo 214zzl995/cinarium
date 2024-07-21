@@ -25,6 +25,7 @@
 
 // Section: imports
 
+use crate::app::*;
 use crate::native::home_api::*;
 use crate::native::system_api::*;
 use crate::native::*;
@@ -41,7 +42,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.1.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1536741240;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -168382060;
 
 // Section: executor
 
@@ -49,6 +50,100 @@ flutter_rust_bridge::frb_generated_default_handler!();
 
 // Section: wire_funcs
 
+fn wire__crate__app__TaskConfig_thread_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "TaskConfig_thread",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<TaskConfig>,
+            >>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse::<_, ()>((move || {
+                let mut api_that_guard = None;
+                let decode_indices_ =
+                    flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
+                        flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                            &api_that, 0, false,
+                        ),
+                    ]);
+                for i in decode_indices_ {
+                    match i {
+                        0 => api_that_guard = Some(api_that.lockable_decode_sync_ref()),
+                        _ => unreachable!(),
+                    }
+                }
+                let api_that_guard = api_that_guard.unwrap();
+                let output_ok =
+                    Result::<_, ()>::Ok(crate::app::TaskConfig::thread(&*api_that_guard))?;
+                Ok(output_ok)
+            })())
+        },
+    )
+}
+fn wire__crate__app__TaskConfig_tidy_folder_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "TaskConfig_tidy_folder",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<TaskConfig>,
+            >>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse::<_, ()>((move || {
+                let mut api_that_guard = None;
+                let decode_indices_ =
+                    flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
+                        flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                            &api_that, 0, false,
+                        ),
+                    ]);
+                for i in decode_indices_ {
+                    match i {
+                        0 => api_that_guard = Some(api_that.lockable_decode_sync_ref()),
+                        _ => unreachable!(),
+                    }
+                }
+                let api_that_guard = api_that_guard.unwrap();
+                let output_ok =
+                    Result::<_, ()>::Ok(crate::app::TaskConfig::tidy_folder(&*api_that_guard))?;
+                Ok(output_ok)
+            })())
+        },
+    )
+}
 fn wire__crate__native__ListenerHandle_cancel_impl(
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -143,6 +238,41 @@ fn wire__crate__native__db_api__get_task_videos_impl(
                 transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
                     (move || async move {
                         let output_ok = crate::native::db_api::get_task_videos().await?;
+                        Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire__crate__native__db_api__init_db_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "init_db",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
+                    (move || async move {
+                        let output_ok = crate::native::db_api::init_db().await?;
                         Ok(output_ok)
                     })()
                     .await,
@@ -2448,16 +2578,87 @@ fn wire__crate__native__system_api__init_app_log_impl(
         },
     )
 }
-fn wire__crate__native__system_api__listener_http_status_impl(
+fn wire__crate__native__system_api__init_cinarium_config_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
     data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "init_cinarium_config",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
+                    (move || async move {
+                        let output_ok = crate::native::system_api::init_cinarium_config().await?;
+                        Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire__crate__native__system_api__init_source_notify_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "init_source_notify",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
+                    (move || async move {
+                        let output_ok = crate::native::system_api::init_source_notify().await?;
+                        Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire__crate__native__system_api__listener_http_status_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
         flutter_rust_bridge::for_generated::TaskInfo {
             debug_name: "listener_http_status",
-            port: None,
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
         },
         move || {
             let message = unsafe {
@@ -2473,25 +2674,32 @@ fn wire__crate__native__system_api__listener_http_status_impl(
                 <flutter_rust_bridge::DartOpaque>::sse_decode(&mut deserializer),
             );
             deserializer.end();
-            transform_result_sse::<_, ()>((move || {
-                let output_ok = Result::<_, ()>::Ok(
-                    crate::native::system_api::listener_http_status(api_dart_callback),
-                )?;
-                Ok(output_ok)
-            })())
+            move |context| async move {
+                transform_result_sse::<_, ()>(
+                    (move || async move {
+                        let output_ok = Result::<_, ()>::Ok(
+                            crate::native::system_api::listener_http_status(api_dart_callback)
+                                .await,
+                        )?;
+                        Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
         },
     )
 }
 fn wire__crate__native__system_api__listener_untreated_file_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
     data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
         flutter_rust_bridge::for_generated::TaskInfo {
             debug_name: "listener_untreated_file",
-            port: None,
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
         },
         move || {
             let message = unsafe {
@@ -2507,12 +2715,18 @@ fn wire__crate__native__system_api__listener_untreated_file_impl(
                 <flutter_rust_bridge::DartOpaque>::sse_decode(&mut deserializer),
             );
             deserializer.end();
-            transform_result_sse::<_, ()>((move || {
-                let output_ok = Result::<_, ()>::Ok(
-                    crate::native::system_api::listener_untreated_file(api_dart_callback),
-                )?;
-                Ok(output_ok)
-            })())
+            move |context| async move {
+                transform_result_sse::<_, ()>(
+                    (move || async move {
+                        let output_ok = Result::<_, ()>::Ok(
+                            crate::native::system_api::listener_untreated_file(api_dart_callback)
+                                .await,
+                        )?;
+                        Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
         },
     )
 }
@@ -2574,7 +2788,7 @@ fn wire__crate__native__system_api__open_in_explorer_impl(
             };
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_path = <String>::sse_decode(&mut deserializer);
+            let api_path = <PathBuf>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
                 transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
@@ -3008,6 +3222,41 @@ fn wire__crate__native__task_api__get_pool_data_impl(
         },
     )
 }
+fn wire__crate__native__task_api__init_pool_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "init_pool",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
+                    (move || async move {
+                        let output_ok = crate::native::task_api::init_pool().await?;
+                        Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
 fn wire__crate__native__task_api__insertion_of_tasks_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -3046,15 +3295,16 @@ fn wire__crate__native__task_api__insertion_of_tasks_impl(
     )
 }
 fn wire__crate__native__task_api__listener_pool_status_change_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
     data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
         flutter_rust_bridge::for_generated::TaskInfo {
             debug_name: "listener_pool_status_change",
-            port: None,
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
         },
         move || {
             let message = unsafe {
@@ -3070,25 +3320,32 @@ fn wire__crate__native__task_api__listener_pool_status_change_impl(
                 <flutter_rust_bridge::DartOpaque>::sse_decode(&mut deserializer),
             );
             deserializer.end();
-            transform_result_sse::<_, ()>((move || {
-                let output_ok = Result::<_, ()>::Ok(
-                    crate::native::task_api::listener_pool_status_change(api_dart_callback),
-                )?;
-                Ok(output_ok)
-            })())
+            move |context| async move {
+                transform_result_sse::<_, ()>(
+                    (move || async move {
+                        let output_ok = Result::<_, ()>::Ok(
+                            crate::native::task_api::listener_pool_status_change(api_dart_callback)
+                                .await,
+                        )?;
+                        Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
         },
     )
 }
 fn wire__crate__native__task_api__listener_task_status_change_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
     data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
         flutter_rust_bridge::for_generated::TaskInfo {
             debug_name: "listener_task_status_change",
-            port: None,
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
         },
         move || {
             let message = unsafe {
@@ -3105,12 +3362,18 @@ fn wire__crate__native__task_api__listener_task_status_change_impl(
                     <flutter_rust_bridge::DartOpaque>::sse_decode(&mut deserializer),
                 );
             deserializer.end();
-            transform_result_sse::<_, ()>((move || {
-                let output_ok = Result::<_, ()>::Ok(
-                    crate::native::task_api::listener_task_status_change(api_dart_callback),
-                )?;
-                Ok(output_ok)
-            })())
+            move |context| async move {
+                transform_result_sse::<_, ()>(
+                    (move || async move {
+                        let output_ok = Result::<_, ()>::Ok(
+                            crate::native::task_api::listener_task_status_change(api_dart_callback)
+                                .await,
+                        )?;
+                        Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
         },
     )
 }
@@ -3141,41 +3404,6 @@ fn wire__crate__native__task_api__pause_pool_impl(
                 transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
                     (move || async move {
                         let output_ok = crate::native::task_api::pause_pool().await?;
-                        Ok(output_ok)
-                    })()
-                    .await,
-                )
-            }
-        },
-    )
-}
-fn wire__crate__native__task_api__pool_init_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "pool_init",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            deserializer.end();
-            move |context| async move {
-                transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
-                    (move || async move {
-                        let output_ok = crate::native::task_api::pool_init().await?;
                         Ok(output_ok)
                     })()
                     .await,
@@ -3368,6 +3596,9 @@ flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
     flutter_rust_bridge::for_generated::RustAutoOpaqueInner<PathBuf>
 );
 flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
+    flutter_rust_bridge::for_generated::RustAutoOpaqueInner<TaskConfig>
+);
+flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
     flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Template<VideoDataInterim>>
 );
 
@@ -3406,6 +3637,16 @@ impl SseDecode for PathBuf {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut inner = <RustOpaqueMoi<
             flutter_rust_bridge::for_generated::RustAutoOpaqueInner<PathBuf>,
+        >>::sse_decode(deserializer);
+        return flutter_rust_bridge::for_generated::rust_auto_opaque_decode_owned(inner);
+    }
+}
+
+impl SseDecode for TaskConfig {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <RustOpaqueMoi<
+            flutter_rust_bridge::for_generated::RustAutoOpaqueInner<TaskConfig>,
         >>::sse_decode(deserializer);
         return flutter_rust_bridge::for_generated::rust_auto_opaque_decode_owned(inner);
     }
@@ -3489,6 +3730,16 @@ impl SseDecode
 }
 
 impl SseDecode for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<PathBuf>> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <usize>::sse_decode(deserializer);
+        return decode_rust_opaque_moi(inner);
+    }
+}
+
+impl SseDecode
+    for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<TaskConfig>>
+{
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut inner = <usize>::sse_decode(deserializer);
@@ -3837,18 +4088,6 @@ impl SseDecode for (u32, u8) {
     }
 }
 
-impl SseDecode for crate::app::TaskConfig {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut var_thread = <usize>::sse_decode(deserializer);
-        let mut var_tidyFolder = <PathBuf>::sse_decode(deserializer);
-        return crate::app::TaskConfig {
-            thread: var_thread,
-            tidy_folder: var_tidyFolder,
-        };
-    }
-}
-
 impl SseDecode for crate::task::TaskMetadata {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -3959,88 +4198,125 @@ fn pde_ffi_dispatcher_primary_impl(
 ) {
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
-        2 => wire__crate__native__db_api__get_home_videos_impl(port, ptr, rust_vec_len, data_len),
-        3 => wire__crate__native__db_api__get_task_videos_impl(port, ptr, rust_vec_len, data_len),
-        4 => wire__crate__native__db_api__switch_videos_hidden_impl(
+        4 => wire__crate__native__db_api__get_home_videos_impl(port, ptr, rust_vec_len, data_len),
+        5 => wire__crate__native__db_api__get_task_videos_impl(port, ptr, rust_vec_len, data_len),
+        6 => wire__crate__native__db_api__init_db_impl(port, ptr, rust_vec_len, data_len),
+        7 => wire__crate__native__db_api__switch_videos_hidden_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        5 => wire__crate__native__db_api__update_crawl_name_impl(port, ptr, rust_vec_len, data_len),
-        46 => {
+        8 => wire__crate__native__db_api__update_crawl_name_impl(port, ptr, rust_vec_len, data_len),
+        49 => {
             wire__crate__native__home_api__HomeVideoData_new_impl(port, ptr, rust_vec_len, data_len)
         }
-        47 => wire__crate__native__system_api__change_crawler_templates_priority_impl(
+        50 => wire__crate__native__system_api__change_crawler_templates_priority_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        49 => {
+        52 => {
             wire__crate__native__system_api__get_http_conf_impl(port, ptr, rust_vec_len, data_len)
         }
-        52 => {
+        55 => {
             wire__crate__native__system_api__get_task_conf_impl(port, ptr, rust_vec_len, data_len)
         }
-        53 => wire__crate__native__system_api__init_app_log_impl(port, ptr, rust_vec_len, data_len),
-        56 => wire__crate__native__system_api__open_in_default_software_impl(
+        56 => wire__crate__native__system_api__init_app_log_impl(port, ptr, rust_vec_len, data_len),
+        57 => wire__crate__native__system_api__init_cinarium_config_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        57 => wire__crate__native__system_api__open_in_explorer_impl(
+        58 => wire__crate__native__system_api__init_source_notify_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        59 => wire__crate__native__system_api__run_web_api_impl(port, ptr, rust_vec_len, data_len),
-        60 => wire__crate__native__system_api__stop_web_api_impl(port, ptr, rust_vec_len, data_len),
-        62 => wire__crate__native__system_api__switch_crawler_template_enabled_impl(
+        59 => wire__crate__native__system_api__listener_http_status_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        63 => wire__crate__native__system_api__update_http_port_impl(
+        60 => wire__crate__native__system_api__listener_untreated_file_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        64 => wire__crate__native__system_api__update_task_thread_impl(
+        61 => wire__crate__native__system_api__open_in_default_software_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        65 => wire__crate__native__system_api__update_task_tidy_folder_impl(
+        62 => wire__crate__native__system_api__open_in_explorer_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        66 => wire__crate__native__task_api__change_task_status_impl(
+        64 => wire__crate__native__system_api__run_web_api_impl(port, ptr, rust_vec_len, data_len),
+        65 => wire__crate__native__system_api__stop_web_api_impl(port, ptr, rust_vec_len, data_len),
+        67 => wire__crate__native__system_api__switch_crawler_template_enabled_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        67 => wire__crate__native__task_api__delete_task_impl(port, ptr, rust_vec_len, data_len),
-        68 => {
+        68 => wire__crate__native__system_api__update_http_port_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        69 => wire__crate__native__system_api__update_task_thread_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        70 => wire__crate__native__system_api__update_task_tidy_folder_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        71 => wire__crate__native__task_api__change_task_status_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        72 => wire__crate__native__task_api__delete_task_impl(port, ptr, rust_vec_len, data_len),
+        73 => {
             wire__crate__native__task_api__force_pause_pool_impl(port, ptr, rust_vec_len, data_len)
         }
-        70 => wire__crate__native__task_api__insertion_of_tasks_impl(
+        75 => wire__crate__native__task_api__init_pool_impl(port, ptr, rust_vec_len, data_len),
+        76 => wire__crate__native__task_api__insertion_of_tasks_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        73 => wire__crate__native__task_api__pause_pool_impl(port, ptr, rust_vec_len, data_len),
-        74 => wire__crate__native__task_api__pool_init_impl(port, ptr, rust_vec_len, data_len),
-        75 => wire__crate__native__task_api__resume_pool_impl(port, ptr, rust_vec_len, data_len),
+        77 => wire__crate__native__task_api__listener_pool_status_change_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        78 => wire__crate__native__task_api__listener_task_status_change_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        79 => wire__crate__native__task_api__pause_pool_impl(port, ptr, rust_vec_len, data_len),
+        80 => wire__crate__native__task_api__resume_pool_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -4053,233 +4329,217 @@ fn pde_ffi_dispatcher_sync_impl(
 ) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
-        1 => wire__crate__native__ListenerHandle_cancel_impl(ptr, rust_vec_len, data_len),
-        6 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_actor_impl(
+        1 => wire__crate__app__TaskConfig_thread_impl(ptr, rust_vec_len, data_len),
+        2 => wire__crate__app__TaskConfig_tidy_folder_impl(ptr, rust_vec_len, data_len),
+        3 => wire__crate__native__ListenerHandle_cancel_impl(ptr, rust_vec_len, data_len),
+        9 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_actor_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        7 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_actor_filter_impl(
+        10 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_actor_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        8 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_actor_videos_impl(
+        11 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_actor_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        9 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_director_impl(
+        12 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_director_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        10 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_director_filter_impl(
+        13 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_director_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        11 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_director_videos_impl(
+        14 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_director_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        12 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_filter_video_impl(
+        15 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_filter_video_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        13 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_maker_impl(
+        16 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_maker_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        14 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_maker_filter_impl(
+        17 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_maker_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        15 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_maker_videos_impl(
+        18 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_maker_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        16 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_publisher_impl(
+        19 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_publisher_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        17 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_publisher_filter_impl(
+        20 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_publisher_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        18 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_publisher_videos_impl(
+        21 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_publisher_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        19 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_series_impl(
+        22 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_series_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        20 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_series_filter_impl(
+        23 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_series_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        21 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_series_videos_impl(
+        24 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_series_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        22 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_tag_impl(
+        25 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_tag_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        23 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_tag_filter_impl(
+        26 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_tag_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        24 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_tag_videos_impl(
+        27 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_tag_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        25 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_videos_impl(
+        28 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        26 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_actor_impl(
+        29 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_actor_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        27 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_actor_filter_impl(
+        30 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_actor_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        28 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_actor_videos_impl(
+        31 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_actor_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        29 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_director_impl(
+        32 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_director_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        30 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_director_filter_impl(
+        33 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_director_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        31 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_director_videos_impl(
+        34 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_director_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        32 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_filter_video_impl(
+        35 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_filter_video_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        33 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_maker_impl(
+        36 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_maker_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        34 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_maker_filter_impl(
+        37 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_maker_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        35 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_maker_videos_impl(
+        38 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_maker_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        36 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_publisher_impl(
+        39 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_publisher_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        37 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_publisher_filter_impl(
+        40 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_publisher_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        38 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_publisher_videos_impl(
+        41 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_publisher_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        39 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_series_impl(
+        42 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_series_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        40 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_series_filter_impl(
+        43 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_series_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        41 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_series_videos_impl(
+        44 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_series_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        42 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_tag_impl(
+        45 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_tag_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        43 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_tag_filter_impl(
+        46 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_tag_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        44 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_tag_videos_impl(
+        47 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_tag_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        45 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_videos_impl(
+        48 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        48 => {
+        51 => {
             wire__crate__native__system_api__get_crawler_templates_impl(ptr, rust_vec_len, data_len)
         }
-        50 => wire__crate__native__system_api__get_http_status_impl(ptr, rust_vec_len, data_len),
-        51 => wire__crate__native__system_api__get_local_ip_impl(ptr, rust_vec_len, data_len),
-        54 => {
-            wire__crate__native__system_api__listener_http_status_impl(ptr, rust_vec_len, data_len)
-        }
-        55 => wire__crate__native__system_api__listener_untreated_file_impl(
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        58 => wire__crate__native__system_api__path_buf_2_string_impl(ptr, rust_vec_len, data_len),
-        61 => wire__crate__native__system_api__string_2_path_buf_impl(ptr, rust_vec_len, data_len),
-        69 => wire__crate__native__task_api__get_pool_data_impl(ptr, rust_vec_len, data_len),
-        71 => wire__crate__native__task_api__listener_pool_status_change_impl(
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        72 => wire__crate__native__task_api__listener_task_status_change_impl(
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
+        53 => wire__crate__native__system_api__get_http_status_impl(ptr, rust_vec_len, data_len),
+        54 => wire__crate__native__system_api__get_local_ip_impl(ptr, rust_vec_len, data_len),
+        63 => wire__crate__native__system_api__path_buf_2_string_impl(ptr, rust_vec_len, data_len),
+        66 => wire__crate__native__system_api__string_2_path_buf_impl(ptr, rust_vec_len, data_len),
+        74 => wire__crate__native__task_api__get_pool_data_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -4327,6 +4587,21 @@ impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for FrbWrapper<
 
 impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<PathBuf>> for PathBuf {
     fn into_into_dart(self) -> FrbWrapper<PathBuf> {
+        self.into()
+    }
+}
+
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for FrbWrapper<TaskConfig> {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self.0)
+            .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for FrbWrapper<TaskConfig> {}
+
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<TaskConfig>> for TaskConfig {
+    fn into_into_dart(self) -> FrbWrapper<TaskConfig> {
         self.into()
     }
 }
@@ -4475,22 +4750,6 @@ impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<crate::native::task_api::PoolS
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::app::TaskConfig {
-    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        [
-            self.thread.into_into_dart().into_dart(),
-            self.tidy_folder.into_into_dart().into_dart(),
-        ]
-        .into_dart()
-    }
-}
-impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::app::TaskConfig {}
-impl flutter_rust_bridge::IntoIntoDart<crate::app::TaskConfig> for crate::app::TaskConfig {
-    fn into_into_dart(self) -> crate::app::TaskConfig {
-        self
-    }
-}
-// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::task::TaskMetadata {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
@@ -4606,6 +4865,13 @@ impl SseEncode for PathBuf {
     }
 }
 
+impl SseEncode for TaskConfig {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<TaskConfig>>>::sse_encode(flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self), serializer);
+    }
+}
+
 impl SseEncode for Template<VideoDataInterim> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -4679,6 +4945,17 @@ impl SseEncode
 }
 
 impl SseEncode for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<PathBuf>> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        let (ptr, size) = self.sse_encode_raw();
+        <usize>::sse_encode(ptr, serializer);
+        <i32>::sse_encode(size, serializer);
+    }
+}
+
+impl SseEncode
+    for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<TaskConfig>>
+{
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         let (ptr, size) = self.sse_encode_raw();
@@ -4964,14 +5241,6 @@ impl SseEncode for (u32, u8) {
     }
 }
 
-impl SseEncode for crate::app::TaskConfig {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <usize>::sse_encode(self.thread, serializer);
-        <PathBuf>::sse_encode(self.tidy_folder, serializer);
-    }
-}
-
 impl SseEncode for crate::task::TaskMetadata {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -5071,6 +5340,7 @@ mod io {
     // Section: imports
 
     use super::*;
+    use crate::app::*;
     use crate::native::home_api::*;
     use crate::native::system_api::*;
     use crate::native::*;
@@ -5128,6 +5398,20 @@ mod io {
     }
 
     #[no_mangle]
+    pub extern "C" fn frbgen_bridge_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTaskConfig(
+        ptr: *const std::ffi::c_void,
+    ) {
+        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<TaskConfig>>::increment_strong_count(ptr as _);
+    }
+
+    #[no_mangle]
+    pub extern "C" fn frbgen_bridge_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTaskConfig(
+        ptr: *const std::ffi::c_void,
+    ) {
+        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<TaskConfig>>::decrement_strong_count(ptr as _);
+    }
+
+    #[no_mangle]
     pub extern "C" fn frbgen_bridge_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTemplateVideoDataInterim(
         ptr: *const std::ffi::c_void,
     ) {
@@ -5153,6 +5437,7 @@ mod web {
     // Section: imports
 
     use super::*;
+    use crate::app::*;
     use crate::native::home_api::*;
     use crate::native::system_api::*;
     use crate::native::*;
@@ -5209,6 +5494,20 @@ mod web {
         ptr: *const std::ffi::c_void,
     ) {
         MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<PathBuf>>::decrement_strong_count(ptr as _);
+    }
+
+    #[wasm_bindgen]
+    pub fn rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTaskConfig(
+        ptr: *const std::ffi::c_void,
+    ) {
+        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<TaskConfig>>::increment_strong_count(ptr as _);
+    }
+
+    #[wasm_bindgen]
+    pub fn rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTaskConfig(
+        ptr: *const std::ffi::c_void,
+    ) {
+        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<TaskConfig>>::decrement_strong_count(ptr as _);
     }
 
     #[wasm_bindgen]

@@ -76,10 +76,10 @@ class MenuItemState extends State<MenuItem>
     Color? color;
 
     if (_isHovering && route != widget.route) {
-      color = Theme.of(context).colorScheme.onBackground.withOpacity(0.03);
+      color = Theme.of(context).colorScheme.onSurface.withOpacity(0.03);
     } else {
       color = route == widget.route
-          ? Theme.of(context).colorScheme.onBackground.withOpacity(0.1)
+          ? Theme.of(context).colorScheme.onSurface.withOpacity(0.1)
           : null;
     }
 
@@ -127,7 +127,6 @@ class MenuItemState extends State<MenuItem>
                         onLoaded: (composition) {
                           _lottieController.duration =
                               const Duration(milliseconds: 500);
-                          // _controller.repeat(); // 动画结束后重复播放
                         },
                       )
                     else

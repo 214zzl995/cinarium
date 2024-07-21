@@ -40,6 +40,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_PathBufPtr => wire
       .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPathBuf;
 
+  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_TaskConfigPtr =>
+      wire.rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTaskConfig;
+
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_TemplateVideoDataInterimPtr => wire
           .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTemplateVideoDataInterim;
@@ -63,6 +66,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           dynamic raw);
 
   @protected
+  TaskConfig
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTaskConfig(
+          dynamic raw);
+
+  @protected
   TemplateVideoDataInterim
       dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTemplateVideoDataInterim(
           dynamic raw);
@@ -75,6 +83,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   HomeVideoData
       dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
+          dynamic raw);
+
+  @protected
+  TaskConfig
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTaskConfig(
           dynamic raw);
 
   @protected
@@ -123,6 +136,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   PathBuf
       dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPathBuf(
+          dynamic raw);
+
+  @protected
+  TaskConfig
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTaskConfig(
           dynamic raw);
 
   @protected
@@ -221,9 +239,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   (int, int) dco_decode_record_u_32_u_8(dynamic raw);
 
   @protected
-  TaskConfig dco_decode_task_config(dynamic raw);
-
-  @protected
   TaskMetadata dco_decode_task_metadata(dynamic raw);
 
   @protected
@@ -272,6 +287,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
+  TaskConfig
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTaskConfig(
+          SseDeserializer deserializer);
+
+  @protected
   TemplateVideoDataInterim
       sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTemplateVideoDataInterim(
           SseDeserializer deserializer);
@@ -284,6 +304,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   HomeVideoData
       sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
+          SseDeserializer deserializer);
+
+  @protected
+  TaskConfig
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTaskConfig(
           SseDeserializer deserializer);
 
   @protected
@@ -316,6 +341,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   PathBuf
       sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPathBuf(
+          SseDeserializer deserializer);
+
+  @protected
+  TaskConfig
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTaskConfig(
           SseDeserializer deserializer);
 
   @protected
@@ -423,9 +453,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   (int, int) sse_decode_record_u_32_u_8(SseDeserializer deserializer);
 
   @protected
-  TaskConfig sse_decode_task_config(SseDeserializer deserializer);
-
-  @protected
   TaskMetadata sse_decode_task_metadata(SseDeserializer deserializer);
 
   @protected
@@ -477,6 +504,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTaskConfig(
+          TaskConfig self, SseSerializer serializer);
+
+  @protected
+  void
       sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTemplateVideoDataInterim(
           TemplateVideoDataInterim self, SseSerializer serializer);
 
@@ -489,6 +521,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
           HomeVideoData self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTaskConfig(
+          TaskConfig self, SseSerializer serializer);
 
   @protected
   void sse_encode_Chrono_Local(DateTime self, SseSerializer serializer);
@@ -539,6 +576,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPathBuf(
           PathBuf self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTaskConfig(
+          TaskConfig self, SseSerializer serializer);
 
   @protected
   void
@@ -650,9 +692,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_record_u_32_u_8((int, int) self, SseSerializer serializer);
 
   @protected
-  void sse_encode_task_config(TaskConfig self, SseSerializer serializer);
-
-  @protected
   void sse_encode_task_metadata(TaskMetadata self, SseSerializer serializer);
 
   @protected
@@ -726,6 +765,18 @@ class RustLibWire implements BaseWire {
           .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPathBuf(
               ptr);
 
+  void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTaskConfig(
+          int ptr) =>
+      wasmModule
+          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTaskConfig(
+              ptr);
+
+  void rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTaskConfig(
+          int ptr) =>
+      wasmModule
+          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTaskConfig(
+              ptr);
+
   void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTemplateVideoDataInterim(
           int ptr) =>
       wasmModule
@@ -767,6 +818,14 @@ extension type RustLibWasmModule._(JSObject _) implements JSObject {
 
   external void
       rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPathBuf(
+          int ptr);
+
+  external void
+      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTaskConfig(
+          int ptr);
+
+  external void
+      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTaskConfig(
           int ptr);
 
   external void

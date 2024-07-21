@@ -14,7 +14,7 @@ class HomeController extends ChangeNotifier {
   final Map<int, FilterValue> _directorFilter = {};
   final Map<int, FilterValue> _tagFilter = {};
   final Map<int, FilterValue> _seriesFilter = {};
-  final FilterSize _sizeFilter = FilterSize(0 as BigInt, 0 as BigInt);
+  final FilterSize _sizeFilter = FilterSize(BigInt.zero, BigInt.zero);
   final FilterDuration _durationFilter = FilterDuration(0, 0);
   final FilterReleaseTime _releaseTimeFilter =
       FilterReleaseTime(DateTime(1970), DateTime.now());

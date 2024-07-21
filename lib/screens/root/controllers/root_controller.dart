@@ -6,7 +6,11 @@ import '../../../routes/app_pages.dart';
 
 class RootController with ChangeNotifier {
   RootController() {
-    _listenerHandle = listenerHttpStatus(
+    initListener();
+  }
+
+  initListener() async {
+    _listenerHandle = await listenerHttpStatus(
         dartCallback: (status) => {
               _httpStatus = status,
               notifyListeners(),

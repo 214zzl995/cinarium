@@ -25,8 +25,12 @@ class RetrieveController with ChangeNotifier {
   RetrieveController() {
     getVideoFiles();
 
+    initListener();
+  }
+
+  initListener() async {
     _listenerHandle =
-        listenerUntreatedFile(dartCallback: untreatedFileHasChangeHandle);
+        await listenerUntreatedFile(dartCallback: untreatedFileHasChangeHandle);
   }
 
   void untreatedFileHasChangeHandle() async {

@@ -21,7 +21,7 @@ class SizeFilterPanel extends StatelessWidget {
                   builder: (context, value, child) {
                     final min = value.$1;
                     final max = value.$2;
-                    if (min != 0 as BigInt || max != 0 as BigInt) {
+                    if (min != BigInt.zero || max != BigInt.zero) {
                       return Positioned(
                           top: -5,
                           right: -5,

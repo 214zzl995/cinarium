@@ -10,6 +10,7 @@ pub struct Source {
 }
 
 impl Source {
+    #[allow(dead_code)]
     pub async fn insert(path: PathBuf) -> anyhow::Result<u32> {
         let path = path.to_str().unwrap();
         let id = sqlx::query!(
@@ -23,6 +24,7 @@ impl Source {
         Ok(id)
     }
 
+    #[allow(dead_code)]
     pub async fn delete(&self) -> anyhow::Result<()> {
         sqlx::query!("delete from source where id = ?1", self.id)
             .execute(get_pool().await)
@@ -30,6 +32,7 @@ impl Source {
         Ok(())
     }
 
+    #[allow(dead_code)]
     pub async fn query_all() -> anyhow::Result<Vec<Source>> {
         let sources = sqlx::query_as!(
             Source,

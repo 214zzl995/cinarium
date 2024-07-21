@@ -5,8 +5,6 @@ setlocal ENABLEDELAYEDEXPANSION
 
 SET BASEDIR=%~dp0
 
-set FLUTTER_ROOT=C:\Users\Leri\Path\flutter
-
 if not exist "%CARGOKIT_TOOL_TEMP_DIR%" (
     mkdir "%CARGOKIT_TOOL_TEMP_DIR%"
 )

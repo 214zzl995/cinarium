@@ -32,6 +32,10 @@ pub struct CrawlerTemplate {
 }
 
 pub async fn init_crawler_templates() -> anyhow::Result<()> {
+    if CRAWLER_TEMPLATES.initialized() {
+        return Ok(());
+    }
+
     let templates = Mutex::new(CrawlerTemplate::get_crawler_templates().await?);
 
     CRAWLER_TEMPLATES.set(templates).unwrap();
@@ -248,6 +252,7 @@ fn find_any_subtitles(path: &PathBuf, comparison_name: &str) -> Option<PathBuf> 
         None::<PathBuf>
     })
 }
+
 
 fn check_single_video_file(path: &PathBuf, video_file_name: &str) -> bool {
     let dir = WalkDir::new(path);

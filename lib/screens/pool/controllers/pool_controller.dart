@@ -1,3 +1,4 @@
+import 'package:bridge/call_rust/native.dart';
 import 'package:bridge/call_rust/native/task_api.dart' as task_api;
 import 'package:bridge/call_rust/native/task_api.dart';
 import 'package:bridge/call_rust/task.dart';
@@ -5,12 +6,21 @@ import 'package:flutter/cupertino.dart';
 
 class PoolController with ChangeNotifier {
   PoolController() {
-    task_api.listenerTaskStatusChange(dartCallback: onTaskStatusChange);
-    task_api.listenerPoolStatusChange(dartCallback: onPoolStatusChange);
-
+    initListener();
     _poolData = task_api.getPoolData();
     _poolStatus = _poolData.status;
   }
+
+  void initListener() async {
+    _taskStatusListener =
+         await task_api.listenerTaskStatusChange(dartCallback: onTaskStatusChange);
+    _poolStatusListener =
+    await task_api.listenerPoolStatusChange(dartCallback: onPoolStatusChange);
+  }
+
+  late ListenerHandle _taskStatusListener;
+
+  late ListenerHandle _poolStatusListener;
 
   late PoolStatus _poolStatus;
 
@@ -46,6 +56,13 @@ class PoolController with ChangeNotifier {
 
   void changeTaskStatus(String id, TaskStatus status) {
     task_api.changeTaskStatus(id: id, status: status);
+  }
+
+  @override
+  void dispose() {
+    _taskStatusListener.cancel();
+    _poolStatusListener.cancel();
+    super.dispose();
   }
 
   (int, TaskStatus) removeTask(String uuid) {

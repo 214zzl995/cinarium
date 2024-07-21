@@ -8,7 +8,7 @@ import '../native.dart';
 import '../task.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-Future<void> poolInit() => RustLib.instance.api.crateNativeTaskApiPoolInit();
+Future<void> initPool() => RustLib.instance.api.crateNativeTaskApiInitPool();
 
 Future<List<String>> insertionOfTasks({required List<TaskMetadata> tasks}) =>
     RustLib.instance.api.crateNativeTaskApiInsertionOfTasks(tasks: tasks);
@@ -31,12 +31,12 @@ Future<void> changeTaskStatus(
 
 PoolData getPoolData() => RustLib.instance.api.crateNativeTaskApiGetPoolData();
 
-ListenerHandle listenerTaskStatusChange(
+Future<ListenerHandle> listenerTaskStatusChange(
         {required FutureOr<void> Function(String, TaskStatus) dartCallback}) =>
     RustLib.instance.api
         .crateNativeTaskApiListenerTaskStatusChange(dartCallback: dartCallback);
 
-ListenerHandle listenerPoolStatusChange(
+Future<ListenerHandle> listenerPoolStatusChange(
         {required FutureOr<void> Function(PoolStatus) dartCallback}) =>
     RustLib.instance.api
         .crateNativeTaskApiListenerPoolStatusChange(dartCallback: dartCallback);

@@ -42,10 +42,18 @@ class SmovbookTheme extends ChangeNotifier {
           brightness: Brightness.light,
         ).harmonized();
 
+        _lightColorScheme = _lightColorScheme!.copyWith(
+          surface: _lightColorScheme!.surface.withOpacity(0.3),
+        );
+
         _darkColorScheme = ColorScheme.fromSeed(
           seedColor: accentColor,
           brightness: Brightness.dark,
         ).harmonized();
+
+        _darkColorScheme = _darkColorScheme!.copyWith(
+          surface: _darkColorScheme!.surface.withOpacity(0.3),
+        );
 
         return;
       }
@@ -70,10 +78,18 @@ class SmovbookTheme extends ChangeNotifier {
       brightness: Brightness.light,
     ).harmonized();
 
+    _lightColorScheme = _lightColorScheme!.copyWith(
+      surface: _lightColorScheme!.surface.withOpacity(0.3),
+    );
+
     _darkColorScheme = ColorScheme.fromSeed(
       seedColor: color,
       brightness: Brightness.dark,
     ).harmonized();
+
+    _darkColorScheme = _darkColorScheme!.copyWith(
+      surface: _darkColorScheme!.surface.withOpacity(0.3),
+    );
 
     notifyListeners();
   }
@@ -113,21 +129,22 @@ class SmovbookTheme extends ChangeNotifier {
   Color get effectBackgroundColor {
     if (windowEffect == WindowEffect.disabled) {
       if (mode == ThemeMode.light) {
-        return lightColorScheme!.background;
+        return lightColorScheme!.surface;
       } else if (mode == ThemeMode.dark) {
-        return darkColorScheme!.background;
+        return darkColorScheme!.surface;
       } else {
         final brightness =
             WidgetsBinding.instance.platformDispatcher.platformBrightness;
         if (brightness == Brightness.light) {
-          return lightColorScheme!.background;
+          return lightColorScheme!.surface;
         } else if (brightness == Brightness.dark) {
-          return darkColorScheme!.background;
+          return darkColorScheme!.surface;
         } else {
           return Colors.transparent;
         }
       }
     } else {
+      debugPrint("asdasdasd");
       return Colors.transparent;
     }
   }
@@ -148,7 +165,7 @@ class SmovbookTheme extends ChangeNotifier {
         WindowEffect.acrylic,
         WindowEffect.disabled,
       ].contains(effect)
-          ? Theme.of(context).colorScheme.background
+          ? Theme.of(context).colorScheme.surface
           : Colors.transparent,
       dark: brightness == Brightness.dark,
     );

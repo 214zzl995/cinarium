@@ -57,7 +57,7 @@ class TaskPoolSetting extends StatelessWidget {
                 width: 1,
               ),
             ),
-            child: const Column(
+            child: Column(
               children: [CrawlerTempSetting()],
             )),
       ],
@@ -89,69 +89,71 @@ class TaskPoolSetting extends StatelessWidget {
   }
 
   Widget _buildTidyFolder(BuildContext context) {
-    return Selector<SettingsController, String>(selector: (_, settings) {
-      return pathBuf2String(path: settings.taskConfig.tidyFolder);
-    }, builder: (selectorContext, tidyFolder, __) {
-      return Row(
-        children: [
-          Expanded(
-              flex: 1,
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.folder_open_outlined,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: Text(
-                      'Tidy Folder',
-                      style: TextStyle(
-                          color:
-                              Theme.of(context).colorScheme.onSurfaceVariant),
-                    ),
-                  ),
-                ],
-              )),
-          Row(
+    return Selector<SettingsController, String>(
+        selector: (_, settings) => settings.taskConfig.tidyFolder,
+        builder: (selectorContext, tidyFolder, __) {
+
+          return Row(
             children: [
-              AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 100),
-                  child: SizedBox(
-                    key: ValueKey(tidyFolder),
-                    width: 200,
-                    child: MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: GestureDetector(
-                        onTap: () {
-                          openInExplorer(path: tidyFolder);
-                        },
+              Expanded(
+                  flex: 1,
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.folder_open_outlined,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20),
                         child: Text(
-                          tidyFolder,
-                          textAlign: TextAlign.right,
+                          'Tidy Folder',
                           style: TextStyle(
-                            color: Theme.of(context).colorScheme.onSurface,
-                            fontSize: 12,
-                          ),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant),
                         ),
                       ),
-                    ),
+                    ],
                   )),
-              const SizedBox(
-                width: 10,
-              ),
-              SizedBox(
-                width: 100,
-                child: ElevatedButton(
-                    onPressed: () {
-                      updateTaskTidyFolder();
-                    },
-                    child: const Icon(Icons.folder_open_outlined)),
+              Row(
+                children: [
+                  AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 100),
+                      child: SizedBox(
+                        key: ValueKey(tidyFolder),
+                        width: 200,
+                        child: MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: GestureDetector(
+                            onTap: () {
+                              openInExplorer(path: string2PathBuf(path: tidyFolder));
+                            },
+                            child: Text(
+                              tidyFolder,
+                              textAlign: TextAlign.right,
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  SizedBox(
+                    width: 100,
+                    child: ElevatedButton(
+                        onPressed: () {
+                          context.read<SettingsController>().updateTidyFolder();
+                        },
+                        child: const Icon(Icons.folder_open_outlined)),
+                  ),
+                ],
               ),
             ],
-          ),
-        ],
-      );
-    });
+          );
+        });
   }
 }

@@ -21,7 +21,7 @@ class Menu extends StatelessWidget {
             children: [
               ...List.of(Routes.values.where((e) => e.isTop).map((route) {
                 switch (route) {
-                  case Routes.hfs:
+                  case Routes.http:
                     return Stack(
                       children: [
                         MenuItem(
@@ -39,7 +39,7 @@ class Menu extends StatelessWidget {
                               color: context
                                   .select<RootController, Color>((value) {
                                 if (value.httpStatus) {
-                                  return Colors.red;
+                                  return Theme.of(context).colorScheme.primary;
                                 } else {
                                   return Colors.transparent;
                                 }

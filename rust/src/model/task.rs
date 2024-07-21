@@ -9,12 +9,13 @@ pub async fn get_tasks() -> anyhow::Result<Vec<(String, Task<TaskMetadata>)>> {
     let pool = get_pool().await;
     let tasks = sqlx::query!(
         r#"
-           select a.id as "id!: String", coalesce(c.name,coalesce(crawl_name,filename)) as "name!: String", status as "status!: u8", coalesce(max(b.msg),'') as msg, video_id as "video_id!:u32"
-           from task a,
-                task_msg b,
-                video c
-           where b.task_id = a.id
-             and a.video_id = c.id
+           select a.id     as "id!: String", COALESCE(c.name, COALESCE(crawl_name, filename)) as "name!: String",
+                  a.status as "status!: u8", COALESCE(MAX(b.msg), '') as msg, a.video_id as "video_id!: u32"
+           from task a
+                inner join task_msg b on b.task_id = a.id
+                inner join video c on a.video_id = c.id
+            group by a.id, a.status, c.name, c.crawl_name, c.filename, a.video_id
+            having MAX(b.msg) is not null
         "#,
     )
     .fetch_all(pool)
@@ -128,6 +129,7 @@ impl CrawlerTemplate {
         Ok(templates)
     }
 
+    #[allow(dead_code)]
     pub async fn insert(&self) -> anyhow::Result<()> {
         let pool = get_pool().await;
         sqlx::query!(

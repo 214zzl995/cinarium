@@ -56,6 +56,7 @@ impl<T: Serialize> Res<T> {
 }
 
 impl Res<()> {
+    #[allow(dead_code)]
     pub fn with_msg(msg: &str) -> Self {
         Self {
             code: 200,

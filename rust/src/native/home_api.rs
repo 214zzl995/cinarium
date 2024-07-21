@@ -7,6 +7,7 @@ use crate::model::{
     HomeVideo,
 };
 
+#[allow(dead_code)]
 pub enum FilterType {
     Actor,
     Tag,
@@ -42,6 +43,7 @@ pub struct HomeVideoData {
 }
 
 impl HomeVideoData {
+    #[allow(dead_code)]
     pub async fn new() -> anyhow::Result<Self> {
         let videos = HomeVideo::query_all().await?;
         let filter_video = videos.clone();
@@ -162,6 +164,7 @@ impl HomeVideoData {
         })
     }
 
+    #[allow(dead_code)]
     fn add_filter(&mut self, filter_type: FilterType, id: u32) {
         if self.maker_filter.is_empty()
             && self.publisher_filter.is_empty()
@@ -194,6 +197,7 @@ impl HomeVideoData {
         }
     }
 
+    #[allow(dead_code)]
     fn remove_filter(&mut self, filter_type: FilterType, id: u32) {
         match filter_type {
             FilterType::Actor => {
@@ -227,6 +231,7 @@ impl HomeVideoData {
         }
     }
 
+    #[allow(dead_code)]
     fn clear_filter(&mut self) {
         self.maker_filter.clear();
         self.publisher_filter.clear();

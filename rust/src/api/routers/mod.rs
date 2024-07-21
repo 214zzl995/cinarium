@@ -34,6 +34,7 @@ fn data_api() -> Router {
         .route("/video/:id", get(video::get_video_detail))
 }
 
+#[allow(dead_code)]
 pub async fn handler_404() -> (StatusCode, &'static str) {
     (StatusCode::NOT_FOUND, "nothing to see here")
 }

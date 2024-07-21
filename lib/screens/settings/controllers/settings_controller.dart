@@ -33,40 +33,47 @@ class SettingsController with ChangeNotifier {
 
   void changeThread(BigInt thread) {
     updateTaskThread(thread: thread).then(
-      (_) {
-        final conf = _taskConfig.copyWith(
-          thread: thread,
-        );
-
-        _taskConfig = conf;
+      (_) async {
+        _taskConfig = await getTaskConf();
         notifyListeners();
       },
     );
   }
 
-  void switchTemplateEnabled(int id) {
+  void updateTidyFolder() {
+    updateTaskTidyFolder().then(
+      (_) async {
+        _taskConfig = await getTaskConf();
+        notifyListeners();
+      },
+    );
+  }
+
+  switchTemplateEnabled(int id) async {
+    await switchCrawlerTemplateEnabled(id: id);
     final index = _crawlerTemplates.indexWhere((element) => element.id == id);
     final temp = _crawlerTemplates[index];
     final newTemp = temp.copyWith(enabled: !temp.enabled);
     _crawlerTemplates[index] = newTemp;
-
-    switchCrawlerTemplateEnabled(id: id).then((_) {
-      notifyListeners();
-    });
+    notifyListeners();
   }
 
-  void changeCrawlerTemplatePriority(List<(int, int)> prioritys) {
-    for (final pair in prioritys) {
-      final index =
-          _crawlerTemplates.indexWhere((element) => element.id == pair.$1);
-      final temp = _crawlerTemplates[index];
-      final newTemp = temp.copyWith(priority: pair.$2);
-      _crawlerTemplates[index] = newTemp;
-    }
+  void modelDisableChange(bool? value, int index) {
+    switchTemplateEnabled(_crawlerTemplates[index].id);
+  }
 
-    changeCrawlerTemplatesPriority(prioritys: prioritys).then((_) {
-      notifyListeners();
-    });
+  void onTemplatesReorder(int oldIndex, int newIndex) {
+    _crawlerTemplates = [...List.from(_crawlerTemplates)..removeAt(oldIndex)]
+      ..insert(newIndex, _crawlerTemplates[oldIndex]);
+    List.generate(
+        _crawlerTemplates.length,
+        (index) => _crawlerTemplates[index] =
+            _crawlerTemplates[index].copyWith(priority: index));
+
+    notifyListeners();
+
+    changeCrawlerTemplatesPriority(
+        prioritys: crawlerTemplates.map((e) => (e.id, e.priority)).toList());
   }
 
   init() async {
@@ -80,7 +87,7 @@ class SettingsController with ChangeNotifier {
 
   TaskConfig get taskConfig => _taskConfig;
 
-  List<CrawlerTemplate> get crawlerTemps => _crawlerTemplates;
+  List<CrawlerTemplate> get crawlerTemplates => _crawlerTemplates;
 }
 
 extension HttpConfigsExt on HttpConfig {
@@ -89,17 +96,6 @@ extension HttpConfigsExt on HttpConfig {
   }) {
     return HttpConfig(
       port: port ?? this.port,
-    );
-  }
-}
-
-extension TaskConfigExt on TaskConfig {
-  TaskConfig copyWith({String? tidyFolder, BigInt? thread}) {
-    return TaskConfig(
-      tidyFolder: tidyFolder == null
-          ? this.tidyFolder
-          : string2PathBuf(path: tidyFolder),
-      thread: thread ?? this.thread,
     );
   }
 }

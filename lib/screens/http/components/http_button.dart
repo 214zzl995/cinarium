@@ -1,4 +1,5 @@
 import 'package:bridge/call_rust/native/system_api.dart';
+import 'package:cinarium/screens/http/controllers/http_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -23,29 +24,41 @@ class HttpButtonState extends State<HttpButton>
     super.initState();
     _lottieController = AnimationController(vsync: this);
     _lottieController.duration = const Duration(milliseconds: 200);
-    if (context.read<RootController>().httpStatus &&
+    if (context
+        .read<RootController>()
+        .httpStatus &&
         !_lottieController.isAnimating) {
       _lottieController.value = 1;
     }
   }
 
   @override
+  void dispose() {
+    _lottieController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(HttpButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    context.select<HttpController, bool>((value) {
+      if (value.httpStatus) {
+        _lottieController.forward();
+      }else{
+        _lottieController.reverse();
+      }
+      return value.httpStatus;
+    });
     return SizedBox(
         width: 60,
         height: 60,
         child: FilledButton.tonal(
             onPressed: () async {
-              if (_lottieController.isAnimating) {
-                return;
-              }
-              if (_lottieController.value > 0) {
-                await stopWebApi();
-                _lottieController.reverse();
-                return;
-              }
-              await runWebApi();
-              _lottieController.forward();
+             context.read<HttpController>().switchHttp();
             },
             style: ButtonStyle(
               shape: WidgetStateProperty.all(

@@ -32,7 +32,7 @@ static LOG_GUARD: OnceLock<WorkerGuard> = OnceLock::new();
 
 pub fn register_log() -> anyhow::Result<()> {
     if LOG_REGISTERED.load(Ordering::SeqCst) {
-        return Err(anyhow::anyhow!("Log already registered"));
+        return Ok(());
     }
 
     let log_directory = if cfg!(debug_assertions) {

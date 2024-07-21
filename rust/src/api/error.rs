@@ -8,6 +8,7 @@ pub enum ApiError {
     #[error("database : `{0}`")]
     DataBase(#[from] sqlx::Error),
     #[error("other : `{0}`")]
+    #[allow(dead_code)]
     Other(String),
 }
 

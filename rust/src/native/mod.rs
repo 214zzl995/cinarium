@@ -7,7 +7,7 @@ pub mod db_api;
 pub mod task_api;
 pub mod home_api;
 
-pub struct ListenerHandle(oneshot::Sender<()>);
+pub struct ListenerHandle(#[allow(dead_code)] oneshot::Sender<()>);
 
 impl ListenerHandle {
     #[frb(sync)]

@@ -3,11 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:cinarium/screens/root/page/root_page.dart';
 import '../models/theme.dart';
 import '../screens/debug/page/debug_page.dart';
-import '../screens/hfs/page/hfs_page.dart';
 import '../screens/home/page/home_page.dart';
+import '../screens/http/page/http_page.dart';
 import '../screens/pool/page/pool_page.dart';
 import '../screens/retrieve/page/retrieve_page.dart';
-import '../screens/settings/page/hfs_settings_page.dart';
+import '../screens/settings/page/http_settings_page.dart';
 import '../screens/settings/page/settings_page.dart';
 import '../screens/settings/page/system_settings_page.dart';
 import '../screens/settings/page/task_pool_settings_page.dart';
@@ -82,10 +82,10 @@ class AppPages {
           StatefulShellBranch(
             routes: <RouteBase>[
               GoRoute(
-                path: Routes.hfs.router,
-                name: Routes.hfs.name,
+                path: Routes.http.router,
+                name: Routes.http.name,
                 pageBuilder: (context, state) => SlideUpFadeTransitionPage(
-                    key: state.pageKey, child: const HfsPage()),
+                    key: state.pageKey, child: const HttpPage()),
               ),
             ],
           ),
@@ -141,10 +141,10 @@ class AppPages {
                 key: state.pageKey, child: const DebugPage()),
           ),
           GoRoute(
-            path: Routes.hfs.router,
-            name: Routes.hfs.name,
+            path: Routes.http.router,
+            name: Routes.http.name,
             pageBuilder: (context, state) => SlideUpFadeTransitionPage(
-                key: state.pageKey, child: const HfsPage()),
+                key: state.pageKey, child: const HttpPage()),
           ),
           GoRoute(
             path: Routes.pool.router,

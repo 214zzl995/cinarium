@@ -31,6 +31,11 @@ struct SourceNotify {
 }
 
 pub async fn init_source_notify() -> anyhow::Result<()> {
+
+    if SOURCE_NOTIFY.get().is_some() {
+        return Ok(());
+    }
+
     let sources = Source::query_all().await?;
 
     let (tx, rx) = unbounded_channel();

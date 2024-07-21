@@ -56,14 +56,16 @@ pub fn get_task_manager() -> RunnerManger<TaskMetadata> {
                         change_status,
                     ));
 
-                    LISTENER
+                    let sender = LISTENER
                         .get_or_init(|| {
                             let (tx, _) =
                                 tokio::sync::watch::channel((task_id.clone(), status.clone()));
                             tx
-                        })
-                        .send((task_id, status))
-                        .unwrap();
+                        });
+
+                        if sender.receiver_count() > 0 {
+                            sender.send((task_id, status)).unwrap();
+                        }
                 },
             )
         })

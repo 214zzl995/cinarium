@@ -61,7 +61,7 @@ class CrawlNameFieldState extends State<CrawlNameField> {
         closeCrawlName(context);
       }
     }
-    return true;
+    return false;
   }
 
   void _onTextChanged(String value) {

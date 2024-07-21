@@ -41,7 +41,7 @@ pub fn listener_http_status(
     dart_callback: impl Fn(bool) -> DartFnFuture<()> + Send + Sync + 'static,
 ) -> ListenerHandle {
     let (handle_tx, handle_rx) = oneshot::channel::<()>();
-    tokio::spawn(async move {
+    flutter_rust_bridge::spawn(async move {
         let mut rx = LISTENER
             .get_or_init(|| {
                 let (tx, _) = watch::channel(false);
@@ -78,7 +78,7 @@ pub async fn stop_web_api() -> anyhow::Result<()> {
 }
 
 pub fn web_api_status() -> anyhow::Result<bool> {
-    Ok(HANDLE.get().context("")?.lock().is_some())
+    Ok(HANDLE.get_or_init(|| Mutex::new(None)).lock().is_some())
 }
 
 async fn shutdown_signal() {

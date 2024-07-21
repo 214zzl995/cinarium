@@ -7,7 +7,7 @@ class HfsSettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const settingsPanel = [
-      HfsSetting(),
+      HttpSetting(),
     ];
     return ListView.builder(
       itemCount: settingsPanel.length,

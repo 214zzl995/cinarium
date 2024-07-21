@@ -1,14 +1,14 @@
 use flutter_rust_bridge::frb;
 use parking_lot::Mutex;
 use serde::{Deserialize, Serialize};
+use tokio::sync::OnceCell;
 
 use std::{
     env,
     path::{Path, PathBuf},
 };
 
-static CINARIUM_CONFIG: tokio::sync::OnceCell<Mutex<CinariumConfig>> =
-    tokio::sync::OnceCell::const_new();
+static CINARIUM_CONFIG: OnceCell<Mutex<CinariumConfig>> = OnceCell::const_new();
 
 #[derive(Deserialize, Serialize, Clone, Default, Debug)]
 pub struct CinariumConfig {
@@ -19,13 +19,11 @@ pub struct CinariumConfig {
 }
 
 #[derive(Deserialize, Serialize, Clone, Debug)]
-#[frb(non_opaque)]
 pub struct HttpConfig {
     pub port: u16,
 }
 
 #[derive(Deserialize, Serialize, Clone, Debug)]
-#[frb(non_opaque)]
 pub struct TaskConfig {
     pub thread: usize,
     pub tidy_folder: PathBuf,
@@ -33,6 +31,9 @@ pub struct TaskConfig {
 
 /// Initialization error software exit
 pub async fn init_cinarium_config() -> anyhow::Result<()> {
+    if CINARIUM_CONFIG.initialized() {
+        return Ok(());
+    }
     let config = CinariumConfig::new().await?;
     CINARIUM_CONFIG
         .set(Mutex::new(config))

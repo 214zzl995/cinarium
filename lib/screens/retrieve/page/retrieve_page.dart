@@ -12,6 +12,7 @@ class RetrievePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: Padding(
         padding: const EdgeInsets.only(top: 5, bottom: 10),
         child: Column(

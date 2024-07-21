@@ -8,6 +8,8 @@ import '../lib.dart';
 import '../model/video.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+Future<void> initDb() => RustLib.instance.api.crateNativeDbApiInitDb();
+
 Future<List<HomeVideo>> getHomeVideos() =>
     RustLib.instance.api.crateNativeDbApiGetHomeVideos();
 

@@ -19,6 +19,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: Stack(
         children: [
           Positioned(
@@ -83,12 +84,9 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildBody() {
-    return Selector<HomeController, (bool, bool)>(
-        selector: (_, homeController) =>
-            (homeController.loading, homeController.videoList.isEmpty),
-        builder: (selectorContext, data, __) {
-          final loading = data.$1;
-          final empty = data.$2;
+    return Selector<HomeController, bool>(
+        selector: (_, homeController) => (homeController.loading),
+        builder: (selectorContext, loading, __) {
           return AnimatedSwitcher(
             duration: const Duration(milliseconds: 500),
             child: loading
@@ -103,17 +101,22 @@ class HomePage extends StatelessWidget {
                       height: 500,
                     ),
                   )
-                : empty
-                    ? Lottie.asset(
-                        'assets/lottie/animation_empty_whale.json',
-                        repeat: true,
-                        animate: true,
-                        reverse: false,
-                        frameRate: FrameRate.max,
-                        width: 500,
-                        height: 500,
-                      )
-                    : _buildScrollingView(selectorContext),
+                : Selector<HomeController, bool>(
+                    builder: (selectorContext, empty, __) {
+                      return empty
+                          ? Lottie.asset(
+                              'assets/lottie/home_empty.json',
+                              repeat: true,
+                              animate: true,
+                              reverse: false,
+                              frameRate: FrameRate.max,
+                              width: 500,
+                              height: 500,
+                            )
+                          : _buildScrollingView(selectorContext);
+                    },
+                    selector: (_, homeController) =>
+                        homeController.videoList.isEmpty),
             transitionBuilder: (child, animation) => FadeTransition(
               opacity: animation,
               child: child,
@@ -131,14 +134,6 @@ class HomePage extends StatelessWidget {
           height: 50,
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
-            boxShadow: [
-              BoxShadow(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
-                spreadRadius: 1,
-                blurRadius: 1,
-                offset: const Offset(0, -1),
-              ),
-            ],
           ),
           child: const Row(
             children: [

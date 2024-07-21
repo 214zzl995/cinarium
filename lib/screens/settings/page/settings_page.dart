@@ -13,6 +13,7 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final route = GoRouter.of(context).location;
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       //后续添加 顶部导航 滚动缩放
       appBar: AppBar(
         title: const Row(

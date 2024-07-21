@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:cinarium/screens/root/controllers/root_controller.dart';
 import 'package:cinarium/screens/settings/components/port_field.dart';
 
-class HfsSetting extends StatelessWidget {
-  const HfsSetting({super.key});
+class HttpSetting extends StatelessWidget {
+  const HttpSetting({super.key});
 
   @override
   Widget build(BuildContext context) {

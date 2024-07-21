@@ -13,6 +13,12 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 Future<void> initAppLog() =>
     RustLib.instance.api.crateNativeSystemApiInitAppLog();
 
+Future<void> initCinariumConfig() =>
+    RustLib.instance.api.crateNativeSystemApiInitCinariumConfig();
+
+Future<void> initSourceNotify() =>
+    RustLib.instance.api.crateNativeSystemApiInitSourceNotify();
+
 Future<void> runWebApi() =>
     RustLib.instance.api.crateNativeSystemApiRunWebApi();
 
@@ -39,7 +45,7 @@ Future<void> updateTaskThread({required BigInt thread}) =>
 Future<void> updateTaskTidyFolder() =>
     RustLib.instance.api.crateNativeSystemApiUpdateTaskTidyFolder();
 
-Future<void> openInExplorer({required String path}) =>
+Future<void> openInExplorer({required PathBuf path}) =>
     RustLib.instance.api.crateNativeSystemApiOpenInExplorer(path: path);
 
 Future<void> openInDefaultSoftware({required String path}) =>
@@ -63,12 +69,12 @@ String pathBuf2String({required PathBuf path}) =>
 PathBuf string2PathBuf({required String path}) =>
     RustLib.instance.api.crateNativeSystemApiString2PathBuf(path: path);
 
-ListenerHandle listenerHttpStatus(
+Future<ListenerHandle> listenerHttpStatus(
         {required FutureOr<void> Function(bool) dartCallback}) =>
     RustLib.instance.api
         .crateNativeSystemApiListenerHttpStatus(dartCallback: dartCallback);
 
-ListenerHandle listenerUntreatedFile(
+Future<ListenerHandle> listenerUntreatedFile(
         {required FutureOr<void> Function() dartCallback}) =>
     RustLib.instance.api
         .crateNativeSystemApiListenerUntreatedFile(dartCallback: dartCallback);

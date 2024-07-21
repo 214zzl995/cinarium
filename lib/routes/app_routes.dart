@@ -3,7 +3,7 @@ part of 'app_pages.dart';
 enum Routes {
   home(true),
   retrieve(true),
-  hfs(true),
+  http(true),
   pool(true),
   debug(true, isDebug: true),
   settings(false, initial: SettingRoutes.theme);

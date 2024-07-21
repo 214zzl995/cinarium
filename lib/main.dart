@@ -1,4 +1,7 @@
 import 'package:bridge/call_rust/frb_generated.dart';
+import 'package:bridge/call_rust/native/db_api.dart';
+import 'package:bridge/call_rust/native/system_api.dart';
+import 'package:bridge/call_rust/native/task_api.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
@@ -20,6 +23,11 @@ void main(List<String> args) async {
   await HiveUtil.install();
   await TrayUtil.initSystemTray();
   await RustLib.init();
+  await initAppLog();
+  await initDb();
+  await initCinariumConfig();
+  await initPool();
+  await initSourceNotify();
 
   if (DesktopUtil().isDesktop) {
     await flutter_acrylic.Window.initialize();
