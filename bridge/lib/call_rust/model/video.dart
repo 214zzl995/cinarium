@@ -4,8 +4,18 @@
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
 import '../frb_generated.dart';
-import '../lib.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+
+// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Metadata>>
+abstract class Metadata implements RustOpaqueInterface {
+  String get extension_;
+
+  String get filename;
+
+  String get path;
+
+  BigInt get size;
+}
 
 class HomeVideo {
   final int id;
@@ -48,41 +58,6 @@ class HomeVideo {
           duration == other.duration &&
           thumbnailRatio == other.thumbnailRatio &&
           matedata == other.matedata;
-}
-
-class Metadata {
-  final String hash;
-  final String filename;
-  final PathBuf path;
-  final BigInt size;
-  final String extension_;
-
-  const Metadata({
-    required this.hash,
-    required this.filename,
-    required this.path,
-    required this.size,
-    required this.extension_,
-  });
-
-  @override
-  int get hashCode =>
-      hash.hashCode ^
-      filename.hashCode ^
-      path.hashCode ^
-      size.hashCode ^
-      extension_.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Metadata &&
-          runtimeType == other.runtimeType &&
-          hash == other.hash &&
-          filename == other.filename &&
-          path == other.path &&
-          size == other.size &&
-          extension_ == other.extension_;
 }
 
 class UntreatedVideo {

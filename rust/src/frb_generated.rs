@@ -26,6 +26,7 @@
 // Section: imports
 
 use crate::app::*;
+use crate::model::video::*;
 use crate::native::home_api::*;
 use crate::native::system_api::*;
 use crate::native::*;
@@ -42,7 +43,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.1.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -168382060;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 11940069;
 
 // Section: executor
 
@@ -141,6 +142,198 @@ fn wire__crate__app__TaskConfig_tidy_folder_impl(
                     Result::<_, ()>::Ok(crate::app::TaskConfig::tidy_folder(&*api_that_guard))?;
                 Ok(output_ok)
             })())
+        },
+    )
+}
+fn wire__crate__model__video__Metadata_get_extension_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "Metadata_get_extension",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Metadata>,
+            >>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
+                (move || {
+                    let mut api_that_guard = None;
+                    let decode_indices_ =
+                        flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
+                            flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                                &api_that, 0, false,
+                            ),
+                        ]);
+                    for i in decode_indices_ {
+                        match i {
+                            0 => api_that_guard = Some(api_that.lockable_decode_sync_ref()),
+                            _ => unreachable!(),
+                        }
+                    }
+                    let api_that_guard = api_that_guard.unwrap();
+                    let output_ok = crate::model::video::Metadata::get_extension(&*api_that_guard)?;
+                    Ok(output_ok)
+                })(),
+            )
+        },
+    )
+}
+fn wire__crate__model__video__Metadata_get_filename_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "Metadata_get_filename",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Metadata>,
+            >>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
+                (move || {
+                    let mut api_that_guard = None;
+                    let decode_indices_ =
+                        flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
+                            flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                                &api_that, 0, false,
+                            ),
+                        ]);
+                    for i in decode_indices_ {
+                        match i {
+                            0 => api_that_guard = Some(api_that.lockable_decode_sync_ref()),
+                            _ => unreachable!(),
+                        }
+                    }
+                    let api_that_guard = api_that_guard.unwrap();
+                    let output_ok = crate::model::video::Metadata::get_filename(&*api_that_guard)?;
+                    Ok(output_ok)
+                })(),
+            )
+        },
+    )
+}
+fn wire__crate__model__video__Metadata_get_path_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "Metadata_get_path",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Metadata>,
+            >>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
+                (move || {
+                    let mut api_that_guard = None;
+                    let decode_indices_ =
+                        flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
+                            flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                                &api_that, 0, false,
+                            ),
+                        ]);
+                    for i in decode_indices_ {
+                        match i {
+                            0 => api_that_guard = Some(api_that.lockable_decode_sync_ref()),
+                            _ => unreachable!(),
+                        }
+                    }
+                    let api_that_guard = api_that_guard.unwrap();
+                    let output_ok = crate::model::video::Metadata::get_path(&*api_that_guard)?;
+                    Ok(output_ok)
+                })(),
+            )
+        },
+    )
+}
+fn wire__crate__model__video__Metadata_get_size_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "Metadata_get_size",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Metadata>,
+            >>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
+                (move || {
+                    let mut api_that_guard = None;
+                    let decode_indices_ =
+                        flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
+                            flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                                &api_that, 0, false,
+                            ),
+                        ]);
+                    for i in decode_indices_ {
+                        match i {
+                            0 => api_that_guard = Some(api_that.lockable_decode_sync_ref()),
+                            _ => unreachable!(),
+                        }
+                    }
+                    let api_that_guard = api_that_guard.unwrap();
+                    let output_ok = crate::model::video::Metadata::get_size(&*api_that_guard)?;
+                    Ok(output_ok)
+                })(),
+            )
         },
     )
 }
@@ -3593,6 +3786,9 @@ flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
     flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ListenerHandle>
 );
 flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
+    flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Metadata>
+);
+flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
     flutter_rust_bridge::for_generated::RustAutoOpaqueInner<PathBuf>
 );
 flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
@@ -3627,6 +3823,16 @@ impl SseDecode for ListenerHandle {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut inner = <RustOpaqueMoi<
             flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ListenerHandle>,
+        >>::sse_decode(deserializer);
+        return flutter_rust_bridge::for_generated::rust_auto_opaque_decode_owned(inner);
+    }
+}
+
+impl SseDecode for Metadata {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <RustOpaqueMoi<
+            flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Metadata>,
         >>::sse_decode(deserializer);
         return flutter_rust_bridge::for_generated::rust_auto_opaque_decode_owned(inner);
     }
@@ -3729,6 +3935,16 @@ impl SseDecode
     }
 }
 
+impl SseDecode
+    for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Metadata>>
+{
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <usize>::sse_decode(deserializer);
+        return decode_rust_opaque_moi(inner);
+    }
+}
+
 impl SseDecode for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<PathBuf>> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -3812,7 +4028,7 @@ impl SseDecode for crate::model::video::HomeVideo {
         let mut var_releaseTime = <String>::sse_decode(deserializer);
         let mut var_duration = <u32>::sse_decode(deserializer);
         let mut var_thumbnailRatio = <f32>::sse_decode(deserializer);
-        let mut var_matedata = <crate::model::video::Metadata>::sse_decode(deserializer);
+        let mut var_matedata = <Metadata>::sse_decode(deserializer);
         return crate::model::video::HomeVideo {
             id: var_id,
             name: var_name,
@@ -3999,24 +4215,6 @@ impl SseDecode for Vec<crate::model::video::UntreatedVideo> {
     }
 }
 
-impl SseDecode for crate::model::video::Metadata {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut var_hash = <String>::sse_decode(deserializer);
-        let mut var_filename = <String>::sse_decode(deserializer);
-        let mut var_path = <PathBuf>::sse_decode(deserializer);
-        let mut var_size = <u64>::sse_decode(deserializer);
-        let mut var_extension_ = <String>::sse_decode(deserializer);
-        return crate::model::video::Metadata {
-            hash: var_hash,
-            filename: var_filename,
-            path: var_path,
-            size: var_size,
-            extension: var_extension_,
-        };
-    }
-}
-
 impl SseDecode for crate::task::PoolData {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -4172,7 +4370,7 @@ impl SseDecode for crate::model::video::UntreatedVideo {
         let mut var_id = <u32>::sse_decode(deserializer);
         let mut var_crawlName = <String>::sse_decode(deserializer);
         let mut var_isHidden = <bool>::sse_decode(deserializer);
-        let mut var_matedata = <crate::model::video::Metadata>::sse_decode(deserializer);
+        let mut var_matedata = <Metadata>::sse_decode(deserializer);
         return crate::model::video::UntreatedVideo {
             id: var_id,
             crawl_name: var_crawlName,
@@ -4198,125 +4396,127 @@ fn pde_ffi_dispatcher_primary_impl(
 ) {
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
-        4 => wire__crate__native__db_api__get_home_videos_impl(port, ptr, rust_vec_len, data_len),
-        5 => wire__crate__native__db_api__get_task_videos_impl(port, ptr, rust_vec_len, data_len),
-        6 => wire__crate__native__db_api__init_db_impl(port, ptr, rust_vec_len, data_len),
-        7 => wire__crate__native__db_api__switch_videos_hidden_impl(
+        8 => wire__crate__native__db_api__get_home_videos_impl(port, ptr, rust_vec_len, data_len),
+        9 => wire__crate__native__db_api__get_task_videos_impl(port, ptr, rust_vec_len, data_len),
+        10 => wire__crate__native__db_api__init_db_impl(port, ptr, rust_vec_len, data_len),
+        11 => wire__crate__native__db_api__switch_videos_hidden_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        8 => wire__crate__native__db_api__update_crawl_name_impl(port, ptr, rust_vec_len, data_len),
-        49 => {
+        12 => {
+            wire__crate__native__db_api__update_crawl_name_impl(port, ptr, rust_vec_len, data_len)
+        }
+        53 => {
             wire__crate__native__home_api__HomeVideoData_new_impl(port, ptr, rust_vec_len, data_len)
         }
-        50 => wire__crate__native__system_api__change_crawler_templates_priority_impl(
+        54 => wire__crate__native__system_api__change_crawler_templates_priority_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        52 => {
+        56 => {
             wire__crate__native__system_api__get_http_conf_impl(port, ptr, rust_vec_len, data_len)
         }
-        55 => {
+        59 => {
             wire__crate__native__system_api__get_task_conf_impl(port, ptr, rust_vec_len, data_len)
         }
-        56 => wire__crate__native__system_api__init_app_log_impl(port, ptr, rust_vec_len, data_len),
-        57 => wire__crate__native__system_api__init_cinarium_config_impl(
+        60 => wire__crate__native__system_api__init_app_log_impl(port, ptr, rust_vec_len, data_len),
+        61 => wire__crate__native__system_api__init_cinarium_config_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        58 => wire__crate__native__system_api__init_source_notify_impl(
+        62 => wire__crate__native__system_api__init_source_notify_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        59 => wire__crate__native__system_api__listener_http_status_impl(
+        63 => wire__crate__native__system_api__listener_http_status_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        60 => wire__crate__native__system_api__listener_untreated_file_impl(
+        64 => wire__crate__native__system_api__listener_untreated_file_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        61 => wire__crate__native__system_api__open_in_default_software_impl(
+        65 => wire__crate__native__system_api__open_in_default_software_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        62 => wire__crate__native__system_api__open_in_explorer_impl(
+        66 => wire__crate__native__system_api__open_in_explorer_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        64 => wire__crate__native__system_api__run_web_api_impl(port, ptr, rust_vec_len, data_len),
-        65 => wire__crate__native__system_api__stop_web_api_impl(port, ptr, rust_vec_len, data_len),
-        67 => wire__crate__native__system_api__switch_crawler_template_enabled_impl(
+        68 => wire__crate__native__system_api__run_web_api_impl(port, ptr, rust_vec_len, data_len),
+        69 => wire__crate__native__system_api__stop_web_api_impl(port, ptr, rust_vec_len, data_len),
+        71 => wire__crate__native__system_api__switch_crawler_template_enabled_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        68 => wire__crate__native__system_api__update_http_port_impl(
+        72 => wire__crate__native__system_api__update_http_port_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        69 => wire__crate__native__system_api__update_task_thread_impl(
+        73 => wire__crate__native__system_api__update_task_thread_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        70 => wire__crate__native__system_api__update_task_tidy_folder_impl(
+        74 => wire__crate__native__system_api__update_task_tidy_folder_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        71 => wire__crate__native__task_api__change_task_status_impl(
+        75 => wire__crate__native__task_api__change_task_status_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        72 => wire__crate__native__task_api__delete_task_impl(port, ptr, rust_vec_len, data_len),
-        73 => {
+        76 => wire__crate__native__task_api__delete_task_impl(port, ptr, rust_vec_len, data_len),
+        77 => {
             wire__crate__native__task_api__force_pause_pool_impl(port, ptr, rust_vec_len, data_len)
         }
-        75 => wire__crate__native__task_api__init_pool_impl(port, ptr, rust_vec_len, data_len),
-        76 => wire__crate__native__task_api__insertion_of_tasks_impl(
+        79 => wire__crate__native__task_api__init_pool_impl(port, ptr, rust_vec_len, data_len),
+        80 => wire__crate__native__task_api__insertion_of_tasks_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        77 => wire__crate__native__task_api__listener_pool_status_change_impl(
+        81 => wire__crate__native__task_api__listener_pool_status_change_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        78 => wire__crate__native__task_api__listener_task_status_change_impl(
+        82 => wire__crate__native__task_api__listener_task_status_change_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        79 => wire__crate__native__task_api__pause_pool_impl(port, ptr, rust_vec_len, data_len),
-        80 => wire__crate__native__task_api__resume_pool_impl(port, ptr, rust_vec_len, data_len),
+        83 => wire__crate__native__task_api__pause_pool_impl(port, ptr, rust_vec_len, data_len),
+        84 => wire__crate__native__task_api__resume_pool_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -4331,215 +4531,219 @@ fn pde_ffi_dispatcher_sync_impl(
     match func_id {
         1 => wire__crate__app__TaskConfig_thread_impl(ptr, rust_vec_len, data_len),
         2 => wire__crate__app__TaskConfig_tidy_folder_impl(ptr, rust_vec_len, data_len),
-        3 => wire__crate__native__ListenerHandle_cancel_impl(ptr, rust_vec_len, data_len),
-        9 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_actor_impl(
+        3 => wire__crate__model__video__Metadata_get_extension_impl(ptr, rust_vec_len, data_len),
+        4 => wire__crate__model__video__Metadata_get_filename_impl(ptr, rust_vec_len, data_len),
+        5 => wire__crate__model__video__Metadata_get_path_impl(ptr, rust_vec_len, data_len),
+        6 => wire__crate__model__video__Metadata_get_size_impl(ptr, rust_vec_len, data_len),
+        7 => wire__crate__native__ListenerHandle_cancel_impl(ptr, rust_vec_len, data_len),
+        13 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_actor_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        10 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_actor_filter_impl(
+        14 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_actor_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        11 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_actor_videos_impl(
+        15 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_actor_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        12 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_director_impl(
+        16 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_director_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        13 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_director_filter_impl(
+        17 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_director_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        14 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_director_videos_impl(
+        18 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_director_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        15 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_filter_video_impl(
+        19 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_filter_video_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        16 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_maker_impl(
+        20 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_maker_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        17 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_maker_filter_impl(
+        21 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_maker_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        18 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_maker_videos_impl(
+        22 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_maker_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        19 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_publisher_impl(
+        23 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_publisher_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        20 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_publisher_filter_impl(
+        24 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_publisher_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        21 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_publisher_videos_impl(
+        25 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_publisher_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        22 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_series_impl(
+        26 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_series_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        23 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_series_filter_impl(
+        27 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_series_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        24 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_series_videos_impl(
+        28 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_series_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        25 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_tag_impl(
+        29 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_tag_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        26 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_tag_filter_impl(
+        30 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_tag_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        27 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_tag_videos_impl(
+        31 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_tag_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        28 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_videos_impl(
+        32 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        29 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_actor_impl(
+        33 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_actor_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        30 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_actor_filter_impl(
+        34 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_actor_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        31 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_actor_videos_impl(
+        35 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_actor_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        32 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_director_impl(
+        36 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_director_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        33 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_director_filter_impl(
+        37 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_director_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        34 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_director_videos_impl(
+        38 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_director_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        35 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_filter_video_impl(
+        39 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_filter_video_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        36 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_maker_impl(
+        40 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_maker_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        37 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_maker_filter_impl(
+        41 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_maker_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        38 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_maker_videos_impl(
+        42 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_maker_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        39 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_publisher_impl(
+        43 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_publisher_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        40 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_publisher_filter_impl(
+        44 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_publisher_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        41 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_publisher_videos_impl(
+        45 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_publisher_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        42 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_series_impl(
+        46 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_series_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        43 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_series_filter_impl(
+        47 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_series_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        44 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_series_videos_impl(
+        48 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_series_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        45 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_tag_impl(
+        49 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_tag_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        46 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_tag_filter_impl(
+        50 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_tag_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        47 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_tag_videos_impl(
+        51 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_tag_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        48 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_videos_impl(
+        52 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        51 => {
+        55 => {
             wire__crate__native__system_api__get_crawler_templates_impl(ptr, rust_vec_len, data_len)
         }
-        53 => wire__crate__native__system_api__get_http_status_impl(ptr, rust_vec_len, data_len),
-        54 => wire__crate__native__system_api__get_local_ip_impl(ptr, rust_vec_len, data_len),
-        63 => wire__crate__native__system_api__path_buf_2_string_impl(ptr, rust_vec_len, data_len),
-        66 => wire__crate__native__system_api__string_2_path_buf_impl(ptr, rust_vec_len, data_len),
-        74 => wire__crate__native__task_api__get_pool_data_impl(ptr, rust_vec_len, data_len),
+        57 => wire__crate__native__system_api__get_http_status_impl(ptr, rust_vec_len, data_len),
+        58 => wire__crate__native__system_api__get_local_ip_impl(ptr, rust_vec_len, data_len),
+        67 => wire__crate__native__system_api__path_buf_2_string_impl(ptr, rust_vec_len, data_len),
+        70 => wire__crate__native__system_api__string_2_path_buf_impl(ptr, rust_vec_len, data_len),
+        78 => wire__crate__native__task_api__get_pool_data_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -4572,6 +4776,21 @@ impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for FrbWrapper<
 
 impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<ListenerHandle>> for ListenerHandle {
     fn into_into_dart(self) -> FrbWrapper<ListenerHandle> {
+        self.into()
+    }
+}
+
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for FrbWrapper<Metadata> {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self.0)
+            .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for FrbWrapper<Metadata> {}
+
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<Metadata>> for Metadata {
+    fn into_into_dart(self) -> FrbWrapper<Metadata> {
         self.into()
     }
 }
@@ -4687,27 +4906,6 @@ impl flutter_rust_bridge::IntoDart for crate::app::HttpConfig {
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::app::HttpConfig {}
 impl flutter_rust_bridge::IntoIntoDart<crate::app::HttpConfig> for crate::app::HttpConfig {
     fn into_into_dart(self) -> crate::app::HttpConfig {
-        self
-    }
-}
-// Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::model::video::Metadata {
-    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        [
-            self.hash.into_into_dart().into_dart(),
-            self.filename.into_into_dart().into_dart(),
-            self.path.into_into_dart().into_dart(),
-            self.size.into_into_dart().into_dart(),
-            self.extension.into_into_dart().into_dart(),
-        ]
-        .into_dart()
-    }
-}
-impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::model::video::Metadata {}
-impl flutter_rust_bridge::IntoIntoDart<crate::model::video::Metadata>
-    for crate::model::video::Metadata
-{
-    fn into_into_dart(self) -> crate::model::video::Metadata {
         self
     }
 }
@@ -4858,6 +5056,13 @@ impl SseEncode for ListenerHandle {
     }
 }
 
+impl SseEncode for Metadata {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Metadata>>>::sse_encode(flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self), serializer);
+    }
+}
+
 impl SseEncode for PathBuf {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -4944,6 +5149,17 @@ impl SseEncode
     }
 }
 
+impl SseEncode
+    for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Metadata>>
+{
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        let (ptr, size) = self.sse_encode_raw();
+        <usize>::sse_encode(ptr, serializer);
+        <i32>::sse_encode(size, serializer);
+    }
+}
+
 impl SseEncode for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<PathBuf>> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -5020,7 +5236,7 @@ impl SseEncode for crate::model::video::HomeVideo {
         <String>::sse_encode(self.release_time, serializer);
         <u32>::sse_encode(self.duration, serializer);
         <f32>::sse_encode(self.thumbnail_ratio, serializer);
-        <crate::model::video::Metadata>::sse_encode(self.matedata, serializer);
+        <Metadata>::sse_encode(self.matedata, serializer);
     }
 }
 
@@ -5162,17 +5378,6 @@ impl SseEncode for Vec<crate::model::video::UntreatedVideo> {
         for item in self {
             <crate::model::video::UntreatedVideo>::sse_encode(item, serializer);
         }
-    }
-}
-
-impl SseEncode for crate::model::video::Metadata {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <String>::sse_encode(self.hash, serializer);
-        <String>::sse_encode(self.filename, serializer);
-        <PathBuf>::sse_encode(self.path, serializer);
-        <u64>::sse_encode(self.size, serializer);
-        <String>::sse_encode(self.extension, serializer);
     }
 }
 
@@ -5318,7 +5523,7 @@ impl SseEncode for crate::model::video::UntreatedVideo {
         <u32>::sse_encode(self.id, serializer);
         <String>::sse_encode(self.crawl_name, serializer);
         <bool>::sse_encode(self.is_hidden, serializer);
-        <crate::model::video::Metadata>::sse_encode(self.matedata, serializer);
+        <Metadata>::sse_encode(self.matedata, serializer);
     }
 }
 
@@ -5341,6 +5546,7 @@ mod io {
 
     use super::*;
     use crate::app::*;
+    use crate::model::video::*;
     use crate::native::home_api::*;
     use crate::native::system_api::*;
     use crate::native::*;
@@ -5381,6 +5587,20 @@ mod io {
         ptr: *const std::ffi::c_void,
     ) {
         MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ListenerHandle>>::decrement_strong_count(ptr as _);
+    }
+
+    #[no_mangle]
+    pub extern "C" fn frbgen_bridge_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMetadata(
+        ptr: *const std::ffi::c_void,
+    ) {
+        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Metadata>>::increment_strong_count(ptr as _);
+    }
+
+    #[no_mangle]
+    pub extern "C" fn frbgen_bridge_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMetadata(
+        ptr: *const std::ffi::c_void,
+    ) {
+        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Metadata>>::decrement_strong_count(ptr as _);
     }
 
     #[no_mangle]
@@ -5438,6 +5658,7 @@ mod web {
 
     use super::*;
     use crate::app::*;
+    use crate::model::video::*;
     use crate::native::home_api::*;
     use crate::native::system_api::*;
     use crate::native::*;
@@ -5480,6 +5701,20 @@ mod web {
         ptr: *const std::ffi::c_void,
     ) {
         MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ListenerHandle>>::decrement_strong_count(ptr as _);
+    }
+
+    #[wasm_bindgen]
+    pub fn rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMetadata(
+        ptr: *const std::ffi::c_void,
+    ) {
+        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Metadata>>::increment_strong_count(ptr as _);
+    }
+
+    #[wasm_bindgen]
+    pub fn rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMetadata(
+        ptr: *const std::ffi::c_void,
+    ) {
+        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Metadata>>::decrement_strong_count(ptr as _);
     }
 
     #[wasm_bindgen]

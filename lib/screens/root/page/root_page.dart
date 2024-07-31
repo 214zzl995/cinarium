@@ -56,10 +56,8 @@ class RootPage extends StatelessWidget {
               ],
             ),
             //windowButtonHeight: 33,
-            backgroundColor:
-                Theme.of(context).extension<CustomColors>()!.danger,
-            surfaceTintColor:
-                Theme.of(context).extension<CustomColors>()!.danger,
+            backgroundColor: Colors.transparent,
+            surfaceTintColor: Colors.transparent,
           ),
           body: Row(
             crossAxisAlignment: CrossAxisAlignment.start,

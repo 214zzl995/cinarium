@@ -60,8 +60,7 @@ class MovCard extends StatelessWidget {
                                     child: ExtendedImage(
                                       image: ExtendedResizeImage(
                                         ExtendedFileImageProvider(
-                                          File(
-                                              "${video.matedata.path}/img/thumbnail.webp"),
+                                          File("${video.matedata.path}/img/thumbnail.webp"),
                                           imageCacheName: video.name,
                                         ),
                                         compressionRatio: null,

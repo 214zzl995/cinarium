@@ -89,21 +89,21 @@ class HomeController extends ChangeNotifier {
 
     if (filterList.isNotEmpty) {
       _homeVideoData.filterVideo = filterList.where((element) {
-        if (_sizeFilter.min != 0 as BigInt || _sizeFilter.max != 0 as BigInt) {
-          if (_sizeFilter.min == 0 as BigInt) {
+        if (_sizeFilter.min != BigInt.zero || _sizeFilter.max != BigInt.zero) {
+          if (_sizeFilter.min == BigInt.zero) {
             if (element.matedata.size >= _sizeFilter.max) {
               return false;
             }
           }
 
-          if (_sizeFilter.max == 0 as BigInt) {
+          if (_sizeFilter.max == BigInt.zero) {
             if (element.matedata.size <= _sizeFilter.min) {
               return false;
             }
           }
 
-          if (_sizeFilter.max != 0 as BigInt &&
-              _sizeFilter.min != 0 as BigInt) {
+          if (_sizeFilter.max != BigInt.zero &&
+              _sizeFilter.min != BigInt.zero) {
             if (element.matedata.size <= _sizeFilter.min ||
                 element.matedata.size >= _sizeFilter.max) {
               return false;

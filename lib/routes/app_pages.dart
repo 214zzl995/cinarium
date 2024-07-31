@@ -119,41 +119,41 @@ class AppPages {
           GoRoute(
             path: Routes.home.router,
             name: Routes.home.name,
-            pageBuilder: (context, state) => SlideUpFadeTransitionPage(
+            pageBuilder: (context, state) => FadeTransitionPage(
                 key: state.pageKey, child: const HomePage()),
           ),
           GoRoute(
             path: Routes.settings.router,
             name: Routes.settings.name,
-            pageBuilder: (context, state) => SlideUpFadeTransitionPage(
+            pageBuilder: (context, state) => FadeTransitionPage(
                 key: state.pageKey, child: const ThemeSettingsPage()),
           ),
           GoRoute(
             path: Routes.retrieve.router,
             name: Routes.retrieve.name,
-            pageBuilder: (context, state) => SlideUpFadeTransitionPage(
+            pageBuilder: (context, state) => FadeTransitionPage(
                 key: state.pageKey, child: const RetrievePage()),
           ),
           GoRoute(
             path: Routes.debug.router,
             name: Routes.debug.name,
-            pageBuilder: (context, state) => SlideUpFadeTransitionPage(
+            pageBuilder: (context, state) => FadeTransitionPage(
                 key: state.pageKey, child: const DebugPage()),
           ),
           GoRoute(
             path: Routes.http.router,
             name: Routes.http.name,
-            pageBuilder: (context, state) => SlideUpFadeTransitionPage(
+            pageBuilder: (context, state) => FadeTransitionPage(
                 key: state.pageKey, child: const HttpPage()),
           ),
           GoRoute(
             path: Routes.pool.router,
             name: Routes.pool.name,
-            pageBuilder: (context, state) => SlideUpFadeTransitionPage(
+            pageBuilder: (context, state) => FadeTransitionPage(
                 key: state.pageKey, child: const PoolPage()),
           ),
           ShellRoute(
-              pageBuilder: (context, state, child) => SlideUpFadeTransitionPage(
+              pageBuilder: (context, state, child) => FadeTransitionPage(
                   key: state.pageKey, child: SettingsPage(child: child)),
               routes: [
                 GoRoute(

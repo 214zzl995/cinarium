@@ -46,7 +46,7 @@ pub struct DetailVideo {
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone, sqlx::FromRow)]
-#[frb(non_opaque)]
+#[frb(opaque)]
 pub struct Metadata {
     pub hash: String,
     pub filename: String,
@@ -1056,8 +1056,8 @@ impl Attr {
             Self,
             r#"
                 select a.id as "id!:u32", name as "name!"
-                from tag a,video_tags 
-                where tag_id = a.id 
+                from actor a,video_actors 
+                where actor_id = a.id 
                 group by a.id,name
             "#
         )

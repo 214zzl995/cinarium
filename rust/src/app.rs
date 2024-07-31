@@ -1,4 +1,3 @@
-use flutter_rust_bridge::frb;
 use parking_lot::Mutex;
 use serde::{Deserialize, Serialize};
 use tokio::sync::OnceCell;
