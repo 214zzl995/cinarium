@@ -131,9 +131,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Map<int, String> dco_decode_Map_u_32_String(dynamic raw);
 
   @protected
-  Map<int, HomeVideo> dco_decode_Map_u_32_home_video(dynamic raw);
-
-  @protected
   Map<int, Uint32List> dco_decode_Map_u_32_list_prim_u_32_strict(dynamic raw);
 
   @protected
@@ -213,9 +210,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       dco_decode_list_record_string_task_operational_data(dynamic raw);
 
   @protected
-  List<(int, HomeVideo)> dco_decode_list_record_u_32_home_video(dynamic raw);
-
-  @protected
   List<(int, Uint32List)> dco_decode_list_record_u_32_list_prim_u_32_strict(
       dynamic raw);
 
@@ -240,9 +234,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   (String, TaskOperationalData) dco_decode_record_string_task_operational_data(
       dynamic raw);
-
-  @protected
-  (int, HomeVideo) dco_decode_record_u_32_home_video(dynamic raw);
 
   @protected
   (int, Uint32List) dco_decode_record_u_32_list_prim_u_32_strict(dynamic raw);
@@ -346,10 +337,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Map<int, String> sse_decode_Map_u_32_String(SseDeserializer deserializer);
 
   @protected
-  Map<int, HomeVideo> sse_decode_Map_u_32_home_video(
-      SseDeserializer deserializer);
-
-  @protected
   Map<int, Uint32List> sse_decode_Map_u_32_list_prim_u_32_strict(
       SseDeserializer deserializer);
 
@@ -432,10 +419,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
-  List<(int, HomeVideo)> sse_decode_list_record_u_32_home_video(
-      SseDeserializer deserializer);
-
-  @protected
   List<(int, Uint32List)> sse_decode_list_record_u_32_list_prim_u_32_strict(
       SseDeserializer deserializer);
 
@@ -463,10 +446,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   (String, TaskOperationalData) sse_decode_record_string_task_operational_data(
-      SseDeserializer deserializer);
-
-  @protected
-  (int, HomeVideo) sse_decode_record_u_32_home_video(
       SseDeserializer deserializer);
 
   @protected
@@ -592,10 +571,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       Map<int, String> self, SseSerializer serializer);
 
   @protected
-  void sse_encode_Map_u_32_home_video(
-      Map<int, HomeVideo> self, SseSerializer serializer);
-
-  @protected
   void sse_encode_Map_u_32_list_prim_u_32_strict(
       Map<int, Uint32List> self, SseSerializer serializer);
 
@@ -682,10 +657,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       List<(String, TaskOperationalData)> self, SseSerializer serializer);
 
   @protected
-  void sse_encode_list_record_u_32_home_video(
-      List<(int, HomeVideo)> self, SseSerializer serializer);
-
-  @protected
   void sse_encode_list_record_u_32_list_prim_u_32_strict(
       List<(int, Uint32List)> self, SseSerializer serializer);
 
@@ -714,10 +685,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_record_string_task_operational_data(
       (String, TaskOperationalData) self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_record_u_32_home_video(
-      (int, HomeVideo) self, SseSerializer serializer);
 
   @protected
   void sse_encode_record_u_32_list_prim_u_32_strict(

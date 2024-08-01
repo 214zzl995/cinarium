@@ -140,6 +140,7 @@ class HomeController extends ChangeNotifier {
             return false;
           }
         }
+
         return true;
       }).toList();
     }

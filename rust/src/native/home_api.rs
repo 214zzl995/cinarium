@@ -9,18 +9,19 @@ use crate::model::{
 
 #[allow(dead_code)]
 pub enum FilterType {
-    Actor,
-    Tag,
-    Maker,
-    Publisher,
-    Series,
-    Director,
+    Actor(u32),
+    Tag(u32),
+    Maker(u32),
+    Publisher(u32),
+    Series(u32),
+    Director(u32),
+    Text(String),
 }
 
 #[derive(Debug)]
 #[frb(opaque)]
 pub struct HomeVideoData {
-    pub videos: HashMap<u32, HomeVideo>,
+    videos: HashMap<u32, FilterHomeVideo>,
     pub actor: HashMap<u32, String>,
     pub tag: HashMap<u32, String>,
     pub maker: HashMap<u32, String>,
@@ -39,15 +40,39 @@ pub struct HomeVideoData {
     pub director_filter: Vec<u32>,
     pub actor_filter: Vec<u32>,
     pub tag_filter: Vec<u32>,
-    pub filter_video: Vec<HomeVideo>,
+}
+
+#[derive(Debug)]
+struct FilterHomeVideo {
+    video: HomeVideo,
+    visible: bool,
+}
+
+impl FilterHomeVideo {
+    fn new(video: HomeVideo) -> Self {
+        Self {
+            video,
+            visible: true,
+        }
+    }
+
+    fn show(&mut self) {
+        self.visible = true;
+    }
+
+    fn hide(&mut self) {
+        self.visible = false;
+    }
 }
 
 impl HomeVideoData {
     #[allow(dead_code)]
     pub async fn new() -> anyhow::Result<Self> {
         let videos = HomeVideo::query_all().await?;
-        let filter_video = videos.clone();
-        let videos = videos.into_iter().map(|v| (v.id, v)).collect();
+        let videos = videos
+            .into_iter()
+            .map(|v| (v.id, FilterHomeVideo::new(v)))
+            .collect();
 
         let actor = Attr::query_all_actor()
             .await?
@@ -160,12 +185,54 @@ impl HomeVideoData {
             director_filter: Vec::new(),
             actor_filter: Vec::new(),
             tag_filter: Vec::new(),
-            filter_video,
         })
     }
 
     #[allow(dead_code)]
-    fn add_filter(&mut self, filter_type: FilterType, id: u32) {
+    #[frb(sync)]
+    pub fn filter_actor(&mut self, id: u32) {
+        self.add_filter(FilterType::Actor(id));
+    }
+
+    #[allow(dead_code)]
+    #[frb(sync)]
+    pub fn filter_tag(&mut self, id: u32) {
+        self.add_filter(FilterType::Tag(id));
+    }
+
+    #[allow(dead_code)]
+    #[frb(sync)]
+    pub fn filter_maker(&mut self, id: u32) {
+        self.add_filter(FilterType::Maker(id));
+    }
+
+    #[allow(dead_code)]
+    #[frb(sync)]
+    pub fn filter_publisher(&mut self, id: u32) {
+        self.add_filter(FilterType::Publisher(id));
+    }
+
+    #[allow(dead_code)]
+    #[frb(sync)]
+    pub fn filter_series(&mut self, id: u32) {
+        self.add_filter(FilterType::Series(id));
+    }
+
+    #[allow(dead_code)]
+    #[frb(sync)]
+    pub fn filter_director(&mut self, id: u32) {
+        self.add_filter(FilterType::Director(id));
+    }
+
+    #[allow(dead_code)]
+    #[frb(sync)]
+    pub fn filter_text(&mut self, text: String) {
+        self.add_filter(FilterType::Text(text));
+    }
+
+    #[allow(dead_code)]
+    #[frb(sync)]
+    fn add_filter(&mut self, filter_type: FilterType) {
         if self.maker_filter.is_empty()
             && self.publisher_filter.is_empty()
             && self.series_filter.is_empty()
@@ -173,63 +240,95 @@ impl HomeVideoData {
             && self.actor_filter.is_empty()
             && self.tag_filter.is_empty()
         {
-            self.filter_video.clear();
+            self.videos.iter_mut().for_each(|(_, v)| v.show());
         }
         match filter_type {
-            FilterType::Actor => {
+            FilterType::Actor(id) => {
                 self.actor_filter.push(id);
+
+                if let Some(video_ids) = self.actor_videos.get(&id) {
+                    video_ids.iter().for_each(|&video_id| {
+                        if let Some(video) = self.videos.get_mut(&video_id) {
+                            video.show();
+                        }
+                    });
+                };
             }
-            FilterType::Tag => {
+            FilterType::Tag(id) => {
                 self.tag_filter.push(id);
+
+                if let Some(video_ids) = self.tag_videos.get(&id) {
+                    video_ids.iter().for_each(|&video_id| {
+                        if let Some(video) = self.videos.get_mut(&video_id) {
+                            video.show();
+                        }
+                    });
+                };
             }
-            FilterType::Maker => {
+            FilterType::Maker(id) => {
                 self.maker_filter.push(id);
+
+                if let Some(video_ids) = self.maker_videos.get(&id) {
+                    video_ids.iter().for_each(|&video_id| {
+                        if let Some(video) = self.videos.get_mut(&video_id) {
+                            video.show();
+                        }
+                    });
+                };
             }
-            FilterType::Publisher => {
+            FilterType::Publisher(id) => {
                 self.publisher_filter.push(id);
+
+                if let Some(video_ids) = self.publisher_videos.get(&id) {
+                    video_ids.iter().for_each(|&video_id| {
+                        if let Some(video) = self.videos.get_mut(&video_id) {
+                            video.show();
+                        }
+                    });
+                };
             }
-            FilterType::Series => {
+            FilterType::Series(id) => {
                 self.series_filter.push(id);
+
+                if let Some(video_ids) = self.series_videos.get(&id) {
+                    video_ids.iter().for_each(|&video_id| {
+                        if let Some(video) = self.videos.get_mut(&video_id) {
+                            video.show();
+                        }
+                    });
+                };
             }
-            FilterType::Director => {
+            FilterType::Director(id) => {
                 self.director_filter.push(id);
+
+                if let Some(video_ids) = self.director_videos.get(&id) {
+                    video_ids.iter().for_each(|&video_id| {
+                        if let Some(video) = self.videos.get_mut(&video_id) {
+                            video.show();
+                        }
+                    });
+                };
+            }
+            FilterType::Text(text) => {
+
+                if text.is_empty() {
+                    self.videos.iter_mut().for_each(|(_, v)| v.show());
+                    return;
+                }
+
+                self.videos.iter_mut().for_each(|(_, v)| {
+                    if v.video.title.contains(&text) {
+                        v.show();
+                    } else {
+                        v.hide();
+                    }
+                });
             }
         }
     }
 
     #[allow(dead_code)]
-    fn remove_filter(&mut self, filter_type: FilterType, id: u32) {
-        match filter_type {
-            FilterType::Actor => {
-                self.actor_filter.retain(|&x| x != id);
-            }
-            FilterType::Tag => {
-                self.tag_filter.retain(|&x| x != id);
-            }
-            FilterType::Maker => {
-                self.maker_filter.retain(|&x| x != id);
-            }
-            FilterType::Publisher => {
-                self.publisher_filter.retain(|&x| x != id);
-            }
-            FilterType::Series => {
-                self.series_filter.retain(|&x| x != id);
-            }
-            FilterType::Director => {
-                self.director_filter.retain(|&x| x != id);
-            }
-        }
-
-        if self.maker_filter.is_empty()
-            && self.publisher_filter.is_empty()
-            && self.series_filter.is_empty()
-            && self.director_filter.is_empty()
-            && self.actor_filter.is_empty()
-            && self.tag_filter.is_empty()
-        {
-           
-        }
-    }
+    fn remove_filter(&mut self, filter_type: FilterType) {}
 
     #[allow(dead_code)]
     fn clear_filter(&mut self) {
@@ -239,6 +338,21 @@ impl HomeVideoData {
         self.director_filter.clear();
         self.actor_filter.clear();
         self.tag_filter.clear();
-        
+    }
+
+    #[frb(sync, getter)]
+    #[allow(dead_code)]
+    pub fn get_video(&self) -> anyhow::Result<Vec<HomeVideo>> {
+        Ok(self
+            .videos
+            .values()
+            .filter_map(|v| {
+                if v.visible {
+                    Some(v.video.clone())
+                } else {
+                    None
+                }
+            })
+            .collect())
     }
 }

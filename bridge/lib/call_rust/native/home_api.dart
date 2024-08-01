@@ -7,8 +7,8 @@ import '../frb_generated.dart';
 import '../model/video.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions are ignored because they are not marked as `pub`: `add_filter`, `clear_filter`, `remove_filter`
-// These types are ignored because they are not used by any `pub` functions: `FilterType`
+// These functions are ignored because they are not marked as `pub`: `add_filter`, `clear_filter`, `hide`, `new`, `remove_filter`, `show`
+// These types are ignored because they are not used by any `pub` functions: `FilterHomeVideo`, `FilterType`
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<HomeVideoData>>
 abstract class HomeVideoData implements RustOpaqueInterface {
@@ -23,8 +23,6 @@ abstract class HomeVideoData implements RustOpaqueInterface {
   Uint32List get directorFilter;
 
   Map<int, Uint32List> get directorVideos;
-
-  List<HomeVideo> get filterVideo;
 
   Map<int, String> get maker;
 
@@ -50,8 +48,6 @@ abstract class HomeVideoData implements RustOpaqueInterface {
 
   Map<int, Uint32List> get tagVideos;
 
-  Map<int, HomeVideo> get videos;
-
   set actor(Map<int, String> actor);
 
   set actorFilter(Uint32List actorFilter);
@@ -63,8 +59,6 @@ abstract class HomeVideoData implements RustOpaqueInterface {
   set directorFilter(Uint32List directorFilter);
 
   set directorVideos(Map<int, Uint32List> directorVideos);
-
-  set filterVideo(List<HomeVideo> filterVideo);
 
   set maker(Map<int, String> maker);
 
@@ -90,7 +84,21 @@ abstract class HomeVideoData implements RustOpaqueInterface {
 
   set tagVideos(Map<int, Uint32List> tagVideos);
 
-  set videos(Map<int, HomeVideo> videos);
+  void filterActor({required int id});
+
+  void filterDirector({required int id});
+
+  void filterMaker({required int id});
+
+  void filterPublisher({required int id});
+
+  void filterSeries({required int id});
+
+  void filterTag({required int id});
+
+  void filterText({required String text});
+
+  List<HomeVideo> get video;
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
   static Future<HomeVideoData> newInstance() =>
