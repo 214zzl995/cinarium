@@ -7,7 +7,7 @@ import '../frb_generated.dart';
 import '../model/video.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions are ignored because they are not marked as `pub`: `add_filter`, `clear_filter`, `hide`, `new`, `remove_filter`, `show`
+// These functions are ignored because they are not marked as `pub`: `add_filter`, `clear_filter`, `hide_other_videos`, `is_hide`, `is_show`, `new`, `remove_filter`, `show_other_videos`
 // These types are ignored because they are not used by any `pub` functions: `FilterHomeVideo`, `FilterType`
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<HomeVideoData>>
@@ -23,6 +23,8 @@ abstract class HomeVideoData implements RustOpaqueInterface {
   Uint32List get directorFilter;
 
   Map<int, Uint32List> get directorVideos;
+
+  (int?, int?) get durationFilter;
 
   Map<int, String> get maker;
 
@@ -42,11 +44,15 @@ abstract class HomeVideoData implements RustOpaqueInterface {
 
   Map<int, Uint32List> get seriesVideos;
 
+  (BigInt?, BigInt?) get sizeFilter;
+
   Map<int, String> get tag;
 
   Uint32List get tagFilter;
 
   Map<int, Uint32List> get tagVideos;
+
+  String get textFilter;
 
   set actor(Map<int, String> actor);
 
@@ -59,6 +65,8 @@ abstract class HomeVideoData implements RustOpaqueInterface {
   set directorFilter(Uint32List directorFilter);
 
   set directorVideos(Map<int, Uint32List> directorVideos);
+
+  set durationFilter((int?, int?) durationFilter);
 
   set maker(Map<int, String> maker);
 
@@ -78,21 +86,47 @@ abstract class HomeVideoData implements RustOpaqueInterface {
 
   set seriesVideos(Map<int, Uint32List> seriesVideos);
 
+  set sizeFilter((BigInt?, BigInt?) sizeFilter);
+
   set tag(Map<int, String> tag);
 
   set tagFilter(Uint32List tagFilter);
 
   set tagVideos(Map<int, Uint32List> tagVideos);
 
+  set textFilter(String textFilter);
+
+  void cleanActorFilter();
+
+  void cleanDirectorFilter();
+
+  void cleanDurationFilter();
+
+  void cleanMakerFilter();
+
+  void cleanPublisherFilter();
+
+  void cleanSeriesFilter();
+
+  void cleanSizeFilter();
+
+  void cleanTagFilter();
+
+  void cleanTextFilter();
+
   void filterActor({required int id});
 
   void filterDirector({required int id});
+
+  void filterDuration({int? min, int? max});
 
   void filterMaker({required int id});
 
   void filterPublisher({required int id});
 
   void filterSeries({required int id});
+
+  void filterSize({BigInt? min, BigInt? max});
 
   void filterTag({required int id});
 

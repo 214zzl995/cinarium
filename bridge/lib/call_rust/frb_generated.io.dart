@@ -168,6 +168,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   bool dco_decode_bool(dynamic raw);
 
   @protected
+  int dco_decode_box_autoadd_u_32(dynamic raw);
+
+  @protected
+  BigInt dco_decode_box_autoadd_u_64(dynamic raw);
+
+  @protected
   CrawlerTemplate dco_decode_crawler_template(dynamic raw);
 
   @protected
@@ -224,10 +230,24 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<UntreatedVideo> dco_decode_list_untreated_video(dynamic raw);
 
   @protected
+  int? dco_decode_opt_box_autoadd_u_32(dynamic raw);
+
+  @protected
+  BigInt? dco_decode_opt_box_autoadd_u_64(dynamic raw);
+
+  @protected
   PoolData dco_decode_pool_data(dynamic raw);
 
   @protected
   PoolStatus dco_decode_pool_status(dynamic raw);
+
+  @protected
+  (int?, int?) dco_decode_record_opt_box_autoadd_u_32_opt_box_autoadd_u_32(
+      dynamic raw);
+
+  @protected
+  (BigInt?, BigInt?)
+      dco_decode_record_opt_box_autoadd_u_64_opt_box_autoadd_u_64(dynamic raw);
 
   @protected
   (String, TaskOperationalData) dco_decode_record_string_task_operational_data(
@@ -375,6 +395,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   bool sse_decode_bool(SseDeserializer deserializer);
 
   @protected
+  int sse_decode_box_autoadd_u_32(SseDeserializer deserializer);
+
+  @protected
+  BigInt sse_decode_box_autoadd_u_64(SseDeserializer deserializer);
+
+  @protected
   CrawlerTemplate sse_decode_crawler_template(SseDeserializer deserializer);
 
   @protected
@@ -437,10 +463,25 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  int? sse_decode_opt_box_autoadd_u_32(SseDeserializer deserializer);
+
+  @protected
+  BigInt? sse_decode_opt_box_autoadd_u_64(SseDeserializer deserializer);
+
+  @protected
   PoolData sse_decode_pool_data(SseDeserializer deserializer);
 
   @protected
   PoolStatus sse_decode_pool_status(SseDeserializer deserializer);
+
+  @protected
+  (int?, int?) sse_decode_record_opt_box_autoadd_u_32_opt_box_autoadd_u_32(
+      SseDeserializer deserializer);
+
+  @protected
+  (BigInt?, BigInt?)
+      sse_decode_record_opt_box_autoadd_u_64_opt_box_autoadd_u_64(
+          SseDeserializer deserializer);
 
   @protected
   (String, TaskOperationalData) sse_decode_record_string_task_operational_data(
@@ -609,6 +650,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_bool(bool self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_u_32(int self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_u_64(BigInt self, SseSerializer serializer);
+
+  @protected
   void sse_encode_crawler_template(
       CrawlerTemplate self, SseSerializer serializer);
 
@@ -675,10 +722,24 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       List<UntreatedVideo> self, SseSerializer serializer);
 
   @protected
+  void sse_encode_opt_box_autoadd_u_32(int? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_u_64(BigInt? self, SseSerializer serializer);
+
+  @protected
   void sse_encode_pool_data(PoolData self, SseSerializer serializer);
 
   @protected
   void sse_encode_pool_status(PoolStatus self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_record_opt_box_autoadd_u_32_opt_box_autoadd_u_32(
+      (int?, int?) self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_record_opt_box_autoadd_u_64_opt_box_autoadd_u_64(
+      (BigInt?, BigInt?) self, SseSerializer serializer);
 
   @protected
   void sse_encode_record_string_task_operational_data(

@@ -15,14 +15,31 @@ class DurationFilterEditsState extends State<DurationFilterEdits> {
   final TextEditingController _maxEditingController = TextEditingController();
 
   @override
-  @override
   void initState() {
-    final min = context.read<HomeController>().durationFilter.min;
-    final max = context.read<HomeController>().durationFilter.max;
-    _minEditingController.text = min == 0 ? "" : min.toString();
-    _maxEditingController.text = max == 0 ? "" : max.toString();
+    final min = context.read<HomeController>().durationFilter.$1;
+    final max = context.read<HomeController>().durationFilter.$2;
+    _minEditingController.text = min == null ? "" : min.toString();
+    _maxEditingController.text = max == null ? "" : max.toString();
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _minEditingController.dispose();
+    _maxEditingController.dispose();
+    super.dispose();
+  }
+
+  void _onDurationFilterChanged() {
+    final min = _minEditingController.text.isEmpty
+        ? null
+        : int.parse(_minEditingController.text);
+    final max = _maxEditingController.text.isEmpty
+        ? null
+        : int.parse(_maxEditingController.text);
+
+    context.read<HomeController>().addDurationFilter(min, max);
   }
 
   @override
@@ -64,14 +81,8 @@ class DurationFilterEditsState extends State<DurationFilterEdits> {
                                   .onSurfaceVariant,
                               fontWeight: FontWeight.w600,
                               fontSize: 13))),
-                  onChanged: (value) {
-                    if (value.isEmpty) {
-                      context.read<HomeController>().addDurationFilter(0, null);
-                      return;
-                    }
-                    context
-                        .read<HomeController>()
-                        .addDurationFilter(int.parse(value), null);
+                  onChanged: (_) {
+                    _onDurationFilterChanged();
                   },
                 ),
               ),
@@ -107,16 +118,8 @@ class DurationFilterEditsState extends State<DurationFilterEdits> {
                               fontWeight: FontWeight.w600,
                               fontSize: 13)),
                     ),
-                    onChanged: (value) {
-                      if (value.isEmpty) {
-                        context
-                            .read<HomeController>()
-                            .addDurationFilter(null, 0);
-                        return;
-                      }
-                      context
-                          .read<HomeController>()
-                          .addDurationFilter(null, int.parse(value));
+                    onChanged: (_) {
+                      _onDurationFilterChanged();
                     },
                   )),
             ],
@@ -124,7 +127,7 @@ class DurationFilterEditsState extends State<DurationFilterEdits> {
         ),
         Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceVariant,
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
             ),
             padding: const EdgeInsets.all(10),
             alignment: Alignment.centerRight,
@@ -132,7 +135,9 @@ class DurationFilterEditsState extends State<DurationFilterEdits> {
               width: 90,
               child: ElevatedButton(
                   onPressed: () {
-                    context.read<HomeController>().addDurationFilter(0, 0);
+                    context
+                        .read<HomeController>()
+                        .addDurationFilter(null, null);
                     _minEditingController.text = "";
                     _maxEditingController.text = "";
                   },

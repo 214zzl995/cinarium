@@ -65,7 +65,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.1.0';
 
   @override
-  int get rustContentHash => -316737353;
+  int get rustContentHash => -1640943820;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -121,6 +121,9 @@ abstract class RustLibApi extends BaseApi {
       crateNativeHomeApiHomeVideoDataAutoAccessorGetDirectorVideos(
           {required HomeVideoData that});
 
+  (int?, int?) crateNativeHomeApiHomeVideoDataAutoAccessorGetDurationFilter(
+      {required HomeVideoData that});
+
   Map<int, String> crateNativeHomeApiHomeVideoDataAutoAccessorGetMaker(
       {required HomeVideoData that});
 
@@ -151,6 +154,9 @@ abstract class RustLibApi extends BaseApi {
       crateNativeHomeApiHomeVideoDataAutoAccessorGetSeriesVideos(
           {required HomeVideoData that});
 
+  (BigInt?, BigInt?) crateNativeHomeApiHomeVideoDataAutoAccessorGetSizeFilter(
+      {required HomeVideoData that});
+
   Map<int, String> crateNativeHomeApiHomeVideoDataAutoAccessorGetTag(
       {required HomeVideoData that});
 
@@ -158,6 +164,9 @@ abstract class RustLibApi extends BaseApi {
       {required HomeVideoData that});
 
   Map<int, Uint32List> crateNativeHomeApiHomeVideoDataAutoAccessorGetTagVideos(
+      {required HomeVideoData that});
+
+  String crateNativeHomeApiHomeVideoDataAutoAccessorGetTextFilter(
       {required HomeVideoData that});
 
   void crateNativeHomeApiHomeVideoDataAutoAccessorSetActor(
@@ -178,6 +187,9 @@ abstract class RustLibApi extends BaseApi {
   void crateNativeHomeApiHomeVideoDataAutoAccessorSetDirectorVideos(
       {required HomeVideoData that,
       required Map<int, Uint32List> directorVideos});
+
+  void crateNativeHomeApiHomeVideoDataAutoAccessorSetDurationFilter(
+      {required HomeVideoData that, required (int?, int?) durationFilter});
 
   void crateNativeHomeApiHomeVideoDataAutoAccessorSetMaker(
       {required HomeVideoData that, required Map<int, String> maker});
@@ -208,6 +220,9 @@ abstract class RustLibApi extends BaseApi {
       {required HomeVideoData that,
       required Map<int, Uint32List> seriesVideos});
 
+  void crateNativeHomeApiHomeVideoDataAutoAccessorSetSizeFilter(
+      {required HomeVideoData that, required (BigInt?, BigInt?) sizeFilter});
+
   void crateNativeHomeApiHomeVideoDataAutoAccessorSetTag(
       {required HomeVideoData that, required Map<int, String> tag});
 
@@ -217,11 +232,44 @@ abstract class RustLibApi extends BaseApi {
   void crateNativeHomeApiHomeVideoDataAutoAccessorSetTagVideos(
       {required HomeVideoData that, required Map<int, Uint32List> tagVideos});
 
+  void crateNativeHomeApiHomeVideoDataAutoAccessorSetTextFilter(
+      {required HomeVideoData that, required String textFilter});
+
+  void crateNativeHomeApiHomeVideoDataCleanActorFilter(
+      {required HomeVideoData that});
+
+  void crateNativeHomeApiHomeVideoDataCleanDirectorFilter(
+      {required HomeVideoData that});
+
+  void crateNativeHomeApiHomeVideoDataCleanDurationFilter(
+      {required HomeVideoData that});
+
+  void crateNativeHomeApiHomeVideoDataCleanMakerFilter(
+      {required HomeVideoData that});
+
+  void crateNativeHomeApiHomeVideoDataCleanPublisherFilter(
+      {required HomeVideoData that});
+
+  void crateNativeHomeApiHomeVideoDataCleanSeriesFilter(
+      {required HomeVideoData that});
+
+  void crateNativeHomeApiHomeVideoDataCleanSizeFilter(
+      {required HomeVideoData that});
+
+  void crateNativeHomeApiHomeVideoDataCleanTagFilter(
+      {required HomeVideoData that});
+
+  void crateNativeHomeApiHomeVideoDataCleanTextFilter(
+      {required HomeVideoData that});
+
   void crateNativeHomeApiHomeVideoDataFilterActor(
       {required HomeVideoData that, required int id});
 
   void crateNativeHomeApiHomeVideoDataFilterDirector(
       {required HomeVideoData that, required int id});
+
+  void crateNativeHomeApiHomeVideoDataFilterDuration(
+      {required HomeVideoData that, int? min, int? max});
 
   void crateNativeHomeApiHomeVideoDataFilterMaker(
       {required HomeVideoData that, required int id});
@@ -231,6 +279,9 @@ abstract class RustLibApi extends BaseApi {
 
   void crateNativeHomeApiHomeVideoDataFilterSeries(
       {required HomeVideoData that, required int id});
+
+  void crateNativeHomeApiHomeVideoDataFilterSize(
+      {required HomeVideoData that, BigInt? min, BigInt? max});
 
   void crateNativeHomeApiHomeVideoDataFilterTag(
       {required HomeVideoData that, required int id});
@@ -839,7 +890,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           );
 
   @override
-  Map<int, String> crateNativeHomeApiHomeVideoDataAutoAccessorGetMaker(
+  (int?, int?) crateNativeHomeApiHomeVideoDataAutoAccessorGetDurationFilter(
       {required HomeVideoData that}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
@@ -847,6 +898,35 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
         return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 19)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData:
+            sse_decode_record_opt_box_autoadd_u_32_opt_box_autoadd_u_32,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateNativeHomeApiHomeVideoDataAutoAccessorGetDurationFilterConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateNativeHomeApiHomeVideoDataAutoAccessorGetDurationFilterConstMeta =>
+          const TaskConstMeta(
+            debugName: "HomeVideoData_auto_accessor_get_duration_filter",
+            argNames: ["that"],
+          );
+
+  @override
+  Map<int, String> crateNativeHomeApiHomeVideoDataAutoAccessorGetMaker(
+      {required HomeVideoData that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 20)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_Map_u_32_String,
@@ -873,7 +953,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 20)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 21)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_list_prim_u_32_strict,
@@ -902,7 +982,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 21)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 22)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_Map_u_32_list_prim_u_32_strict,
@@ -930,7 +1010,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 22)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 23)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_Map_u_32_String,
@@ -958,7 +1038,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 23)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 24)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_list_prim_u_32_strict,
@@ -987,7 +1067,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 24)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 25)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_Map_u_32_list_prim_u_32_strict,
@@ -1015,7 +1095,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 25)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 26)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_Map_u_32_String,
@@ -1042,7 +1122,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 26)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 27)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_list_prim_u_32_strict,
@@ -1071,7 +1151,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 27)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 28)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_Map_u_32_list_prim_u_32_strict,
@@ -1092,6 +1172,35 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           );
 
   @override
+  (BigInt?, BigInt?) crateNativeHomeApiHomeVideoDataAutoAccessorGetSizeFilter(
+      {required HomeVideoData that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 29)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData:
+            sse_decode_record_opt_box_autoadd_u_64_opt_box_autoadd_u_64,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateNativeHomeApiHomeVideoDataAutoAccessorGetSizeFilterConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateNativeHomeApiHomeVideoDataAutoAccessorGetSizeFilterConstMeta =>
+          const TaskConstMeta(
+            debugName: "HomeVideoData_auto_accessor_get_size_filter",
+            argNames: ["that"],
+          );
+
+  @override
   Map<int, String> crateNativeHomeApiHomeVideoDataAutoAccessorGetTag(
       {required HomeVideoData that}) {
     return handler.executeSync(SyncTask(
@@ -1099,7 +1208,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 28)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 30)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_Map_u_32_String,
@@ -1126,7 +1235,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 29)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 31)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_list_prim_u_32_strict,
@@ -1154,7 +1263,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 30)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 32)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_Map_u_32_list_prim_u_32_strict,
@@ -1175,6 +1284,34 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           );
 
   @override
+  String crateNativeHomeApiHomeVideoDataAutoAccessorGetTextFilter(
+      {required HomeVideoData that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 33)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateNativeHomeApiHomeVideoDataAutoAccessorGetTextFilterConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateNativeHomeApiHomeVideoDataAutoAccessorGetTextFilterConstMeta =>
+          const TaskConstMeta(
+            debugName: "HomeVideoData_auto_accessor_get_text_filter",
+            argNames: ["that"],
+          );
+
+  @override
   void crateNativeHomeApiHomeVideoDataAutoAccessorSetActor(
       {required HomeVideoData that, required Map<int, String> actor}) {
     return handler.executeSync(SyncTask(
@@ -1183,7 +1320,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
         sse_encode_Map_u_32_String(actor, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 31)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 34)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1211,7 +1348,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
         sse_encode_list_prim_u_32_strict(actorFilter, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 32)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 35)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1241,7 +1378,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
         sse_encode_Map_u_32_list_prim_u_32_strict(actorVideos, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 33)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 36)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1270,7 +1407,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
         sse_encode_Map_u_32_String(director, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 34)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 37)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1299,7 +1436,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
         sse_encode_list_prim_u_32_strict(directorFilter, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 35)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 38)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1329,7 +1466,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
         sse_encode_Map_u_32_list_prim_u_32_strict(directorVideos, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 36)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 39)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1350,6 +1487,36 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           );
 
   @override
+  void crateNativeHomeApiHomeVideoDataAutoAccessorSetDurationFilter(
+      {required HomeVideoData that, required (int?, int?) durationFilter}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
+            that, serializer);
+        sse_encode_record_opt_box_autoadd_u_32_opt_box_autoadd_u_32(
+            durationFilter, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 40)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateNativeHomeApiHomeVideoDataAutoAccessorSetDurationFilterConstMeta,
+      argValues: [that, durationFilter],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateNativeHomeApiHomeVideoDataAutoAccessorSetDurationFilterConstMeta =>
+          const TaskConstMeta(
+            debugName: "HomeVideoData_auto_accessor_set_duration_filter",
+            argNames: ["that", "durationFilter"],
+          );
+
+  @override
   void crateNativeHomeApiHomeVideoDataAutoAccessorSetMaker(
       {required HomeVideoData that, required Map<int, String> maker}) {
     return handler.executeSync(SyncTask(
@@ -1358,7 +1525,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
         sse_encode_Map_u_32_String(maker, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 37)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 41)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1386,7 +1553,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
         sse_encode_list_prim_u_32_strict(makerFilter, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 38)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 42)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1416,7 +1583,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
         sse_encode_Map_u_32_list_prim_u_32_strict(makerVideos, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 39)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 43)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1445,7 +1612,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
         sse_encode_Map_u_32_String(publisher, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 40)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 44)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1474,7 +1641,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
         sse_encode_list_prim_u_32_strict(publisherFilter, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 41)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 45)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1504,7 +1671,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
         sse_encode_Map_u_32_list_prim_u_32_strict(publisherVideos, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 42)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 46)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1533,7 +1700,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
         sse_encode_Map_u_32_String(series, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 43)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 47)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1561,7 +1728,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
         sse_encode_list_prim_u_32_strict(seriesFilter, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 44)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 48)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1591,7 +1758,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
         sse_encode_Map_u_32_list_prim_u_32_strict(seriesVideos, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 45)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 49)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1612,6 +1779,36 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           );
 
   @override
+  void crateNativeHomeApiHomeVideoDataAutoAccessorSetSizeFilter(
+      {required HomeVideoData that, required (BigInt?, BigInt?) sizeFilter}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
+            that, serializer);
+        sse_encode_record_opt_box_autoadd_u_64_opt_box_autoadd_u_64(
+            sizeFilter, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 50)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateNativeHomeApiHomeVideoDataAutoAccessorSetSizeFilterConstMeta,
+      argValues: [that, sizeFilter],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateNativeHomeApiHomeVideoDataAutoAccessorSetSizeFilterConstMeta =>
+          const TaskConstMeta(
+            debugName: "HomeVideoData_auto_accessor_set_size_filter",
+            argNames: ["that", "sizeFilter"],
+          );
+
+  @override
   void crateNativeHomeApiHomeVideoDataAutoAccessorSetTag(
       {required HomeVideoData that, required Map<int, String> tag}) {
     return handler.executeSync(SyncTask(
@@ -1620,7 +1817,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
         sse_encode_Map_u_32_String(tag, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 46)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 51)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1648,7 +1845,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
         sse_encode_list_prim_u_32_strict(tagFilter, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 47)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 52)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1677,7 +1874,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
         sse_encode_Map_u_32_list_prim_u_32_strict(tagVideos, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 48)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 53)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1698,6 +1895,273 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           );
 
   @override
+  void crateNativeHomeApiHomeVideoDataAutoAccessorSetTextFilter(
+      {required HomeVideoData that, required String textFilter}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
+            that, serializer);
+        sse_encode_String(textFilter, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 54)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateNativeHomeApiHomeVideoDataAutoAccessorSetTextFilterConstMeta,
+      argValues: [that, textFilter],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateNativeHomeApiHomeVideoDataAutoAccessorSetTextFilterConstMeta =>
+          const TaskConstMeta(
+            debugName: "HomeVideoData_auto_accessor_set_text_filter",
+            argNames: ["that", "textFilter"],
+          );
+
+  @override
+  void crateNativeHomeApiHomeVideoDataCleanActorFilter(
+      {required HomeVideoData that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 55)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateNativeHomeApiHomeVideoDataCleanActorFilterConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateNativeHomeApiHomeVideoDataCleanActorFilterConstMeta =>
+      const TaskConstMeta(
+        debugName: "HomeVideoData_clean_actor_filter",
+        argNames: ["that"],
+      );
+
+  @override
+  void crateNativeHomeApiHomeVideoDataCleanDirectorFilter(
+      {required HomeVideoData that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 56)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateNativeHomeApiHomeVideoDataCleanDirectorFilterConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateNativeHomeApiHomeVideoDataCleanDirectorFilterConstMeta =>
+          const TaskConstMeta(
+            debugName: "HomeVideoData_clean_director_filter",
+            argNames: ["that"],
+          );
+
+  @override
+  void crateNativeHomeApiHomeVideoDataCleanDurationFilter(
+      {required HomeVideoData that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 57)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateNativeHomeApiHomeVideoDataCleanDurationFilterConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateNativeHomeApiHomeVideoDataCleanDurationFilterConstMeta =>
+          const TaskConstMeta(
+            debugName: "HomeVideoData_clean_duration_filter",
+            argNames: ["that"],
+          );
+
+  @override
+  void crateNativeHomeApiHomeVideoDataCleanMakerFilter(
+      {required HomeVideoData that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 58)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateNativeHomeApiHomeVideoDataCleanMakerFilterConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateNativeHomeApiHomeVideoDataCleanMakerFilterConstMeta =>
+      const TaskConstMeta(
+        debugName: "HomeVideoData_clean_maker_filter",
+        argNames: ["that"],
+      );
+
+  @override
+  void crateNativeHomeApiHomeVideoDataCleanPublisherFilter(
+      {required HomeVideoData that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 59)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateNativeHomeApiHomeVideoDataCleanPublisherFilterConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateNativeHomeApiHomeVideoDataCleanPublisherFilterConstMeta =>
+          const TaskConstMeta(
+            debugName: "HomeVideoData_clean_publisher_filter",
+            argNames: ["that"],
+          );
+
+  @override
+  void crateNativeHomeApiHomeVideoDataCleanSeriesFilter(
+      {required HomeVideoData that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 60)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateNativeHomeApiHomeVideoDataCleanSeriesFilterConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateNativeHomeApiHomeVideoDataCleanSeriesFilterConstMeta =>
+          const TaskConstMeta(
+            debugName: "HomeVideoData_clean_series_filter",
+            argNames: ["that"],
+          );
+
+  @override
+  void crateNativeHomeApiHomeVideoDataCleanSizeFilter(
+      {required HomeVideoData that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 61)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateNativeHomeApiHomeVideoDataCleanSizeFilterConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateNativeHomeApiHomeVideoDataCleanSizeFilterConstMeta =>
+      const TaskConstMeta(
+        debugName: "HomeVideoData_clean_size_filter",
+        argNames: ["that"],
+      );
+
+  @override
+  void crateNativeHomeApiHomeVideoDataCleanTagFilter(
+      {required HomeVideoData that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 62)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateNativeHomeApiHomeVideoDataCleanTagFilterConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateNativeHomeApiHomeVideoDataCleanTagFilterConstMeta =>
+      const TaskConstMeta(
+        debugName: "HomeVideoData_clean_tag_filter",
+        argNames: ["that"],
+      );
+
+  @override
+  void crateNativeHomeApiHomeVideoDataCleanTextFilter(
+      {required HomeVideoData that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 63)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateNativeHomeApiHomeVideoDataCleanTextFilterConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateNativeHomeApiHomeVideoDataCleanTextFilterConstMeta =>
+      const TaskConstMeta(
+        debugName: "HomeVideoData_clean_text_filter",
+        argNames: ["that"],
+      );
+
+  @override
   void crateNativeHomeApiHomeVideoDataFilterActor(
       {required HomeVideoData that, required int id}) {
     return handler.executeSync(SyncTask(
@@ -1706,7 +2170,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
         sse_encode_u_32(id, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 49)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 64)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1733,7 +2197,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
         sse_encode_u_32(id, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 50)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 65)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1752,6 +2216,34 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  void crateNativeHomeApiHomeVideoDataFilterDuration(
+      {required HomeVideoData that, int? min, int? max}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
+            that, serializer);
+        sse_encode_opt_box_autoadd_u_32(min, serializer);
+        sse_encode_opt_box_autoadd_u_32(max, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 66)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateNativeHomeApiHomeVideoDataFilterDurationConstMeta,
+      argValues: [that, min, max],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateNativeHomeApiHomeVideoDataFilterDurationConstMeta =>
+      const TaskConstMeta(
+        debugName: "HomeVideoData_filter_duration",
+        argNames: ["that", "min", "max"],
+      );
+
+  @override
   void crateNativeHomeApiHomeVideoDataFilterMaker(
       {required HomeVideoData that, required int id}) {
     return handler.executeSync(SyncTask(
@@ -1760,7 +2252,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
         sse_encode_u_32(id, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 51)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 67)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1787,7 +2279,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
         sse_encode_u_32(id, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 52)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 68)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1814,7 +2306,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
         sse_encode_u_32(id, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 53)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 69)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1833,6 +2325,34 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  void crateNativeHomeApiHomeVideoDataFilterSize(
+      {required HomeVideoData that, BigInt? min, BigInt? max}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
+            that, serializer);
+        sse_encode_opt_box_autoadd_u_64(min, serializer);
+        sse_encode_opt_box_autoadd_u_64(max, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 70)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateNativeHomeApiHomeVideoDataFilterSizeConstMeta,
+      argValues: [that, min, max],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateNativeHomeApiHomeVideoDataFilterSizeConstMeta =>
+      const TaskConstMeta(
+        debugName: "HomeVideoData_filter_size",
+        argNames: ["that", "min", "max"],
+      );
+
+  @override
   void crateNativeHomeApiHomeVideoDataFilterTag(
       {required HomeVideoData that, required int id}) {
     return handler.executeSync(SyncTask(
@@ -1841,7 +2361,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
         sse_encode_u_32(id, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 54)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 71)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1868,7 +2388,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
         sse_encode_String(text, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 55)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 72)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1894,7 +2414,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerHomeVideoData(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 56)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 73)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_list_home_video,
@@ -1918,7 +2438,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 57, port: port_);
+            funcId: 74, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -1945,7 +2465,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_list_record_u_32_u_8(prioritys, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 58, port: port_);
+            funcId: 75, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -1969,7 +2489,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 59)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 76)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_list_crawler_template,
@@ -1993,7 +2513,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 60, port: port_);
+            funcId: 77, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_http_config,
@@ -2016,7 +2536,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 61)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 78)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_bool,
@@ -2039,7 +2559,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 62)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 79)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -2063,7 +2583,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 63, port: port_);
+            funcId: 80, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -2088,7 +2608,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 64, port: port_);
+            funcId: 81, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -2112,7 +2632,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 65, port: port_);
+            funcId: 82, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -2136,7 +2656,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 66, port: port_);
+            funcId: 83, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -2163,7 +2683,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_DartFn_Inputs_bool_Output_unit_AnyhowException(
             dartCallback, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 67, port: port_);
+            funcId: 84, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -2191,7 +2711,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_DartFn_Inputs__Output_unit_AnyhowException(
             dartCallback, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 68, port: port_);
+            funcId: 85, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -2218,7 +2738,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(path, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 69, port: port_);
+            funcId: 86, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -2244,7 +2764,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPathBuf(
             path, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 70, port: port_);
+            funcId: 87, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -2269,7 +2789,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerPathBuf(
             path, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 71)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 88)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -2293,7 +2813,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 72, port: port_);
+            funcId: 89, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -2317,7 +2837,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 73, port: port_);
+            funcId: 90, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -2341,7 +2861,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(path, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 74)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 91)!;
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -2368,7 +2888,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_u_32(id, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 75, port: port_);
+            funcId: 92, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -2394,7 +2914,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_u_16(port, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 76, port: port_);
+            funcId: 93, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -2419,7 +2939,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_usize(thread, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 77, port: port_);
+            funcId: 94, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -2443,7 +2963,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 78, port: port_);
+            funcId: 95, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -2470,7 +2990,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_String(id, serializer);
         sse_encode_task_status(status, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 79, port: port_);
+            funcId: 96, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -2495,7 +3015,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(id, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 80, port: port_);
+            funcId: 97, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -2519,7 +3039,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 81, port: port_);
+            funcId: 98, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -2542,7 +3062,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 82)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 99)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_pool_data,
@@ -2566,7 +3086,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 83, port: port_);
+            funcId: 100, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -2591,7 +3111,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_list_task_metadata(tasks, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 84, port: port_);
+            funcId: 101, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_list_String,
@@ -2618,7 +3138,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_DartFn_Inputs_pool_status_Output_unit_AnyhowException(
             dartCallback, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 85, port: port_);
+            funcId: 102, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -2646,7 +3166,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_DartFn_Inputs_String_task_status_Output_unit_AnyhowException(
             dartCallback, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 86, port: port_);
+            funcId: 103, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -2671,7 +3191,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 87, port: port_);
+            funcId: 104, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -2695,7 +3215,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 88, port: port_);
+            funcId: 105, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -3101,6 +3621,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  int dco_decode_box_autoadd_u_32(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as int;
+  }
+
+  @protected
+  BigInt dco_decode_box_autoadd_u_64(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_u_64(raw);
+  }
+
+  @protected
   CrawlerTemplate dco_decode_crawler_template(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -3246,6 +3778,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  int? dco_decode_opt_box_autoadd_u_32(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_u_32(raw);
+  }
+
+  @protected
+  BigInt? dco_decode_opt_box_autoadd_u_64(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_u_64(raw);
+  }
+
+  @protected
   PoolData dco_decode_pool_data(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -3261,6 +3805,34 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   PoolStatus dco_decode_pool_status(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return PoolStatus.values[raw as int];
+  }
+
+  @protected
+  (int?, int?) dco_decode_record_opt_box_autoadd_u_32_opt_box_autoadd_u_32(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2) {
+      throw Exception('Expected 2 elements, got ${arr.length}');
+    }
+    return (
+      dco_decode_opt_box_autoadd_u_32(arr[0]),
+      dco_decode_opt_box_autoadd_u_32(arr[1]),
+    );
+  }
+
+  @protected
+  (BigInt?, BigInt?)
+      dco_decode_record_opt_box_autoadd_u_64_opt_box_autoadd_u_64(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2) {
+      throw Exception('Expected 2 elements, got ${arr.length}');
+    }
+    return (
+      dco_decode_opt_box_autoadd_u_64(arr[0]),
+      dco_decode_opt_box_autoadd_u_64(arr[1]),
+    );
   }
 
   @protected
@@ -3595,6 +4167,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  int sse_decode_box_autoadd_u_32(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_u_32(deserializer));
+  }
+
+  @protected
+  BigInt sse_decode_box_autoadd_u_64(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_u_64(deserializer));
+  }
+
+  @protected
   CrawlerTemplate sse_decode_crawler_template(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_id = sse_decode_u_32(deserializer);
@@ -3801,6 +4385,28 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  int? sse_decode_opt_box_autoadd_u_32(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_u_32(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  BigInt? sse_decode_opt_box_autoadd_u_64(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_u_64(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
   PoolData sse_decode_pool_data(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_status = sse_decode_pool_status(deserializer);
@@ -3814,6 +4420,25 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var inner = sse_decode_i_32(deserializer);
     return PoolStatus.values[inner];
+  }
+
+  @protected
+  (int?, int?) sse_decode_record_opt_box_autoadd_u_32_opt_box_autoadd_u_32(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_field0 = sse_decode_opt_box_autoadd_u_32(deserializer);
+    var var_field1 = sse_decode_opt_box_autoadd_u_32(deserializer);
+    return (var_field0, var_field1);
+  }
+
+  @protected
+  (BigInt?, BigInt?)
+      sse_decode_record_opt_box_autoadd_u_64_opt_box_autoadd_u_64(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_field0 = sse_decode_opt_box_autoadd_u_64(deserializer);
+    var var_field1 = sse_decode_opt_box_autoadd_u_64(deserializer);
+    return (var_field0, var_field1);
   }
 
   @protected
@@ -4175,6 +4800,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_box_autoadd_u_32(int self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_u_32(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_u_64(BigInt self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_u_64(self, serializer);
+  }
+
+  @protected
   void sse_encode_crawler_template(
       CrawlerTemplate self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -4340,6 +4977,26 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_opt_box_autoadd_u_32(int? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_u_32(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_opt_box_autoadd_u_64(BigInt? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_u_64(self, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_pool_data(PoolData self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_pool_status(self.status, serializer);
@@ -4350,6 +5007,22 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   void sse_encode_pool_status(PoolStatus self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self.index, serializer);
+  }
+
+  @protected
+  void sse_encode_record_opt_box_autoadd_u_32_opt_box_autoadd_u_32(
+      (int?, int?) self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_opt_box_autoadd_u_32(self.$1, serializer);
+    sse_encode_opt_box_autoadd_u_32(self.$2, serializer);
+  }
+
+  @protected
+  void sse_encode_record_opt_box_autoadd_u_64_opt_box_autoadd_u_64(
+      (BigInt?, BigInt?) self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_opt_box_autoadd_u_64(self.$1, serializer);
+    sse_encode_opt_box_autoadd_u_64(self.$2, serializer);
   }
 
   @protected
@@ -4503,6 +5176,11 @@ class HomeVideoDataImpl extends RustOpaque implements HomeVideoData {
         that: this,
       );
 
+  (int?, int?) get durationFilter => RustLib.instance.api
+          .crateNativeHomeApiHomeVideoDataAutoAccessorGetDurationFilter(
+        that: this,
+      );
+
   Map<int, String> get maker =>
       RustLib.instance.api.crateNativeHomeApiHomeVideoDataAutoAccessorGetMaker(
         that: this,
@@ -4548,6 +5226,11 @@ class HomeVideoDataImpl extends RustOpaque implements HomeVideoData {
         that: this,
       );
 
+  (BigInt?, BigInt?) get sizeFilter => RustLib.instance.api
+          .crateNativeHomeApiHomeVideoDataAutoAccessorGetSizeFilter(
+        that: this,
+      );
+
   Map<int, String> get tag =>
       RustLib.instance.api.crateNativeHomeApiHomeVideoDataAutoAccessorGetTag(
         that: this,
@@ -4560,6 +5243,11 @@ class HomeVideoDataImpl extends RustOpaque implements HomeVideoData {
 
   Map<int, Uint32List> get tagVideos => RustLib.instance.api
           .crateNativeHomeApiHomeVideoDataAutoAccessorGetTagVideos(
+        that: this,
+      );
+
+  String get textFilter => RustLib.instance.api
+          .crateNativeHomeApiHomeVideoDataAutoAccessorGetTextFilter(
         that: this,
       );
 
@@ -4587,6 +5275,10 @@ class HomeVideoDataImpl extends RustOpaque implements HomeVideoData {
       RustLib.instance.api
           .crateNativeHomeApiHomeVideoDataAutoAccessorSetDirectorVideos(
               that: this, directorVideos: directorVideos);
+
+  set durationFilter((int?, int?) durationFilter) => RustLib.instance.api
+      .crateNativeHomeApiHomeVideoDataAutoAccessorSetDurationFilter(
+          that: this, durationFilter: durationFilter);
 
   set maker(Map<int, String> maker) =>
       RustLib.instance.api.crateNativeHomeApiHomeVideoDataAutoAccessorSetMaker(
@@ -4625,6 +5317,10 @@ class HomeVideoDataImpl extends RustOpaque implements HomeVideoData {
       .crateNativeHomeApiHomeVideoDataAutoAccessorSetSeriesVideos(
           that: this, seriesVideos: seriesVideos);
 
+  set sizeFilter((BigInt?, BigInt?) sizeFilter) => RustLib.instance.api
+      .crateNativeHomeApiHomeVideoDataAutoAccessorSetSizeFilter(
+          that: this, sizeFilter: sizeFilter);
+
   set tag(Map<int, String> tag) => RustLib.instance.api
       .crateNativeHomeApiHomeVideoDataAutoAccessorSetTag(that: this, tag: tag);
 
@@ -4636,11 +5332,64 @@ class HomeVideoDataImpl extends RustOpaque implements HomeVideoData {
       .crateNativeHomeApiHomeVideoDataAutoAccessorSetTagVideos(
           that: this, tagVideos: tagVideos);
 
+  set textFilter(String textFilter) => RustLib.instance.api
+      .crateNativeHomeApiHomeVideoDataAutoAccessorSetTextFilter(
+          that: this, textFilter: textFilter);
+
+  void cleanActorFilter() =>
+      RustLib.instance.api.crateNativeHomeApiHomeVideoDataCleanActorFilter(
+        that: this,
+      );
+
+  void cleanDirectorFilter() =>
+      RustLib.instance.api.crateNativeHomeApiHomeVideoDataCleanDirectorFilter(
+        that: this,
+      );
+
+  void cleanDurationFilter() =>
+      RustLib.instance.api.crateNativeHomeApiHomeVideoDataCleanDurationFilter(
+        that: this,
+      );
+
+  void cleanMakerFilter() =>
+      RustLib.instance.api.crateNativeHomeApiHomeVideoDataCleanMakerFilter(
+        that: this,
+      );
+
+  void cleanPublisherFilter() =>
+      RustLib.instance.api.crateNativeHomeApiHomeVideoDataCleanPublisherFilter(
+        that: this,
+      );
+
+  void cleanSeriesFilter() =>
+      RustLib.instance.api.crateNativeHomeApiHomeVideoDataCleanSeriesFilter(
+        that: this,
+      );
+
+  void cleanSizeFilter() =>
+      RustLib.instance.api.crateNativeHomeApiHomeVideoDataCleanSizeFilter(
+        that: this,
+      );
+
+  void cleanTagFilter() =>
+      RustLib.instance.api.crateNativeHomeApiHomeVideoDataCleanTagFilter(
+        that: this,
+      );
+
+  void cleanTextFilter() =>
+      RustLib.instance.api.crateNativeHomeApiHomeVideoDataCleanTextFilter(
+        that: this,
+      );
+
   void filterActor({required int id}) => RustLib.instance.api
       .crateNativeHomeApiHomeVideoDataFilterActor(that: this, id: id);
 
   void filterDirector({required int id}) => RustLib.instance.api
       .crateNativeHomeApiHomeVideoDataFilterDirector(that: this, id: id);
+
+  void filterDuration({int? min, int? max}) =>
+      RustLib.instance.api.crateNativeHomeApiHomeVideoDataFilterDuration(
+          that: this, min: min, max: max);
 
   void filterMaker({required int id}) => RustLib.instance.api
       .crateNativeHomeApiHomeVideoDataFilterMaker(that: this, id: id);
@@ -4650,6 +5399,10 @@ class HomeVideoDataImpl extends RustOpaque implements HomeVideoData {
 
   void filterSeries({required int id}) => RustLib.instance.api
       .crateNativeHomeApiHomeVideoDataFilterSeries(that: this, id: id);
+
+  void filterSize({BigInt? min, BigInt? max}) =>
+      RustLib.instance.api.crateNativeHomeApiHomeVideoDataFilterSize(
+          that: this, min: min, max: max);
 
   void filterTag({required int id}) => RustLib.instance.api
       .crateNativeHomeApiHomeVideoDataFilterTag(that: this, id: id);

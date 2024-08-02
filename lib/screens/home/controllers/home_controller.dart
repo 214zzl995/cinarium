@@ -14,12 +14,12 @@ class HomeController extends ChangeNotifier {
   final Map<int, FilterValue> _directorFilter = {};
   final Map<int, FilterValue> _tagFilter = {};
   final Map<int, FilterValue> _seriesFilter = {};
-  final FilterSize _sizeFilter = FilterSize(BigInt.zero, BigInt.zero);
-  final FilterDuration _durationFilter = FilterDuration(0, 0);
   final FilterReleaseTime _releaseTimeFilter =
       FilterReleaseTime(DateTime(1970), DateTime.now());
 
   String _textFilter = "";
+
+  int elapsedMilliseconds = 0;
 
   HomeController() {
     getHomeVideos();
@@ -47,102 +47,11 @@ class HomeController extends ChangeNotifier {
         _seriesFilter[element.key] = FilterValue(element.value, false);
       }
 
-      refreshMovList();
     } catch (e) {
       debugPrint("HomeController getList error");
       debugPrint(e.toString());
     } finally {
       _loading = false;
-    }
-  }
-
-  void refreshMovList() {
-    List<HomeVideo> filterList = [];
-
-    if (_actorFilter.isNotEmpty) {
-      filterList.addAll(_actorFilter.entries
-          .where((element) => element.value.checked)
-          .where((e) => _homeVideoData.videos[e.key] != null)
-          .map((e) => _homeVideoData.videos[e.key]!));
-    }
-
-    if (_directorFilter.isNotEmpty) {
-      filterList.addAll(_directorFilter.entries
-          .where((element) => element.value.checked)
-          .where((e) => _homeVideoData.videos[e.key] != null)
-          .map((e) => _homeVideoData.videos[e.key]!));
-    }
-
-    if (_tagFilter.isNotEmpty) {
-      filterList.addAll(_tagFilter.entries
-          .where((element) => element.value.checked)
-          .where((e) => _homeVideoData.videos[e.key] != null)
-          .map((e) => _homeVideoData.videos[e.key]!));
-    }
-
-    if (_seriesFilter.isNotEmpty) {
-      filterList.addAll(_seriesFilter.entries
-          .where((element) => element.value.checked)
-          .where((e) => _homeVideoData.videos[e.key] != null)
-          .map((e) => _homeVideoData.videos[e.key]!));
-    }
-
-    if (filterList.isNotEmpty) {
-      _homeVideoData.filterVideo = filterList.where((element) {
-        if (_sizeFilter.min != BigInt.zero || _sizeFilter.max != BigInt.zero) {
-          if (_sizeFilter.min == BigInt.zero) {
-            if (element.matedata.size >= _sizeFilter.max) {
-              return false;
-            }
-          }
-
-          if (_sizeFilter.max == BigInt.zero) {
-            if (element.matedata.size <= _sizeFilter.min) {
-              return false;
-            }
-          }
-
-          if (_sizeFilter.max != BigInt.zero &&
-              _sizeFilter.min != BigInt.zero) {
-            if (element.matedata.size <= _sizeFilter.min ||
-                element.matedata.size >= _sizeFilter.max) {
-              return false;
-            }
-          }
-        }
-
-        if (_durationFilter.min != 0 || _durationFilter.max != 0) {
-          if (_durationFilter.min == 0) {
-            if (element.duration >= _durationFilter.max) {
-              return false;
-            }
-          }
-
-          if (_durationFilter.max == 0) {
-            if (element.duration <= _durationFilter.min) {
-              return false;
-            }
-          }
-
-          if (_durationFilter.max != 0 && _durationFilter.min != 0) {
-            if (element.duration <= _durationFilter.min ||
-                element.duration >= _durationFilter.max) {
-              return false;
-            }
-          }
-        }
-
-        if (_textFilter.isNotEmpty) {
-          if (!element.name.toLowerCase().contains(_textFilter.toLowerCase()) &&
-              !element.title
-                  .toLowerCase()
-                  .contains(_textFilter.toLowerCase())) {
-            return false;
-          }
-        }
-
-        return true;
-      }).toList();
     }
 
     notifyListeners();
@@ -152,20 +61,25 @@ class HomeController extends ChangeNotifier {
     switch (type) {
       case FilterType.actor:
         _actorFilter[key]!.checked = value;
+        _homeVideoData.filterActor(id: key);
         break;
       case FilterType.director:
         _directorFilter[key]!.checked = value;
+        _homeVideoData.filterDirector(id: key);
         break;
       case FilterType.tag:
         _tagFilter[key]!.checked = value;
+        _homeVideoData.filterTag(id: key);
         break;
       case FilterType.series:
         _seriesFilter[key]!.checked = value;
+        _homeVideoData.filterSeries(id: key);
         break;
       default:
         throw Exception("addFilter error");
     }
-    refreshMovList();
+
+    notifyListeners();
   }
 
   void clearFilter(FilterType type) {
@@ -174,58 +88,52 @@ class HomeController extends ChangeNotifier {
         for (var element in _actorFilter.values) {
           element.checked = false;
         }
+        _homeVideoData.cleanActorFilter();
         break;
       case FilterType.director:
         for (var element in _directorFilter.values) {
           element.checked = false;
         }
+        _homeVideoData.cleanDirectorFilter();
 
         break;
       case FilterType.tag:
         for (var element in _tagFilter.values) {
           element.checked = false;
         }
+        _homeVideoData.cleanTagFilter();
         break;
       case FilterType.series:
         for (var element in _seriesFilter.values) {
           element.checked = false;
         }
+        _homeVideoData.cleanSeriesFilter();
         break;
       default:
         throw Exception("addFilter error");
     }
-    refreshMovList();
+    notifyListeners();
   }
 
   void addTextFilter(String text) {
     _textFilter = text;
-    refreshMovList();
+    _homeVideoData.filterText(text: text);
+    notifyListeners();
   }
 
   void addSizeFilter(BigInt? min, BigInt? max) {
-    if (min != null) {
-      _sizeFilter.min = min;
-    }
-    if (max != null) {
-      _sizeFilter.max = max;
-    }
-    refreshMovList();
+    _homeVideoData.filterSize(min: min, max: max);
+    notifyListeners();
   }
 
   void addDurationFilter(int? min, int? max) {
-    if (min != null) {
-      _durationFilter.min = min;
-    }
-    if (max != null) {
-      _durationFilter.max = max;
-    }
-    refreshMovList();
+    _homeVideoData.filterDuration(min: min, max: max);
+    notifyListeners();
   }
 
   void addReleaseTimeFilter(DateTime start, DateTime end) {
     _releaseTimeFilter.start = start;
     _releaseTimeFilter.end = end;
-    refreshMovList();
   }
 
   @override
@@ -243,7 +151,7 @@ class HomeController extends ChangeNotifier {
 
   bool get loading => _loading;
 
-  List<HomeVideo> get videoList => _homeVideoData.filterVideo;
+  List<HomeVideo> get videoList => _homeVideoData.video;
 
   Map<int, FilterValue> get actorFilter => _actorFilter;
 
@@ -253,9 +161,9 @@ class HomeController extends ChangeNotifier {
 
   Map<int, FilterValue> get seriesFilter => _seriesFilter;
 
-  FilterSize get sizeFilter => _sizeFilter;
+  (BigInt?, BigInt?) get sizeFilter => _homeVideoData.sizeFilter;
 
-  FilterDuration get durationFilter => _durationFilter;
+  (int?, int?) get durationFilter => _homeVideoData.durationFilter;
 
   FilterReleaseTime get releaseTimeFilter => _releaseTimeFilter;
 
@@ -286,20 +194,6 @@ class FilterReleaseTime {
   set end(DateTime value) {
     end = value;
   }
-}
-
-class FilterSize {
-  BigInt min;
-  BigInt max;
-
-  FilterSize(this.min, this.max);
-}
-
-class FilterDuration {
-  int min;
-  int max;
-
-  FilterDuration(this.min, this.max);
 }
 
 class FilterValue {

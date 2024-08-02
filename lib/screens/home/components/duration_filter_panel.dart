@@ -17,11 +17,10 @@ class DurationFilterPanel extends StatelessWidget {
             clipBehavior: Clip.none,
             alignment: Alignment.center,
             children: [
-              Selector<HomeController, (int, int)>(
+              Selector<HomeController, (int?, int?)?>(
                   builder: (context, value, child) {
-                    final min = value.$1;
-                    final max = value.$2;
-                    if (min != 0 || max != 0) {
+                    if (value != null &&
+                        (value.$1 != null || value.$2 != null)) {
                       return Positioned(
                           top: -5,
                           right: -5,
@@ -38,10 +37,9 @@ class DurationFilterPanel extends StatelessWidget {
                       return Container();
                     }
                   },
-                  selector: (context, homeController) => (
-                        homeController.durationFilter.min,
-                        homeController.durationFilter.max
-                      )),
+                  selector: (context, homeController) => homeController.loading
+                      ? null
+                      : homeController.durationFilter),
               TextButton(
                 onPressed: () {
                   if (controller.isOpen) {

@@ -17,11 +17,10 @@ class SizeFilterPanel extends StatelessWidget {
             clipBehavior: Clip.none,
             alignment: Alignment.center,
             children: [
-              Selector<HomeController, (BigInt, BigInt)>(
+              Selector<HomeController, (BigInt?, BigInt?)?>(
                   builder: (context, value, child) {
-                    final min = value.$1;
-                    final max = value.$2;
-                    if (min != BigInt.zero || max != BigInt.zero) {
+                    if (value != null &&
+                        (value.$1 != null || value.$2 != null)) {
                       return Positioned(
                           top: -5,
                           right: -5,
@@ -38,10 +37,9 @@ class SizeFilterPanel extends StatelessWidget {
                       return Container();
                     }
                   },
-                  selector: (context, homeController) => (
-                        homeController.sizeFilter.min,
-                        homeController.sizeFilter.max
-                      )),
+                  selector: (context, homeController) => homeController.loading
+                      ? null
+                      : homeController.sizeFilter),
               TextButton(
                 onPressed: () {
                   if (controller.isOpen) {

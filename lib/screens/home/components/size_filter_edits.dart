@@ -15,14 +15,34 @@ class SizeFilterEditsState extends State<SizeFilterEdits> {
   final TextEditingController _maxEditingController = TextEditingController();
 
   @override
-  @override
   void initState() {
-    final min = context.read<HomeController>().durationFilter.min;
-    final max = context.read<HomeController>().durationFilter.max;
-    _minEditingController.text = min == 0 ? "" : min.toString();
-    _maxEditingController.text = max == 0 ? "" : max.toString();
+    final min = context.read<HomeController>().sizeFilter.$1;
+    final max = context.read<HomeController>().sizeFilter.$2;
+    _minEditingController.text = min == null ? "" : min.toString();
+    _maxEditingController.text = max == null ? "" : max.toString();
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _minEditingController.dispose();
+    _maxEditingController.dispose();
+    super.dispose();
+  }
+
+  void _onSizeFilterChanged() {
+    final min = _minEditingController.text.isEmpty
+        ? null
+        : BigInt.from(
+            (double.parse(_minEditingController.text) * 1073741824).toInt());
+
+    final max = _maxEditingController.text.isEmpty
+        ? null
+        : BigInt.from(
+            (double.parse(_maxEditingController.text) * 1073741824).toInt());
+
+    context.read<HomeController>().addSizeFilter(min, max);
   }
 
   @override
@@ -65,16 +85,8 @@ class SizeFilterEditsState extends State<SizeFilterEdits> {
                                   .onSurfaceVariant,
                               fontWeight: FontWeight.w600,
                               fontSize: 13))),
-                  onChanged: (value) {
-                    if (value.isEmpty) {
-                      context
-                          .read<HomeController>()
-                          .addSizeFilter(0 as BigInt, null);
-                      return;
-                    }
-                    final min =
-                        BigInt.from((double.parse(value) * 1073741824).toInt());
-                    context.read<HomeController>().addSizeFilter(min, null);
+                  onChanged: (_) {
+                    _onSizeFilterChanged();
                   },
                 ),
               ),
@@ -111,16 +123,8 @@ class SizeFilterEditsState extends State<SizeFilterEdits> {
                               fontWeight: FontWeight.w600,
                               fontSize: 13)),
                     ),
-                    onChanged: (value) {
-                      if (value.isEmpty) {
-                        context
-                            .read<HomeController>()
-                            .addSizeFilter(null, 0 as BigInt);
-                        return;
-                      }
-                      final max = BigInt.from(
-                          (double.parse(value) * 1073741824).toInt());
-                      context.read<HomeController>().addSizeFilter(null, max);
+                    onChanged: (_) {
+                      _onSizeFilterChanged();
                     },
                   )),
             ],
@@ -128,7 +132,7 @@ class SizeFilterEditsState extends State<SizeFilterEdits> {
         ),
         Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceVariant,
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
             ),
             padding: const EdgeInsets.all(10),
             alignment: Alignment.centerRight,
