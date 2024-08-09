@@ -37,6 +37,8 @@ class FileCol extends StatelessWidget {
     if (value is double) return Text(value.toString());
     if (value is String) return Text(value);
     if (value is Widget) return value;
+    if (value is bool) return Text(value.toString());
+    if (value is BigInt) return Text(value.toString());
     throw UnimplementedError("Unknown value type");
   }
 }

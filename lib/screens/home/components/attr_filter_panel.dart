@@ -20,9 +20,11 @@ class AttrFilterPanel extends StatelessWidget {
 
         return MenuAnchor(
           alignmentOffset: const Offset(0, 15),
+          clipBehavior: Clip.none,
           onClose: () {
-            // searchValue.value = "";
+            searchValue.value = "";
           },
+          style: MenuTheme.of(context).style?.copyWith(),
           builder:
               (BuildContext context, MenuController controller, Widget? child) {
             return Stack(clipBehavior: Clip.none, children: [

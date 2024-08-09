@@ -79,9 +79,10 @@ class CrawlNameFieldState extends State<CrawlNameField> {
 
   @override
   Widget build(BuildContext context) {
-    /*final crawlName =
+    final crawlName =
         context.read<RetrieveController>().showFiles[widget.index].crawlName;
-    _textEditingController.text = crawlName;*/
+
+    _textEditingController.text = crawlName;
     return FileCol(
         flex: 1,
         value: Column(

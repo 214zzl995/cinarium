@@ -62,8 +62,9 @@ class DurationFilterPanel extends StatelessWidget {
       },
       menuChildren: [
         RangeSliderExample(
-          20,
-          80,
+          0,
+          200,
+          "Minutes",
           onChanged: (min,max) {},
         )
       ],
