@@ -16,10 +16,8 @@ class AttrFilterPanel extends StatelessWidget {
     final searchValue = ValueNotifier("");
     final searchController = TextEditingController();
 
-    return Selector<HomeController, (Map<int, FilterValue>, int)>(
-      builder: (context, value, child) {
-        final filterList = value.$1;
-
+    return Selector<HomeController, Map<int, FilterValue>>(
+      builder: (context, filterMap, child) {
         return Container(
           margin: const EdgeInsets.only(left: 10, right: 10),
           decoration: BoxDecoration(
@@ -73,7 +71,7 @@ class AttrFilterPanel extends StatelessWidget {
                                   shrinkWrap: true,
                                   physics: physics,
                                   children: [
-                                    ...List.of(filterList.entries)
+                                    ...List.of(filterMap.entries)
                                         .where((element) => element.value.value
                                             .toLowerCase()
                                             .contains(value.toLowerCase()))
@@ -89,43 +87,52 @@ class AttrFilterPanel extends StatelessWidget {
         );
       },
       selector: (context, homeController) {
-        Map<int, FilterValue> filterList;
-
         switch (filterType) {
           case FilterType.actor:
-            filterList = context.watch<HomeController>().actorFilter;
-            break;
+            return homeController.actorFilter;
           case FilterType.director:
-            filterList = context.watch<HomeController>().directorFilter;
-            break;
+            return homeController.directorFilter;
           case FilterType.tag:
-            filterList = context.watch<HomeController>().tagFilter;
-            break;
+            return homeController.tagFilter;
           case FilterType.series:
-            filterList = context.watch<HomeController>().seriesFilter;
-            break;
+            return homeController.seriesFilter;
           default:
-            filterList = {};
+            return {};
         }
+      },
+      shouldRebuild: (prev, next) {
+        debugPrint(next[0].toString());
 
-        final checkSize =
-            filterList.values.where((element) => element.checked).length;
-
-        return (filterList, checkSize);
+        return prev != next;
       },
     );
   }
 
   Widget _buildItem(BuildContext context, MapEntry<int, FilterValue> attr) {
     return Row(mainAxisSize: MainAxisSize.min, children: [
-      Checkbox(
-        value: attr.value.checked,
-        onChanged: (value) {
-          context
-              .read<HomeController>()
-              .addFilter(filterType, attr.key, value ?? false);
-        },
-      ),
+      Selector<HomeController, bool>(
+          builder: (context, checked, child) => Checkbox(
+                value: checked,
+                onChanged: (value) {
+                  context
+                      .read<HomeController>()
+                      .addFilter(filterType, attr.key, value ?? false);
+                },
+              ),
+          selector: (context, homeController) {
+            switch (filterType) {
+              case FilterType.actor:
+                return homeController.actorFilter[attr.key]!.checked;
+              case FilterType.director:
+                return homeController.directorFilter[attr.key]!.checked;
+              case FilterType.tag:
+                return homeController.tagFilter[attr.key]!.checked;
+              case FilterType.series:
+                return homeController.seriesFilter[attr.key]!.checked;
+              default:
+                return false;
+            }
+          }),
       Expanded(
           child: MouseRegion(
               cursor: SystemMouseCursors.click,

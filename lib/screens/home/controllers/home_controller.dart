@@ -48,8 +48,6 @@ class HomeController extends ChangeNotifier {
       for (var element in _homeVideoData.series.entries) {
         _seriesFilter[element.key] = FilterValue(element.value, false);
       }
-
-      notifyListeners();
     } catch (e) {
       debugPrint("HomeController getList error");
       debugPrint(e.toString());

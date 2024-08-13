@@ -91,6 +91,7 @@ impl FilterHomeVideo {
             && self.director_visible
     }
 
+    #[allow(dead_code)]
     fn is_hide(&self) -> bool {
         !self.text_visible
             || !self.size_visible

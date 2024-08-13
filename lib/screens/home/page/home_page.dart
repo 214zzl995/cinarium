@@ -17,7 +17,6 @@ import '../components/slide_fade_transition.dart';
 import '../components/text_filter_edit.dart';
 
 const filterPanelIndicatorHoverHeight = 25.0;
-const minFilterPanelHeight = 100.0;
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -252,8 +251,13 @@ class HomePage extends StatelessWidget {
           child: GestureDetector(
             onVerticalDragUpdate: (DragUpdateDetails details) {
               if (filterPanelVisible.value) {
-                context.read<HomeController>().filterPanelHeight -=
-                    details.delta.dy;
+                final maxHeight = Scaffold.of(context).context.size?.height;
+                final minHeight = maxHeight! / 4;
+                final beginHeight =
+                    context.read<HomeController>().filterPanelHeight;
+                final endHeight = beginHeight - details.delta.dy;
+                context.read<HomeController>().filterPanelHeight =
+                    endHeight.clamp(minHeight, maxHeight);
               }
             },
             child: Container(
@@ -315,8 +319,13 @@ class HomePage extends StatelessWidget {
         child: GestureDetector(
           onVerticalDragUpdate: (DragUpdateDetails details) {
             if (filterPanelVisible.value) {
-              context.read<HomeController>().filterPanelHeight -=
-                  details.delta.dy;
+              final maxHeight = Scaffold.of(context).context.size?.height;
+              final minHeight = maxHeight! / 4;
+              final beginHeight =
+                  context.read<HomeController>().filterPanelHeight;
+              final endHeight = beginHeight - details.delta.dy;
+              context.read<HomeController>().filterPanelHeight =
+                  endHeight.clamp(minHeight, maxHeight);
             }
           },
           child: Container(
