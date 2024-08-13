@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cinarium/models/theme.dart';
 import 'package:cinarium/screens/settings/controllers/settings_controller.dart';
-import '../../../util/theme_extension_util.dart';
 import '../../http/controllers/http_controller.dart';
 import '../../home/controllers/home_controller.dart';
 import '../../pool/controllers/pool_controller.dart';
@@ -34,7 +33,7 @@ class RootPage extends StatelessWidget {
         return Scaffold(
           backgroundColor: Theme.of(context).colorScheme.surface,
           appBar: SAppBar(
-            toolbarHeight: 45,
+            toolbarHeight: 40,
             windowButtonHeight: 30,
             title: Row(
               children: [
@@ -43,7 +42,7 @@ class RootPage extends StatelessWidget {
                   size: 20,
                 ),
                 const SizedBox(
-                  width: 10,
+                  width: 20,
                 ),
                 Text(
                   context.select<RootController, String>(

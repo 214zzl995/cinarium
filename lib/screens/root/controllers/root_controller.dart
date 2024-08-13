@@ -17,7 +17,7 @@ class RootController with ChangeNotifier {
             });
   }
 
-  late var _title = "SmovBookX";
+  var _title = "Cinarium";
   late ListenerHandle _listenerHandle;
 
   bool _httpStatus = false;

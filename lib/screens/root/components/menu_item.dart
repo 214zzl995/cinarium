@@ -121,8 +121,8 @@ class MenuItemState extends State<MenuItem>
                       Lottie.asset(
                         widget.lottie!,
                         controller: _lottieController,
-                        width: MenuParam.menuItemsHeight - 37,
-                        height: MenuParam.menuItemsHeight - 37,
+                        width: MenuParam.menuItemsHeight/2.3,
+                        height: MenuParam.menuItemsHeight/2.3,
                         frameRate: FrameRate.max,
                         onLoaded: (composition) {
                           _lottieController.duration =

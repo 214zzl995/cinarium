@@ -43,7 +43,7 @@ void main(List<String> args) async {
         TitleBarStyle.hidden,
         windowButtonVisibility: false,
       );
-      await windowManager.setMinimumSize(const Size(800, 500));
+      await windowManager.setMinimumSize(const Size(700, 500));
       await windowManager.setPreventClose(true);
       await windowManager.setSkipTaskbar(false);
       //await WindowManager.instance.setAsFrameless();

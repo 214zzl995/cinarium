@@ -8,8 +8,7 @@ class TextFilterEdit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final searchController = TextEditingController();
-    return Expanded(
-        child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+    return Row(mainAxisAlignment: MainAxisAlignment.end, children: [
       Container(
         width: 300,
         margin: const EdgeInsets.only(right: 13),
@@ -45,6 +44,6 @@ class TextFilterEdit extends StatelessWidget {
                   )),
             )),
       )
-    ]));
+    ]);
   }
 }

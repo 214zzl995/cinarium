@@ -25,7 +25,9 @@ class MovCard extends StatelessWidget {
               hover.value = false;
             },
             child: GestureDetector(
+                behavior: HitTestBehavior.deferToChild,
                 onTap: () {
+                  debugPrint("open file");
                   //systemApi.openInDefaultSoftware(path:"${smov.path}\\${smov.filename}.${smov.extension}" );
                 },
                 child: ValueListenableBuilder<bool>(
