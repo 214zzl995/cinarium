@@ -7,7 +7,7 @@ import '../frb_generated.dart';
 import '../model/video.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions are ignored because they are not marked as `pub`: `add_filter`, `clear_filter`, `hide_other_videos`, `is_hide`, `is_show`, `new`, `remove_filter`, `show_other_videos`
+// These functions are ignored because they are not marked as `pub`: `add_filter`, `clear_filter`, `hide_other_videos`, `is_hide`, `is_show`, `new`, `refresh_ts`, `remove_filter`, `show_other_videos`
 // These types are ignored because they are not used by any `pub` functions: `FilterHomeVideo`, `FilterType`
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<HomeVideoData>>
@@ -54,6 +54,8 @@ abstract class HomeVideoData implements RustOpaqueInterface {
 
   String get textFilter;
 
+  int get ts;
+
   set actor(Map<int, String> actor);
 
   set actorFilter(Uint32List actorFilter);
@@ -95,6 +97,8 @@ abstract class HomeVideoData implements RustOpaqueInterface {
   set tagVideos(Map<int, Uint32List> tagVideos);
 
   set textFilter(String textFilter);
+
+  set ts(int ts);
 
   void cleanActorFilter();
 

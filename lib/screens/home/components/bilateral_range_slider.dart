@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 typedef OnChangedCallback = void Function(int? min, int? max);
 
-class RangeSliderExample extends StatefulWidget {
-  const RangeSliderExample(this.start, this.end,this.unit,
+class BilateralRangeSlider extends StatefulWidget {
+  const BilateralRangeSlider(this.start, this.end, this.unit,
       {super.key, required this.onChanged});
 
   final double start;
@@ -14,10 +14,10 @@ class RangeSliderExample extends StatefulWidget {
   final String unit;
 
   @override
-  RangeSliderExampleState createState() => RangeSliderExampleState();
+  BilateralRangeSliderState createState() => BilateralRangeSliderState();
 }
 
-class RangeSliderExampleState extends State<RangeSliderExample> {
+class BilateralRangeSliderState extends State<BilateralRangeSlider> {
   late RangeValues _currentRangeValues;
 
   @override
@@ -38,11 +38,11 @@ class RangeSliderExampleState extends State<RangeSliderExample> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(
-            height: 10,
-            width: 250,
-          ),
-          Padding(
+          Container(
+              color: Theme.of(context)
+                  .colorScheme
+                  .surfaceContainerHighest
+                  .withOpacity(0.3),
               padding: const EdgeInsets.all(10),
               child: SliderTheme(
                 data: SliderTheme.of(context).copyWith(
@@ -73,15 +73,10 @@ class RangeSliderExampleState extends State<RangeSliderExample> {
                   },
                 ),
               )),
-          const SizedBox(
-            height: 10,
-            width: 200,
-          ),
           Container(
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surfaceContainerHighest,
               ),
-              padding: const EdgeInsets.all(10),
               alignment: Alignment.centerRight,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -96,17 +91,15 @@ class RangeSliderExampleState extends State<RangeSliderExample> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  SizedBox(
-                    width: 90,
-                    child: ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            _currentRangeValues = RangeValues(
-                                widget.start.toDouble(), widget.end.toDouble());
-                          });
-                          widget.onChanged(null, null);
-                        },
-                        child: const Text('Clear')),
+                  OutlinedButton(
+                    onPressed: () {
+                      setState(() {
+                        _currentRangeValues = RangeValues(
+                            widget.start.toDouble(), widget.end.toDouble());
+                      });
+                      widget.onChanged(null, null);
+                    },
+                    child: const Text('Reset'),
                   )
                 ],
               )),

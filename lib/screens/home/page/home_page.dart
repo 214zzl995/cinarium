@@ -1,6 +1,9 @@
-import 'package:bridge/call_rust/model/video.dart';
+import 'package:cinarium/components/scroll_animator.dart';
+import 'package:cinarium/screens/home/components/attr_filter_panel_menu.dart';
 import 'package:extended_image/extended_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:cinarium/screens/home/components/video_card.dart';
@@ -13,8 +16,8 @@ import '../components/duration_filter_panel.dart';
 import '../components/slide_fade_transition.dart';
 import '../components/text_filter_edit.dart';
 
-const filterPanelIndicatorHoverHeight = 35.0;
-const filterPanelHeight = 400.0;
+const filterPanelIndicatorHoverHeight = 25.0;
+const minFilterPanelHeight = 100.0;
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -47,11 +50,12 @@ class HomePage extends StatelessWidget {
               builder: (context, panelVisible, child) => AnimatedPositioned(
                   bottom: panelVisible
                       ? 0
-                      : filterPanelIndicatorHoverHeight - filterPanelHeight,
+                      : filterPanelIndicatorHoverHeight -
+                          context.read<HomeController>().filterPanelHeight,
                   right: 0,
                   left: 0,
                   duration: const Duration(milliseconds: 200),
-                  curve: Curves.bounceInOut,
+                  curve: Curves.easeOutQuart,
                   child: _buildFilterPanel(context, filterPanelVisible,
                       filterPanelIndicatorVisible)))
         ],
@@ -66,15 +70,16 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildScrollingView(BuildContext context) {
-    return Selector<HomeController, List<HomeVideo>>(
-        selector: (_, homeController) => homeController.videoList,
-        builder: (context, movList, child) {
+    return Selector<HomeController, int>(
+        selector: (_, homeController) => homeController.ts,
+        builder: (context, _, child) {
+          final videoList = context.read<HomeController>().videoList;
           return AnimatedSwitcher(
               duration: const Duration(milliseconds: 500),
               child: WaterfallFlow.builder(
-                key: ValueKey(movList),
+                key: ValueKey(videoList),
                 padding: const EdgeInsets.all(15),
-                itemCount: movList.length,
+                itemCount: videoList.length,
                 cacheExtent: 1500,
                 gridDelegate: SliverWaterfallFlowDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: 320,
@@ -82,16 +87,17 @@ class HomePage extends StatelessWidget {
                   mainAxisSpacing: 10.0,
                   collectGarbage: (List<int> garbages) {
                     for (final index in garbages) {
-                      final mov = movList[index];
+                      final mov = videoList[index];
                       clearMemoryImageCache(mov.name);
                     }
                   },
-                  lastChildLayoutTypeBuilder: (index) => index == movList.length
-                      ? LastChildLayoutType.foot
-                      : LastChildLayoutType.none,
+                  lastChildLayoutTypeBuilder: (index) =>
+                      index == videoList.length
+                          ? LastChildLayoutType.foot
+                          : LastChildLayoutType.none,
                 ),
                 itemBuilder: (BuildContext context, int index) {
-                  if (index == movList.length) {
+                  if (index == videoList.length) {
                     return const SizedBox(
                       height: 0,
                     );
@@ -151,73 +157,194 @@ class HomePage extends StatelessWidget {
 
   Widget _buildFilterPanel(
       BuildContext context, filterPanelVisible, filterPanelIndicatorVisible) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.bounceInOut,
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(10),
-          topRight: Radius.circular(10),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.4),
-            spreadRadius: 1,
-            blurRadius: filterPanelVisible.value ? 5 : 0,
-            offset: const Offset(0, 3),
-          ),
-        ],
-        color: filterPanelVisible.value
-            ? Theme.of(context).colorScheme.surfaceContainer
-            : Theme.of(context).colorScheme.surface,
-      ),
-      height: filterPanelHeight,
-      child: ValueListenableBuilder<bool>(
-        valueListenable: filterPanelIndicatorVisible,
-        builder: (context, indicatorVisible, child) => Column(
-          children: [
-            InkWell(
-              onHover: (hover) {
-                if (!filterPanelVisible.value) {
-                  filterPanelIndicatorVisible.value = hover;
-                }
-              },
-              onTap: () {
-                filterPanelVisible.value = !filterPanelVisible.value;
-              },
-              child: Container(
-                width: double.infinity,
-                height: filterPanelIndicatorHoverHeight,
-                color: Colors.transparent,
-                child: AnimatedOpacity(
-                  duration: const Duration(milliseconds: 200),
-                  opacity: indicatorVisible ? 1 : 0,
-                  child: AnimatedRotation(
-                    duration: const Duration(milliseconds: 200),
-                    turns: filterPanelVisible.value ? 0.5 : 0,
-                    child: const Icon(Icons.keyboard_double_arrow_up),
+    return Selector<HomeController, double>(
+      builder: (context, height, child) {
+        return SizedBox(
+          height: height,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.bounceInOut,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+              ),
+              color: filterPanelVisible.value
+                  ? Theme.of(context).colorScheme.surfaceContainer
+                  : Theme.of(context).colorScheme.surface,
+            ),
+            child: ValueListenableBuilder<bool>(
+              valueListenable: filterPanelIndicatorVisible,
+              builder: (context, indicatorVisible, child) => Column(
+                children: [
+                  ..._buildPanelIndicatorAmalgam(
+                      context, filterPanelVisible, filterPanelIndicatorVisible),
+                  const SizedBox(height: 10),
+                  Expanded(child: child!),
+                ],
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  const Expanded(
+                    flex: 8,
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: AttrFilterPanel(FilterType.actor,
+                                Icons.account_circle_outlined)),
+                        Expanded(
+                            child: AttrFilterPanel(
+                                FilterType.series, Icons.camera_alt_outlined)),
+                        Expanded(
+                            child: AttrFilterPanel(
+                                FilterType.tag, Icons.tag_outlined)),
+                      ],
+                    ),
                   ),
-                ),
+                  Expanded(
+                    flex: 3,
+                    child: Column(
+                      children: [
+                        const TextFilterEdit(),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Expanded(
+                            child: ScrollAnimator(
+                          scrollSpeed: 1,
+                          builder: (BuildContext context,
+                              ScrollController controller,
+                              ScrollPhysics? physics) {
+                            return SingleChildScrollView(
+                                controller: controller,
+                                physics: physics,
+                                child: const Column(
+                                  children: [
+                                    DurationFilterPanel(),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    SizeFilterPanel(),
+                                  ],
+                                ));
+                          },
+                        ))
+                      ],
+                    ),
+                  )
+                ],
               ),
             ),
-            if (filterPanelVisible.value) child!,
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            TextFilterEdit(),
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                AttrFilterPanel(
-                    FilterType.actor, Icons.account_circle_outlined),
-              ],
-            )
-          ],
-        ),
-      ),
+          ),
+        );
+      },
+      selector: (context, homeController) => homeController.filterPanelHeight,
     );
+  }
+
+  List<Widget> _buildPanelIndicatorSeparation(
+      BuildContext context, filterPanelVisible, filterPanelIndicatorVisible) {
+    return [
+      if (filterPanelVisible.value)
+        MouseRegion(
+          cursor: SystemMouseCursors.resizeRow,
+          child: GestureDetector(
+            onVerticalDragUpdate: (DragUpdateDetails details) {
+              if (filterPanelVisible.value) {
+                context.read<HomeController>().filterPanelHeight -=
+                    details.delta.dy;
+              }
+            },
+            child: Container(
+              width: double.infinity,
+              height: 6,
+              color: Colors.transparent,
+            ),
+          ),
+        ),
+      InkWell(
+        onHover: (hover) {
+          if (!filterPanelVisible.value) {
+            filterPanelIndicatorVisible.value = hover;
+          }
+        },
+        onTap: () {
+          filterPanelVisible.value = !filterPanelVisible.value;
+        },
+        child: Container(
+            width: double.infinity,
+            height: filterPanelIndicatorHoverHeight,
+            color: Colors.transparent,
+            child: Align(
+              alignment: Alignment.center,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width / 18,
+                height: 6,
+                child: AnimatedContainer(
+                  decoration: BoxDecoration(
+                    color: filterPanelIndicatorVisible.value
+                        ? Theme.of(context)
+                            .colorScheme
+                            .onSurfaceVariant
+                            .withOpacity(0.8)
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  duration: const Duration(milliseconds: 200),
+                ),
+              ),
+            )),
+      ),
+    ];
+  }
+
+  List<Widget> _buildPanelIndicatorAmalgam(
+      BuildContext context, filterPanelVisible, filterPanelIndicatorVisible) {
+    return [
+      InkWell(
+        mouseCursor: filterPanelVisible.value
+            ? SystemMouseCursors.allScroll
+            : SystemMouseCursors.click,
+        onHover: (hover) {
+          filterPanelIndicatorVisible.value = hover;
+        },
+        onTap: () {
+          filterPanelVisible.value = !filterPanelVisible.value;
+        },
+        child: GestureDetector(
+          onVerticalDragUpdate: (DragUpdateDetails details) {
+            if (filterPanelVisible.value) {
+              context.read<HomeController>().filterPanelHeight -=
+                  details.delta.dy;
+            }
+          },
+          child: Container(
+              width: double.infinity,
+              height: filterPanelIndicatorHoverHeight,
+              color: Colors.transparent,
+              child: Align(
+                alignment: Alignment.center,
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width / 18,
+                  height: 6,
+                  child: AnimatedContainer(
+                    decoration: BoxDecoration(
+                      color: filterPanelIndicatorVisible.value
+                          ? Theme.of(context)
+                              .colorScheme
+                              .onSurfaceVariant
+                              .withOpacity(0.8)
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    duration: const Duration(milliseconds: 200),
+                  ),
+                ),
+              )),
+        ),
+      )
+    ];
   }
 
   Widget _buildFilterBar(BuildContext context) {
@@ -233,11 +360,12 @@ class HomePage extends StatelessWidget {
           child: const Row(
             children: [
               SizedBox(width: 10),
-              AttrFilterPanel(FilterType.actor, Icons.account_circle_outlined),
+              AttrFilterPanelMenu(
+                  FilterType.actor, Icons.account_circle_outlined),
               SizedBox(width: 10),
-              AttrFilterPanel(FilterType.series, Icons.camera_alt_outlined),
+              AttrFilterPanelMenu(FilterType.series, Icons.camera_alt_outlined),
               SizedBox(width: 10),
-              AttrFilterPanel(FilterType.tag, Icons.tag_outlined),
+              AttrFilterPanelMenu(FilterType.tag, Icons.tag_outlined),
               SizedBox(width: 10),
               DurationFilterPanel(),
               SizedBox(width: 10),

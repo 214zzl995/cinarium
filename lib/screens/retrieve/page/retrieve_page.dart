@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cinarium/screens/retrieve/components/file_col.dart';
 import '../components/file_row.dart';
+import '../../../components/scroll_animator.dart';
 import '../components/search_field.dart';
 import '../controllers/retrieve_controller.dart';
 
@@ -19,29 +20,34 @@ class RetrievePage extends StatelessWidget {
           children: [
             _buildToolBar(context),
             Expanded(
-              child: CustomScrollView(
-                slivers: [
-                  _buildTableHeader(context),
-                  SliverFixedExtentList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final file =
-                            context.read<RetrieveController>().showFiles[index];
-                        return FileRow(
-                          index: index,
-                          untreatedVideo: file,
-                          doubleTap: false,
-                        );
-                      },
-                      childCount: context.select<RetrieveController, int>(
-                          (value) => value.fileCount),
+              child: ScrollAnimator(
+                builder: (context, controller, physics) => CustomScrollView(
+                  physics: physics,
+                  controller: controller,
+                  slivers: [
+                    _buildTableHeader(context),
+                    SliverFixedExtentList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          final file = context
+                              .read<RetrieveController>()
+                              .showFiles[index];
+                          return FileRow(
+                            index: index,
+                            untreatedVideo: file,
+                            doubleTap: false,
+                          );
+                        },
+                        childCount: context.select<RetrieveController, int>(
+                            (value) => value.fileCount),
+                      ),
+                      itemExtent: 55.0,
                     ),
-                    itemExtent: 55.0,
-                  ),
-                  const SliverToBoxAdapter(
-                    child: SizedBox(height: 80),
-                  ),
-                ],
+                    const SliverToBoxAdapter(
+                      child: SizedBox(height: 80),
+                    ),
+                  ],
+                ),
               ),
             )
           ],

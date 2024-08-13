@@ -46,6 +46,7 @@ pub struct HomeVideoData {
     pub text_filter: String,
     pub size_filter: (Option<u64>, Option<u64>),
     pub duration_filter: (Option<u32>, Option<u32>),
+    pub ts: u32,
 }
 
 #[derive(Debug)]
@@ -226,6 +227,7 @@ impl HomeVideoData {
             text_filter: String::new(),
             size_filter: (None, None),
             duration_filter: (None, None),
+            ts: chrono::Local::now().timestamp_subsec_micros(),
         })
     }
 
@@ -458,6 +460,7 @@ impl HomeVideoData {
                 });
             }
         }
+        self.refresh_ts();
     }
 
     #[allow(dead_code)]
@@ -503,6 +506,7 @@ impl HomeVideoData {
             }
             _ => {}
         }
+        self.refresh_ts();
     }
 
     #[allow(dead_code)]
@@ -582,5 +586,10 @@ impl HomeVideoData {
                 };
             }
         });
+    }
+
+    #[allow(dead_code)]
+    fn refresh_ts(&mut self) {
+        self.ts = chrono::Local::now().timestamp_subsec_micros();
     }
 }

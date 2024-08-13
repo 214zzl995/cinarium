@@ -39,6 +39,7 @@ dependencies:
     path: ./bridge
   cinarium_core:
     path: rust_builder
+  flutter_resizable_container: ^2.0.0
 
 
 dev_dependencies:

@@ -17,6 +17,8 @@ class HomeController extends ChangeNotifier {
   final FilterReleaseTime _releaseTimeFilter =
       FilterReleaseTime(DateTime(1970), DateTime.now());
 
+  double _filterPanelHeight = 400.0;
+
   String _textFilter = "";
 
   int elapsedMilliseconds = 0;
@@ -47,6 +49,7 @@ class HomeController extends ChangeNotifier {
         _seriesFilter[element.key] = FilterValue(element.value, false);
       }
 
+      notifyListeners();
     } catch (e) {
       debugPrint("HomeController getList error");
       debugPrint(e.toString());
@@ -149,9 +152,18 @@ class HomeController extends ChangeNotifier {
     }
   }
 
+  double get filterPanelHeight => _filterPanelHeight;
+
+  set filterPanelHeight(double value) {
+    _filterPanelHeight = value;
+    notifyListeners();
+  }
+
   bool get loading => _loading;
 
   List<HomeVideo> get videoList => _homeVideoData.video;
+
+  int get ts => _homeVideoData.ts;
 
   Map<int, FilterValue> get actorFilter => _actorFilter;
 

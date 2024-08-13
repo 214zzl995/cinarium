@@ -43,7 +43,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.1.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1640943820;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 57303205;
 
 // Section: executor
 
@@ -1516,6 +1516,52 @@ fn wire__crate__native__home_api__HomeVideoData_auto_accessor_get_text_filter_im
         },
     )
 }
+fn wire__crate__native__home_api__HomeVideoData_auto_accessor_get_ts_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "HomeVideoData_auto_accessor_get_ts",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<HomeVideoData>,
+            >>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse::<_, ()>((move || {
+                let mut api_that_guard = None;
+                let decode_indices_ =
+                    flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
+                        flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                            &api_that, 0, false,
+                        ),
+                    ]);
+                for i in decode_indices_ {
+                    match i {
+                        0 => api_that_guard = Some(api_that.lockable_decode_sync_ref()),
+                        _ => unreachable!(),
+                    }
+                }
+                let api_that_guard = api_that_guard.unwrap();
+                let output_ok = Result::<_, ()>::Ok(api_that_guard.ts.clone())?;
+                Ok(output_ok)
+            })())
+        },
+    )
+}
 fn wire__crate__native__home_api__HomeVideoData_auto_accessor_set_actor_impl(
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -2589,6 +2635,57 @@ fn wire__crate__native__home_api__HomeVideoData_auto_accessor_set_text_filter_im
                 let output_ok = Result::<_, ()>::Ok({
                     {
                         api_that_guard.text_filter = api_text_filter;
+                    };
+                })?;
+                Ok(output_ok)
+            })())
+        },
+    )
+}
+fn wire__crate__native__home_api__HomeVideoData_auto_accessor_set_ts_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "HomeVideoData_auto_accessor_set_ts",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<
+                flutter_rust_bridge::for_generated::RustAutoOpaqueInner<HomeVideoData>,
+            >>::sse_decode(&mut deserializer);
+            let api_ts = <u32>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse::<_, ()>((move || {
+                let mut api_that_guard = None;
+                let decode_indices_ =
+                    flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![
+                        flutter_rust_bridge::for_generated::LockableOrderInfo::new(
+                            &api_that, 0, true,
+                        ),
+                    ]);
+                for i in decode_indices_ {
+                    match i {
+                        0 => api_that_guard = Some(api_that.lockable_decode_sync_ref_mut()),
+                        _ => unreachable!(),
+                    }
+                }
+                let mut api_that_guard = api_that_guard.unwrap();
+                let output_ok = Result::<_, ()>::Ok({
+                    {
+                        api_that_guard.ts = api_ts;
                     };
                 })?;
                 Ok(output_ok)
@@ -5475,115 +5572,115 @@ fn pde_ffi_dispatcher_primary_impl(
         12 => {
             wire__crate__native__db_api__update_crawl_name_impl(port, ptr, rust_vec_len, data_len)
         }
-        74 => {
+        76 => {
             wire__crate__native__home_api__HomeVideoData_new_impl(port, ptr, rust_vec_len, data_len)
         }
-        75 => wire__crate__native__system_api__change_crawler_templates_priority_impl(
+        77 => wire__crate__native__system_api__change_crawler_templates_priority_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        77 => {
+        79 => {
             wire__crate__native__system_api__get_http_conf_impl(port, ptr, rust_vec_len, data_len)
         }
-        80 => {
+        82 => {
             wire__crate__native__system_api__get_task_conf_impl(port, ptr, rust_vec_len, data_len)
         }
-        81 => wire__crate__native__system_api__init_app_log_impl(port, ptr, rust_vec_len, data_len),
-        82 => wire__crate__native__system_api__init_cinarium_config_impl(
+        83 => wire__crate__native__system_api__init_app_log_impl(port, ptr, rust_vec_len, data_len),
+        84 => wire__crate__native__system_api__init_cinarium_config_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        83 => wire__crate__native__system_api__init_source_notify_impl(
+        85 => wire__crate__native__system_api__init_source_notify_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        84 => wire__crate__native__system_api__listener_http_status_impl(
+        86 => wire__crate__native__system_api__listener_http_status_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        85 => wire__crate__native__system_api__listener_untreated_file_impl(
+        87 => wire__crate__native__system_api__listener_untreated_file_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        86 => wire__crate__native__system_api__open_in_default_software_impl(
+        88 => wire__crate__native__system_api__open_in_default_software_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        87 => wire__crate__native__system_api__open_in_explorer_impl(
+        89 => wire__crate__native__system_api__open_in_explorer_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        89 => wire__crate__native__system_api__run_web_api_impl(port, ptr, rust_vec_len, data_len),
-        90 => wire__crate__native__system_api__stop_web_api_impl(port, ptr, rust_vec_len, data_len),
-        92 => wire__crate__native__system_api__switch_crawler_template_enabled_impl(
+        91 => wire__crate__native__system_api__run_web_api_impl(port, ptr, rust_vec_len, data_len),
+        92 => wire__crate__native__system_api__stop_web_api_impl(port, ptr, rust_vec_len, data_len),
+        94 => wire__crate__native__system_api__switch_crawler_template_enabled_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        93 => wire__crate__native__system_api__update_http_port_impl(
+        95 => wire__crate__native__system_api__update_http_port_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        94 => wire__crate__native__system_api__update_task_thread_impl(
+        96 => wire__crate__native__system_api__update_task_thread_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        95 => wire__crate__native__system_api__update_task_tidy_folder_impl(
+        97 => wire__crate__native__system_api__update_task_tidy_folder_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        96 => wire__crate__native__task_api__change_task_status_impl(
+        98 => wire__crate__native__task_api__change_task_status_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        97 => wire__crate__native__task_api__delete_task_impl(port, ptr, rust_vec_len, data_len),
-        98 => {
+        99 => wire__crate__native__task_api__delete_task_impl(port, ptr, rust_vec_len, data_len),
+        100 => {
             wire__crate__native__task_api__force_pause_pool_impl(port, ptr, rust_vec_len, data_len)
         }
-        100 => wire__crate__native__task_api__init_pool_impl(port, ptr, rust_vec_len, data_len),
-        101 => wire__crate__native__task_api__insertion_of_tasks_impl(
+        102 => wire__crate__native__task_api__init_pool_impl(port, ptr, rust_vec_len, data_len),
+        103 => wire__crate__native__task_api__insertion_of_tasks_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        102 => wire__crate__native__task_api__listener_pool_status_change_impl(
+        104 => wire__crate__native__task_api__listener_pool_status_change_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        103 => wire__crate__native__task_api__listener_task_status_change_impl(
+        105 => wire__crate__native__task_api__listener_task_status_change_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        104 => wire__crate__native__task_api__pause_pool_impl(port, ptr, rust_vec_len, data_len),
-        105 => wire__crate__native__task_api__resume_pool_impl(port, ptr, rust_vec_len, data_len),
+        106 => wire__crate__native__task_api__pause_pool_impl(port, ptr, rust_vec_len, data_len),
+        107 => wire__crate__native__task_api__resume_pool_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -5708,212 +5805,222 @@ fn pde_ffi_dispatcher_sync_impl(
             rust_vec_len,
             data_len,
         ),
-        34 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_actor_impl(
+        34 => wire__crate__native__home_api__HomeVideoData_auto_accessor_get_ts_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        35 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_actor_filter_impl(
+        35 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_actor_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        36 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_actor_videos_impl(
+        36 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_actor_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        37 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_director_impl(
+        37 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_actor_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        38 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_director_filter_impl(
+        38 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_director_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        39 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_director_videos_impl(
+        39 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_director_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        40 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_duration_filter_impl(
+        40 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_director_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        41 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_maker_impl(
+        41 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_duration_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        42 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_maker_filter_impl(
+        42 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_maker_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        43 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_maker_videos_impl(
+        43 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_maker_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        44 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_publisher_impl(
+        44 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_maker_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        45 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_publisher_filter_impl(
+        45 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_publisher_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        46 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_publisher_videos_impl(
+        46 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_publisher_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        47 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_series_impl(
+        47 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_publisher_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        48 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_series_filter_impl(
+        48 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_series_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        49 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_series_videos_impl(
+        49 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_series_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        50 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_size_filter_impl(
+        50 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_series_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        51 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_tag_impl(
+        51 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_size_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        52 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_tag_filter_impl(
+        52 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_tag_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        53 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_tag_videos_impl(
+        53 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_tag_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        54 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_text_filter_impl(
+        54 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_tag_videos_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        55 => wire__crate__native__home_api__HomeVideoData_clean_actor_filter_impl(
+        55 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_text_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        56 => wire__crate__native__home_api__HomeVideoData_clean_director_filter_impl(
+        56 => wire__crate__native__home_api__HomeVideoData_auto_accessor_set_ts_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        57 => wire__crate__native__home_api__HomeVideoData_clean_duration_filter_impl(
+        57 => wire__crate__native__home_api__HomeVideoData_clean_actor_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        58 => wire__crate__native__home_api__HomeVideoData_clean_maker_filter_impl(
+        58 => wire__crate__native__home_api__HomeVideoData_clean_director_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        59 => wire__crate__native__home_api__HomeVideoData_clean_publisher_filter_impl(
+        59 => wire__crate__native__home_api__HomeVideoData_clean_duration_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        60 => wire__crate__native__home_api__HomeVideoData_clean_series_filter_impl(
+        60 => wire__crate__native__home_api__HomeVideoData_clean_maker_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        61 => wire__crate__native__home_api__HomeVideoData_clean_size_filter_impl(
+        61 => wire__crate__native__home_api__HomeVideoData_clean_publisher_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        62 => wire__crate__native__home_api__HomeVideoData_clean_tag_filter_impl(
+        62 => wire__crate__native__home_api__HomeVideoData_clean_series_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        63 => wire__crate__native__home_api__HomeVideoData_clean_text_filter_impl(
+        63 => wire__crate__native__home_api__HomeVideoData_clean_size_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        64 => wire__crate__native__home_api__HomeVideoData_filter_actor_impl(
+        64 => wire__crate__native__home_api__HomeVideoData_clean_tag_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        65 => wire__crate__native__home_api__HomeVideoData_filter_director_impl(
+        65 => wire__crate__native__home_api__HomeVideoData_clean_text_filter_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        66 => wire__crate__native__home_api__HomeVideoData_filter_duration_impl(
+        66 => wire__crate__native__home_api__HomeVideoData_filter_actor_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        67 => wire__crate__native__home_api__HomeVideoData_filter_maker_impl(
+        67 => wire__crate__native__home_api__HomeVideoData_filter_director_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        68 => wire__crate__native__home_api__HomeVideoData_filter_publisher_impl(
+        68 => wire__crate__native__home_api__HomeVideoData_filter_duration_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        69 => wire__crate__native__home_api__HomeVideoData_filter_series_impl(
+        69 => wire__crate__native__home_api__HomeVideoData_filter_maker_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        70 => wire__crate__native__home_api__HomeVideoData_filter_size_impl(
+        70 => wire__crate__native__home_api__HomeVideoData_filter_publisher_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        71 => wire__crate__native__home_api__HomeVideoData_filter_tag_impl(
+        71 => wire__crate__native__home_api__HomeVideoData_filter_series_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        72 => wire__crate__native__home_api__HomeVideoData_filter_text_impl(
+        72 => wire__crate__native__home_api__HomeVideoData_filter_size_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        73 => {
+        73 => wire__crate__native__home_api__HomeVideoData_filter_tag_impl(
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        74 => wire__crate__native__home_api__HomeVideoData_filter_text_impl(
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        75 => {
             wire__crate__native__home_api__HomeVideoData_get_video_impl(ptr, rust_vec_len, data_len)
         }
-        76 => {
+        78 => {
             wire__crate__native__system_api__get_crawler_templates_impl(ptr, rust_vec_len, data_len)
         }
-        78 => wire__crate__native__system_api__get_http_status_impl(ptr, rust_vec_len, data_len),
-        79 => wire__crate__native__system_api__get_local_ip_impl(ptr, rust_vec_len, data_len),
-        88 => wire__crate__native__system_api__path_buf_2_string_impl(ptr, rust_vec_len, data_len),
-        91 => wire__crate__native__system_api__string_2_path_buf_impl(ptr, rust_vec_len, data_len),
-        99 => wire__crate__native__task_api__get_pool_data_impl(ptr, rust_vec_len, data_len),
+        80 => wire__crate__native__system_api__get_http_status_impl(ptr, rust_vec_len, data_len),
+        81 => wire__crate__native__system_api__get_local_ip_impl(ptr, rust_vec_len, data_len),
+        90 => wire__crate__native__system_api__path_buf_2_string_impl(ptr, rust_vec_len, data_len),
+        93 => wire__crate__native__system_api__string_2_path_buf_impl(ptr, rust_vec_len, data_len),
+        101 => wire__crate__native__task_api__get_pool_data_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
