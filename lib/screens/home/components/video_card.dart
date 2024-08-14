@@ -30,6 +30,9 @@ class MovCard extends StatelessWidget {
                   debugPrint("open file");
                   //systemApi.openInDefaultSoftware(path:"${smov.path}\\${smov.filename}.${smov.extension}" );
                 },
+                onSecondaryTap: (){
+                  _showRightClickMenu(context);
+                },
                 child: ValueListenableBuilder<bool>(
                   valueListenable: hover,
                   builder: (context, value, child) {
@@ -132,6 +135,42 @@ class MovCard extends StatelessWidget {
                 // 此处添加其他子组件
               ),
             )));
+  }
+
+  void _showRightClickMenu(BuildContext context) async {
+    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+
+    await showMenu(
+      context: context,
+      position: RelativeRect.fromRect(
+        Rect.fromPoints(
+          overlay.localToGlobal(Offset.zero),
+          overlay.localToGlobal(Offset.zero),
+        ),
+        Offset.zero & overlay.size,
+      ),
+      items: [
+        PopupMenuItem(
+          value: 1,
+          child: Text('选项 1'),
+        ),
+        PopupMenuItem(
+          value: 2,
+          child: Text('选项 2'),
+        ),
+        PopupMenuItem(
+          value: 3,
+          child: Text('选项 3'),
+        ),
+      ],
+    ).then((value) {
+      if (value != null) {
+        // 处理点击的菜单项
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('你选择了 $value')),
+        );
+      }
+    });
   }
 }
 
