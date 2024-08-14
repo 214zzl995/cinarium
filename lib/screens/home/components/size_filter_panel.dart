@@ -32,16 +32,20 @@ class SizeFilterPanel extends StatelessWidget {
                     color: Theme.of(context).colorScheme.onSurfaceVariant))
           ],
         ),
-        BilateralRangeSlider(
-          0,
-          30720,
-          "Mb",
-          onChanged: (min, max) {
-            context.read<HomeController>().addSizeFilter(
-                min != null ? BigInt.from(min * 1048576) : null,
-                max != null ? BigInt.from(max * 1048576) : null);
-          },
-        )
+        BilateralRangeSlider(0, 30, "Gb", onChanged: (min, max) {
+          context.read<HomeController>().addSizeFilter(
+              min != null ? BigInt.from((min * 1073741824).round()) : null,
+              max != null ? BigInt.from((max * 1073741824).round()) : null);
+        },
+            initStart: context.read<HomeController>().sizeFilter.$1 == null
+                ? 0
+                : context.read<HomeController>().sizeFilter.$1!.toDouble() /
+                    1073741824,
+            initEnd: context.read<HomeController>().sizeFilter.$2 == null
+                ? 30
+                : context.read<HomeController>().sizeFilter.$2!.toDouble() /
+                    1073741824,
+            retainDecimals: 1)
       ]),
     );
   }

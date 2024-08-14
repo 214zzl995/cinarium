@@ -19,8 +19,6 @@ class HomeController extends ChangeNotifier {
 
   double _filterPanelHeight = 400.0;
 
-  String _textFilter = "";
-
   int elapsedMilliseconds = 0;
 
   HomeController() {
@@ -117,7 +115,6 @@ class HomeController extends ChangeNotifier {
   }
 
   void addTextFilter(String text) {
-    _textFilter = text;
     _homeVideoData.filterText(text: text);
     notifyListeners();
   }
@@ -177,7 +174,7 @@ class HomeController extends ChangeNotifier {
 
   FilterReleaseTime get releaseTimeFilter => _releaseTimeFilter;
 
-  String get textFilter => _textFilter;
+  String get textFilter => _homeVideoData.textFilter;
 }
 
 enum FilterType {

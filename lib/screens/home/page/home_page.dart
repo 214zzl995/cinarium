@@ -1,8 +1,10 @@
 import 'package:cinarium/components/scroll_animator.dart';
 import 'package:cinarium/screens/home/components/attr_filter_panel_menu.dart';
 import 'package:extended_image/extended_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +27,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     ValueNotifier<bool> filterPanelVisible = ValueNotifier(false);
     ValueNotifier<bool> filterPanelIndicatorVisible = ValueNotifier(false);
+    ValueNotifier<bool> filterPanelLock = ValueNotifier(false);
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -33,8 +36,10 @@ class HomePage extends StatelessWidget {
           Positioned.fill(
               child: Listener(
             onPointerDown: (event) {
-              filterPanelVisible.value = false;
-              filterPanelIndicatorVisible.value = false;
+              if (!filterPanelLock.value) {
+                filterPanelVisible.value = false;
+                filterPanelIndicatorVisible.value = false;
+              }
             },
             child: Container(
               decoration: BoxDecoration(
@@ -56,7 +61,7 @@ class HomePage extends StatelessWidget {
                   duration: const Duration(milliseconds: 200),
                   curve: Curves.easeOutQuart,
                   child: _buildFilterPanel(context, filterPanelVisible,
-                      filterPanelIndicatorVisible)))
+                      filterPanelIndicatorVisible, filterPanelLock)))
         ],
       ),
       floatingActionButton: const Row(
@@ -154,184 +159,122 @@ class HomePage extends StatelessWidget {
         });
   }
 
-  Widget _buildFilterPanel(
-      BuildContext context, filterPanelVisible, filterPanelIndicatorVisible) {
-    return Selector<HomeController, double>(
-      builder: (context, height, child) {
-        return SizedBox(
-          height: height,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.bounceInOut,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(10),
-                topRight: Radius.circular(10),
-              ),
-              color: filterPanelVisible.value
-                  ? Theme.of(context).colorScheme.surfaceContainer
-                  : Theme.of(context).colorScheme.surface,
-            ),
-            child: ValueListenableBuilder<bool>(
-              valueListenable: filterPanelIndicatorVisible,
-              builder: (context, indicatorVisible, child) => Column(
-                children: [
-                  ..._buildPanelIndicatorAmalgam(
-                      context, filterPanelVisible, filterPanelIndicatorVisible),
-                  const SizedBox(height: 10),
-                  Expanded(child: child!),
-                ],
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  const Expanded(
-                    flex: 8,
-                    child: Row(
+  Widget _buildFilterPanel(BuildContext context, filterPanelVisible,
+      filterPanelIndicatorVisible, filterPanelLock) {
+    return Selector<HomeController, bool>(
+        selector: (_, homeController) => (homeController.loading),
+        builder: (selectorContext, loading, __) {
+          if (loading){
+            return const SizedBox();
+          }
+          return Selector<HomeController, double>(
+            builder: (context, height, child) {
+              return SizedBox(
+                height: height,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.bounceInOut,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10),
+                    ),
+                    color: filterPanelVisible.value
+                        ? Theme.of(context).colorScheme.surfaceContainer
+                        : Theme.of(context).colorScheme.surface,
+                  ),
+                  child: ValueListenableBuilder<bool>(
+                    valueListenable: filterPanelIndicatorVisible,
+                    builder: (context, indicatorVisible, child) => Column(
                       children: [
-                        Expanded(
-                            child: AttrFilterPanel(FilterType.actor,
-                                Icons.account_circle_outlined)),
-                        Expanded(
-                            child: AttrFilterPanel(
-                                FilterType.series, Icons.camera_alt_outlined)),
-                        Expanded(
-                            child: AttrFilterPanel(
-                                FilterType.tag, Icons.tag_outlined)),
+                        _buildPanelIndicator(
+                          context,
+                          filterPanelVisible,
+                          filterPanelIndicatorVisible,
+                          filterPanelLock,
+                          mergeGestures: true,
+                        ),
+                        const SizedBox(height: 10),
+                        Expanded(child: child!),
                       ],
                     ),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: Column(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
                       children: [
-                        const TextFilterEdit(),
-                        const SizedBox(
-                          height: 10,
+                        const Expanded(
+                          flex: 8,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  child: AttrFilterPanel(FilterType.actor,
+                                      Icons.account_circle_outlined)),
+                              Expanded(
+                                  child: AttrFilterPanel(FilterType.series,
+                                      Icons.camera_alt_outlined)),
+                              Expanded(
+                                  child: AttrFilterPanel(
+                                      FilterType.tag, Icons.tag_outlined)),
+                            ],
+                          ),
                         ),
                         Expanded(
-                            child: ScrollAnimator(
-                          scrollSpeed: 1,
-                          builder: (BuildContext context,
-                              ScrollController controller,
-                              ScrollPhysics? physics) {
-                            return SingleChildScrollView(
-                                controller: controller,
-                                physics: physics,
-                                child: const Column(
-                                  children: [
-                                    DurationFilterPanel(),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    SizeFilterPanel(),
-                                  ],
-                                ));
-                          },
-                        ))
+                          flex: 3,
+                          child: Column(
+                            children: [
+                              const TextFilterEdit(),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Expanded(
+                                  child: ScrollAnimator(
+                                scrollSpeed: 1,
+                                builder: (BuildContext context,
+                                    ScrollController controller,
+                                    ScrollPhysics? physics) {
+                                  return SingleChildScrollView(
+                                      controller: controller,
+                                      physics: physics,
+                                      child: const Column(
+                                        children: [
+                                          DurationFilterPanel(),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          SizeFilterPanel(),
+                                        ],
+                                      ));
+                                },
+                              ))
+                            ],
+                          ),
+                        )
                       ],
                     ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-      selector: (context, homeController) => homeController.filterPanelHeight,
-    );
-  }
-
-  List<Widget> _buildPanelIndicatorSeparation(
-      BuildContext context, filterPanelVisible, filterPanelIndicatorVisible) {
-    return [
-      if (filterPanelVisible.value)
-        MouseRegion(
-          cursor: SystemMouseCursors.resizeRow,
-          child: GestureDetector(
-            onVerticalDragUpdate: (DragUpdateDetails details) {
-              if (filterPanelVisible.value) {
-                final maxHeight = Scaffold.of(context).context.size?.height;
-                final minHeight = maxHeight! / 4;
-                final beginHeight =
-                    context.read<HomeController>().filterPanelHeight;
-                final endHeight = beginHeight - details.delta.dy;
-                context.read<HomeController>().filterPanelHeight =
-                    endHeight.clamp(minHeight, maxHeight);
-              }
-            },
-            child: Container(
-              width: double.infinity,
-              height: 6,
-              color: Colors.transparent,
-            ),
-          ),
-        ),
-      InkWell(
-        onHover: (hover) {
-          if (!filterPanelVisible.value) {
-            filterPanelIndicatorVisible.value = hover;
-          }
-        },
-        onTap: () {
-          filterPanelVisible.value = !filterPanelVisible.value;
-        },
-        child: Container(
-            width: double.infinity,
-            height: filterPanelIndicatorHoverHeight,
-            color: Colors.transparent,
-            child: Align(
-              alignment: Alignment.center,
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width / 18,
-                height: 6,
-                child: AnimatedContainer(
-                  decoration: BoxDecoration(
-                    color: filterPanelIndicatorVisible.value
-                        ? Theme.of(context)
-                            .colorScheme
-                            .onSurfaceVariant
-                            .withOpacity(0.8)
-                        : Colors.transparent,
-                    borderRadius: BorderRadius.circular(5),
                   ),
-                  duration: const Duration(milliseconds: 200),
                 ),
-              ),
-            )),
-      ),
-    ];
+              );
+            },
+            selector: (context, homeController) =>
+                homeController.filterPanelHeight,
+          );
+        });
   }
 
-  List<Widget> _buildPanelIndicatorAmalgam(
-      BuildContext context, filterPanelVisible, filterPanelIndicatorVisible) {
-    return [
-      InkWell(
-        mouseCursor: filterPanelVisible.value
-            ? SystemMouseCursors.allScroll
-            : SystemMouseCursors.click,
-        onHover: (hover) {
-          filterPanelIndicatorVisible.value = hover;
-        },
-        onTap: () {
-          filterPanelVisible.value = !filterPanelVisible.value;
-        },
-        child: GestureDetector(
-          onVerticalDragUpdate: (DragUpdateDetails details) {
-            if (filterPanelVisible.value) {
-              final maxHeight = Scaffold.of(context).context.size?.height;
-              final minHeight = maxHeight! / 4;
-              final beginHeight =
-                  context.read<HomeController>().filterPanelHeight;
-              final endHeight = beginHeight - details.delta.dy;
-              context.read<HomeController>().filterPanelHeight =
-                  endHeight.clamp(minHeight, maxHeight);
-            }
-          },
-          child: Container(
-              width: double.infinity,
-              height: filterPanelIndicatorHoverHeight,
-              color: Colors.transparent,
+  Widget _buildPanelIndicator(BuildContext context, filterPanelVisible,
+      filterPanelIndicatorVisible, filterPanelLock,
+      {bool mergeGestures = true}) {
+    Widget indicator(lock) {
+      return Container(
+        width: double.infinity,
+        height: filterPanelIndicatorHoverHeight,
+        color: Colors.transparent,
+        child: Stack(
+          children: [
+            Positioned(
+              left: 0,
+              right: 0,
+              top: 0,
+              bottom: 0,
               child: Align(
                 alignment: Alignment.center,
                 child: SizedBox(
@@ -350,10 +293,140 @@ class HomePage extends StatelessWidget {
                     duration: const Duration(milliseconds: 200),
                   ),
                 ),
-              )),
+              ),
+            ),
+            if (filterPanelVisible.value)
+              Positioned(
+                left: 10,
+                child: Row(
+                  children: [
+                    Text('Filters',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        )),
+                  ],
+                ),
+              ),
+            if (filterPanelVisible.value)
+              Positioned(
+                right: 10,
+                child: SizedBox(
+                  height: filterPanelIndicatorHoverHeight,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      TextButton(
+                          onPressed: () {
+                            filterPanelLock.value = !filterPanelLock.value;
+                          },
+                          style: ButtonStyle(
+                            padding: WidgetStateProperty.all(
+                                const EdgeInsets.all(0)), // 使得按钮填充整个空间
+                          ),
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 200),
+                            child: lock
+                                ? Icon(
+                                    key: const ValueKey(true),
+                                    Icons.lock_outline,
+                                    size: 17,
+                                    color: Theme.of(context).colorScheme.scrim,
+                                    weight: 800,
+                                  )
+                                : const Icon(
+                                    key: ValueKey(false),
+                                    Icons.lock_open_outlined,
+                                    size: 17,
+                                    weight: 800,
+                                  ),
+                          ))
+                    ],
+                  ),
+                ),
+              ),
+          ],
         ),
-      )
-    ];
+      );
+    }
+
+    void onVerticalDragUpdate(DragUpdateDetails details) {
+      if (filterPanelVisible.value && !filterPanelLock.value) {
+        final maxHeight = Scaffold.of(context).context.size?.height;
+        final minHeight = maxHeight! / 4;
+        final beginHeight = context.read<HomeController>().filterPanelHeight;
+        final endHeight = beginHeight - details.delta.dy;
+        context.read<HomeController>().filterPanelHeight =
+            endHeight.clamp(minHeight, maxHeight);
+      }
+    }
+
+    Widget mergeGesturesWidget(lock) {
+      return InkWell(
+        mouseCursor: lock
+            ? SystemMouseCursors.basic
+            : filterPanelVisible.value
+                ? SystemMouseCursors.allScroll
+                : SystemMouseCursors.click,
+        onHover: (hover) {
+          if (!filterPanelVisible.value && !filterPanelLock.value) {
+            filterPanelIndicatorVisible.value = hover;
+          }
+        },
+        onTap: () {
+          if (!filterPanelLock.value) {
+            filterPanelVisible.value = !filterPanelVisible.value;
+          }
+        },
+        child: GestureDetector(
+          onVerticalDragUpdate: onVerticalDragUpdate,
+          child: indicator(lock), // 使用提取的indicator
+        ),
+      );
+    }
+
+    Widget unMergeGesturesWidget(lock) {
+      return Column(
+        children: [
+          if (filterPanelVisible.value)
+            MouseRegion(
+              cursor: lock
+                  ? SystemMouseCursors.basic
+                  : SystemMouseCursors.resizeRow,
+              child: GestureDetector(
+                onVerticalDragUpdate: onVerticalDragUpdate,
+                child: Container(
+                  width: double.infinity,
+                  height: 6,
+                  color: Colors.transparent,
+                ),
+              ),
+            ),
+          InkWell(
+            onHover: (hover) {
+              if (!filterPanelVisible.value && !filterPanelLock.value) {
+                filterPanelIndicatorVisible.value = hover;
+              }
+            },
+            onTap: () {
+              if (!filterPanelLock.value) {
+                filterPanelVisible.value = !filterPanelVisible.value;
+              }
+            },
+            child: indicator(lock), // 使用提取的indicator
+          ),
+        ],
+      );
+    }
+
+    return ValueListenableBuilder<bool>(
+        valueListenable: filterPanelLock,
+        builder: (context, lock, child) {
+          return mergeGestures
+              ? mergeGesturesWidget(lock)
+              : unMergeGesturesWidget(lock);
+        });
   }
 
   Widget _buildFilterBar(BuildContext context) {

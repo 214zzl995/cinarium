@@ -38,8 +38,14 @@ class DurationFilterPanel extends StatelessWidget {
           200,
           "Minutes",
           onChanged: (min, max) {
-            context.read<HomeController>().addDurationFilter(min, max);
+            context.read<HomeController>().addDurationFilter(min?.round(), max?.round());
           },
+          initStart: context.read<HomeController>().durationFilter.$1 == null
+              ? 0
+              : context.read<HomeController>().durationFilter.$1!.toDouble(),
+          initEnd: context.read<HomeController>().durationFilter.$2 == null
+              ? 200
+              : context.read<HomeController>().durationFilter.$2!.toDouble(),
         )
       ]),
     );

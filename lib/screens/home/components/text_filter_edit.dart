@@ -8,6 +8,7 @@ class TextFilterEdit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final searchController = TextEditingController();
+    searchController.text = context.read<HomeController>().textFilter;
     return Container(
       margin: const EdgeInsets.only(right: 13),
       child: SizedBox(
