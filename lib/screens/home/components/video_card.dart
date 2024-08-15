@@ -4,6 +4,8 @@ import 'dart:ui';
 import 'package:bridge/call_rust/model/video.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:super_context_menu/super_context_menu.dart';
+
 
 class MovCard extends StatelessWidget {
   const MovCard(this.video, this.thumbnailRatio, {super.key});
@@ -24,66 +26,69 @@ class MovCard extends StatelessWidget {
             onExit: (event) {
               hover.value = false;
             },
-            child: GestureDetector(
-                behavior: HitTestBehavior.deferToChild,
-                onTap: () {
-                  debugPrint("open file");
-                  //systemApi.openInDefaultSoftware(path:"${smov.path}\\${smov.filename}.${smov.extension}" );
-                },
-                onSecondaryTap: (){
-                  _showRightClickMenu(context);
-                },
-                child: ValueListenableBuilder<bool>(
-                  valueListenable: hover,
-                  builder: (context, value, child) {
-                    return Stack(
-                      children: [
-                        child!,
-                        if (value) _buildMask(context),
-                      ],
-                    );
-                  },
-                  child: Positioned(
-                      child: Container(
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(12),
-                              ),
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant),
-                          child: AspectRatio(
-                            aspectRatio: thumbnailRatio,
-                            child: ValueListenableBuilder<bool>(
-                              valueListenable: hover,
-                              builder: (context, value, child) {
-                                return AnimatedScale(
-                                    scale: value ? 1 : 1,
-                                    curve: const Cubic(1, .21, .2, .9),
-                                    duration: const Duration(milliseconds: 400),
-                                    child: ExtendedImage(
-                                      image: ExtendedResizeImage(
-                                        ExtendedFileImageProvider(
-                                          File("${video.matedata.path}/img/thumbnail.webp"),
-                                          imageCacheName: video.name,
-                                        ),
-                                        compressionRatio: null,
-                                        // maxBytes: 125 << 10,
-                                        width: null,
-                                        height: null,
-                                        imageCacheName: video.name,
-                                      ),
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(11.0)),
-                                      fit: BoxFit.contain,
-                                      clearMemoryCacheWhenDispose: true,
-                                      shape: BoxShape.rectangle,
-                                    ));
-                              },
-                            ),
-                          ))),
-                ))),
+            child: _buildContextMenu(context,
+                child: GestureDetector(
+                    behavior: HitTestBehavior.deferToChild,
+                    onTap: () {
+                      debugPrint("open file");
+                      // systemApi.openInDefaultSoftware(path:"${smov.path}\\${smov.filename}.${smov.extension}" );
+                    },
+                    onSecondaryTapUp: (details) {
+                      // _buildMenuItems(context, details).show(context);
+                    },
+                    child: ValueListenableBuilder<bool>(
+                      valueListenable: hover,
+                      builder: (context, value, child) {
+                        return Stack(
+                          children: [
+                            child!,
+                            if (value) _buildMask(context),
+                          ],
+                        );
+                      },
+                      child: Positioned(
+                          child: Container(
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(12),
+                                  ),
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant),
+                              child: AspectRatio(
+                                aspectRatio: thumbnailRatio,
+                                child: ValueListenableBuilder<bool>(
+                                  valueListenable: hover,
+                                  builder: (context, value, child) {
+                                    return AnimatedScale(
+                                        scale: value ? 1 : 1,
+                                        curve: const Cubic(1, .21, .2, .9),
+                                        duration:
+                                            const Duration(milliseconds: 400),
+                                        child: ExtendedImage(
+                                          image: ExtendedResizeImage(
+                                            ExtendedFileImageProvider(
+                                              File(
+                                                  "${video.matedata.path}/img/thumbnail.webp"),
+                                              imageCacheName: video.name,
+                                            ),
+                                            compressionRatio: null,
+                                            // maxBytes: 125 << 10,
+                                            width: null,
+                                            height: null,
+                                            imageCacheName: video.name,
+                                          ),
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(11.0)),
+                                          fit: BoxFit.contain,
+                                          clearMemoryCacheWhenDispose: true,
+                                          shape: BoxShape.rectangle,
+                                        ));
+                                  },
+                                ),
+                              ))),
+                    )))),
         Row(
           children: [
             Container(
@@ -117,6 +122,30 @@ class MovCard extends StatelessWidget {
     );
   }
 
+  Widget _buildContextMenu(BuildContext context, {required Widget child}) {
+    return ContextMenuWidget(
+      menuProvider: (_) {
+        return Menu(
+          children: [
+            MenuAction(title: 'Menu Item 1', callback: () {}),
+            MenuAction(title: 'Menu Item 2', callback: () {}),
+            MenuAction(title: 'Menu Item 3', callback: () {}),
+            MenuSeparator(),
+            Menu(title: 'Submenu', children: [
+              MenuAction(title: 'Submenu Item 1', callback: () {}),
+              MenuAction(title: 'Submenu Item 2', callback: () {}),
+              Menu(title: 'Nested Submenu', children: [
+                MenuAction(title: 'Submenu Item 1', callback: () {}),
+                MenuAction(title: 'Submenu Item 2', callback: () {}),
+              ]),
+            ]),
+          ],
+        );
+      },
+      child: child,
+    );
+  }
+
   //现在还没有很好的方案 怎么完美的把详情显示出来
   Widget _buildMask(BuildContext context) {
     return Positioned.fill(
@@ -136,43 +165,9 @@ class MovCard extends StatelessWidget {
               ),
             )));
   }
-
-  void _showRightClickMenu(BuildContext context) async {
-    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
-
-    await showMenu(
-      context: context,
-      position: RelativeRect.fromRect(
-        Rect.fromPoints(
-          overlay.localToGlobal(Offset.zero),
-          overlay.localToGlobal(Offset.zero),
-        ),
-        Offset.zero & overlay.size,
-      ),
-      items: [
-        PopupMenuItem(
-          value: 1,
-          child: Text('选项 1'),
-        ),
-        PopupMenuItem(
-          value: 2,
-          child: Text('选项 2'),
-        ),
-        PopupMenuItem(
-          value: 3,
-          child: Text('选项 3'),
-        ),
-      ],
-    ).then((value) {
-      if (value != null) {
-        // 处理点击的菜单项
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('你选择了 $value')),
-        );
-      }
-    });
-  }
 }
+
+const double popupMenuItemHeight = 40;
 
 class CardParam {
   static const double nameHeight = 25;

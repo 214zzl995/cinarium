@@ -18,7 +18,6 @@ dependencies:
   go_router: ^7.1.0
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-  system_tray: ^2.0.2
   path_provider: ^2.0.14
   lottie: ^2.3.2
   path: ^1.8.2
@@ -39,6 +38,8 @@ dependencies:
     path: ./bridge
   cinarium_core:
     path: rust_builder
+  super_context_menu: ^0.8.19
+  super_native_extensions: ^0.8.19
 
 
 dev_dependencies:

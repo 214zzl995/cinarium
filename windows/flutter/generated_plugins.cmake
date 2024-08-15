@@ -7,8 +7,9 @@ list(APPEND FLUTTER_PLUGIN_LIST
   desktop_multi_window
   dynamic_color
   flutter_acrylic
+  irondash_engine_context
   screen_retriever
-  system_tray
+  super_native_extensions
   window_manager
 )
 
