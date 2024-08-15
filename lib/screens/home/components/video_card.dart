@@ -173,3 +173,6 @@ class CardParam {
   static const double nameHeight = 25;
   static const double cardWidth = 300;
 }
+
+
+
