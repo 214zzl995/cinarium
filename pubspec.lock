@@ -946,13 +946,12 @@ packages:
   super_context_menu:
     dependency: "direct main"
     description:
-      name: super_context_menu
-      sha256: c21e8a2d5a2f304c5acf56b78c8fd21a36f83ea9aded513529de022dc0a077f3
-      url: "https://pub.dev"
-    source: hosted
+      path: super_context_menu
+      relative: true
+    source: path
     version: "0.8.19"
   super_native_extensions:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: super_native_extensions
       sha256: c24676825c9f3ae844676a843d45ad186f2270539ffe72be4277753e46d14e29

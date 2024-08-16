@@ -38,8 +38,8 @@ dependencies:
     path: ./bridge
   cinarium_core:
     path: rust_builder
-  super_context_menu: ^0.8.19
-  super_native_extensions: ^0.8.19
+  super_context_menu:
+    path: ./super_context_menu
 
 
 dev_dependencies:

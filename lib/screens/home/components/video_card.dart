@@ -128,8 +128,18 @@ class MovCard extends StatelessWidget {
         return Menu(
           children: [
             MenuAction(title: 'Menu Item 1', callback: () {}),
-            MenuAction(title: 'Menu Item 2', callback: () {}),
-            MenuAction(title: 'Menu Item 3', callback: () {}),
+            MenuAction(
+              title: 'Disabled Menu Item',
+              image: MenuImage.icon(Icons.replay_outlined),
+              attributes: const MenuActionAttributes(disabled: true),
+              callback: () {},
+            ),
+            MenuAction(
+              title: 'Destructive Menu Item',
+              image: MenuImage.icon(Icons.delete),
+              attributes: const MenuActionAttributes(destructive: true),
+              callback: () {},
+            ),
             MenuSeparator(),
             Menu(title: 'Submenu', children: [
               MenuAction(title: 'Submenu Item 1', callback: () {}),
