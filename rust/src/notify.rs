@@ -10,10 +10,11 @@ use notify::{
     event::{ModifyKind, RenameMode},
     Config, Error, Event, RecommendedWatcher, Watcher,
 };
+use parking_lot::Mutex;
 use tokio::sync::{
     broadcast,
     mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender},
-    oneshot, Mutex,
+    oneshot,
 };
 
 use crate::{
@@ -21,17 +22,18 @@ use crate::{
     native::ListenerHandle,
 };
 
-static SOURCE_NOTIFY: OnceLock<Mutex<SourceNotify>> = OnceLock::new();
+static SOURCE_NOTIFY: OnceLock<SourceNotify> = OnceLock::new();
 static LISTENER: OnceLock<broadcast::Sender<()>> = OnceLock::new();
 
-struct SourceNotify {
+pub struct SourceNotify(Mutex<SourceNotifyInner>);
+
+pub struct SourceNotifyInner {
     watcher: RecommendedWatcher,
     sources: Vec<Source>,
     modifys: HashSet<PathBuf>,
 }
 
 pub async fn init_source_notify() -> anyhow::Result<()> {
-
     if SOURCE_NOTIFY.get().is_some() {
         return Ok(());
     }
@@ -41,12 +43,12 @@ pub async fn init_source_notify() -> anyhow::Result<()> {
     let (tx, rx) = unbounded_channel();
 
     SOURCE_NOTIFY
-        .set(Mutex::new(SourceNotify::new(&sources, tx)?))
+        .set(SourceNotify::new(&sources, tx)?)
         .map_err(|_| anyhow::anyhow!("Failed to set source notify"))?;
 
-    let mut source_notify = SOURCE_NOTIFY.get().unwrap().lock().await;
+    let source_notify = SOURCE_NOTIFY.get().unwrap();
     source_notify.full_scale_retrieval().await?;
-    source_notify.listen(rx).await;
+    source_notify.listen(rx);
 
     Ok(())
 }
@@ -63,18 +65,18 @@ impl SourceNotify {
             Config::default(),
         )?;
 
-        Ok(SourceNotify {
+        Ok(SourceNotify(Mutex::new(SourceNotifyInner {
             watcher,
             sources: sources.to_owned(),
             modifys: HashSet::new(),
-        })
+        })))
     }
 
-    fn add_modify_path(&mut self, path: PathBuf) {
-        self.modifys.insert(path);
+    fn add_modify_path(&self, path: PathBuf) {
+        self.0.lock().modifys.insert(path);
     }
 
-    async fn listen(&mut self, mut rx: UnboundedReceiver<Result<Event, Error>>) {
+    fn listen(&self, mut rx: UnboundedReceiver<Result<Event, Error>>) {
         tokio::spawn(async move {
             while let Some(Ok(event)) = rx.recv().await {
                 match event.kind {
@@ -121,12 +123,7 @@ impl SourceNotify {
                             }
 
                             if is_mov_type(path.extension().unwrap().to_str().unwrap()) {
-                                SOURCE_NOTIFY
-                                    .get()
-                                    .unwrap()
-                                    .lock()
-                                    .await
-                                    .add_modify_path(path);
+                                SOURCE_NOTIFY.get().unwrap().add_modify_path(path);
                             }
                         }
                     }
@@ -135,8 +132,13 @@ impl SourceNotify {
             }
         });
 
-        for source in self.sources.iter() {
-            self.watcher
+        let mut source_notify = self.0.lock();
+
+        let sources = source_notify.sources.clone();
+
+        for source in sources {
+            source_notify
+                .watcher
                 .watch(
                     std::path::Path::new(&source.path),
                     ::notify::RecursiveMode::Recursive,
@@ -148,8 +150,9 @@ impl SourceNotify {
         tokio::spawn(async move {
             loop {
                 tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
+
                 let modifys = {
-                    let mut source_notify = SOURCE_NOTIFY.get().unwrap().lock().await;
+                    let mut source_notify = SOURCE_NOTIFY.get().unwrap().0.lock();
                     source_notify.modifys.drain().collect::<Vec<PathBuf>>()
                 }
                 .into_iter()
@@ -159,6 +162,7 @@ impl SourceNotify {
                     Err(_) => None,
                 })
                 .collect::<Vec<Metadata>>();
+
                 if !modifys.is_empty() {
                     Metadata::insert_replace_batch(&modifys).await.unwrap();
                 }
@@ -168,6 +172,8 @@ impl SourceNotify {
 
     async fn full_scale_retrieval(&self) -> anyhow::Result<()> {
         let phy_videos: HashSet<(String, PathBuf)> = self
+            .0
+            .lock()
             .sources
             .iter()
             .map(|source| retrieve_phy_videos(&source.path))
@@ -203,9 +209,34 @@ impl SourceNotify {
                 })
                 .send(());
         }
-
         Ok(())
     }
+
+    pub fn paths(&self) -> Vec<String> {
+        let mut sources = self
+            .0
+            .lock()
+            .sources
+            .clone()
+            .into_iter()
+            .collect::<Vec<Source>>();
+
+        sources.sort_by(|a, b| a.id.cmp(&b.id));
+
+        sources
+            .into_iter()
+            .map(|s| s.path.to_string_lossy().to_string())
+            .collect()
+    }
+}
+
+impl SourceNotifyInner {}
+
+pub fn get_source_notify_paths() -> anyhow::Result<Vec<String>> {
+    Ok(crate::notify::SOURCE_NOTIFY
+        .get()
+        .ok_or_else(|| anyhow::anyhow!("SourceNotify not initialized"))?
+        .paths())
 }
 
 #[cfg(target_os = "windows")]

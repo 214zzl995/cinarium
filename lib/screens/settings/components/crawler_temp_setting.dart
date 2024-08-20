@@ -9,59 +9,70 @@ class CrawlerTempSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
+    return Container(
+        padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(12),
+          ),
+          border: Border.all(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+            width: 1,
+          ),
+        ),
+        child: Column(
           children: [
-            Icon(
-              Icons.bug_report_outlined,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Text(
-                'CrawlerTemp',
-                style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant),
-              ),
-            ),
-            Expanded(
-                child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.end,
+            Row(
               children: [
-                const Text(
-                  "Long press and drag to switch priority",
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12,
+                Icon(
+                  Icons.bug_report_outlined,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Text(
+                    'CrawlerTemp',
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant),
                   ),
-                  textAlign: TextAlign.right,
                 ),
-                const SizedBox(
-                  width: 10,
-                ),
-                SizedBox(
-                  width: 100,
-                  child: ElevatedButton(
-                      onPressed: () async {},
-                      child: const Text(
-                        "Import",
-                        style: TextStyle(
-                          fontSize: 12,
-                        ),
-                      )),
-                )
+                Expanded(
+                    child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const Text(
+                      "Long press and drag to switch priority",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 12,
+                      ),
+                      textAlign: TextAlign.right,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    SizedBox(
+                      width: 100,
+                      child: ElevatedButton(
+                          onPressed: () async {},
+                          child: const Text(
+                            "Import",
+                            style: TextStyle(
+                              fontSize: 12,
+                            ),
+                          )),
+                    )
+                  ],
+                ))
               ],
-            ))
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            _buildITemplatesList(context)
           ],
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        _buildITemplatesList(context)
-      ],
-    );
+        ));
   }
 
   Widget _buildITemplatesList(BuildContext context) {
@@ -87,7 +98,7 @@ class CrawlerTempSetting extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     margin: const EdgeInsets.symmetric(vertical: 4.0),
                     child: Row(
-                       children: [
+                      children: [
                         Expanded(
                           child: Text(template.baseUrl),
                         ),

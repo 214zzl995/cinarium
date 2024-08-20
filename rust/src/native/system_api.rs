@@ -98,7 +98,23 @@ pub async fn update_task_tidy_folder() -> anyhow::Result<()> {
 }
 
 #[allow(dead_code)]
+pub async fn pick_folder() -> anyhow::Result<Option<String>> {
+    let folder = rfd::AsyncFileDialog::new().pick_folder().await;
+    if let Some(folder) = folder {
+        Ok(Some(folder.path().to_string_lossy().to_string()))
+    } else {
+        Ok(None)
+    }
+}
+
+#[allow(dead_code)]
 pub fn open_in_explorer(path: PathBuf) -> anyhow::Result<()> {
+    open::that(path)?;
+    Ok(())
+}
+
+#[allow(dead_code)]
+pub fn open_in_explorer_by_string(path: String) -> anyhow::Result<()> {
     open::that(path)?;
     Ok(())
 }
@@ -128,14 +144,8 @@ pub fn get_crawler_templates() -> anyhow::Result<Vec<CrawlerTemplate>> {
 
 #[allow(dead_code)]
 #[frb(sync)]
-pub fn path_buf_2_string(path: PathBuf) -> String {
-    path.to_string_lossy().to_string()
-}
-
-#[allow(dead_code)]
-#[frb(sync)]
-pub fn string_2_path_buf(path: String) -> PathBuf {
-    PathBuf::from(path)
+pub fn get_source_notify_paths() -> anyhow::Result<Vec<String>> {
+    crate::notify::get_source_notify_paths()
 }
 
 #[allow(dead_code)]
@@ -153,7 +163,6 @@ pub async fn listener_untreated_file(
 }
 
 impl TaskConfig {
-    
     #[frb(sync, getter)]
     #[allow(dead_code)]
     pub fn tidy_folder(&self) -> String {
@@ -166,9 +175,3 @@ impl TaskConfig {
         self.thread
     }
 }
-
-
-
-
-
-

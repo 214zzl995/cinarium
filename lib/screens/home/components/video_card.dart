@@ -2,10 +2,11 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:bridge/call_rust/model/video.dart';
+import 'package:cinarium/screens/home/controllers/home_controller.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:super_context_menu/super_context_menu.dart';
-
 
 class MovCard extends StatelessWidget {
   const MovCard(this.video, this.thumbnailRatio, {super.key});
@@ -123,32 +124,86 @@ class MovCard extends StatelessWidget {
   }
 
   Widget _buildContextMenu(BuildContext context, {required Widget child}) {
+    final videoActors = context
+        .read<HomeController>()
+        .homeVideoData
+        .getVideoActors(videoId: video.id);
+    final videoSeries = context
+        .read<HomeController>()
+        .homeVideoData
+        .getVideoSeries(videoId: video.id);
+    final videoTags = context
+        .read<HomeController>()
+        .homeVideoData
+        .getVideoTags(videoId: video.id);
+
     return ContextMenuWidget(
       menuProvider: (_) {
         return Menu(
           children: [
-            MenuAction(title: 'Menu Item 1', callback: () {}),
             MenuAction(
-              title: 'Disabled Menu Item',
-              image: MenuImage.icon(Icons.replay_outlined),
-              attributes: const MenuActionAttributes(disabled: true),
-              callback: () {},
-            ),
-            MenuAction(
-              title: 'Destructive Menu Item',
-              image: MenuImage.icon(Icons.delete),
-              attributes: const MenuActionAttributes(destructive: true),
-              callback: () {},
-            ),
+                title: 'Open with default player',
+                image: MenuImage.icon(Icons.play_circle_fill_outlined),
+                callback: () {}),
             MenuSeparator(),
-            Menu(title: 'Submenu', children: [
-              MenuAction(title: 'Submenu Item 1', callback: () {}),
-              MenuAction(title: 'Submenu Item 2', callback: () {}),
-              Menu(title: 'Nested Submenu', children: [
-                MenuAction(title: 'Submenu Item 1', callback: () {}),
-                MenuAction(title: 'Submenu Item 2', callback: () {}),
+            if (videoActors.isNotEmpty)
+              Menu(title: 'Filter Actors', children: [
+                ...videoActors.map((e) {
+                  final checked =
+                      context.read<HomeController>().actorFilter[e.id]!.checked;
+                  return MenuAction(
+                      title: e.name,
+                      image: checked
+                          ? MenuImage.icon(Icons.check_box_rounded)
+                          : MenuImage.icon(
+                              Icons.check_box_outline_blank_rounded),
+                      callback: () {
+                        context
+                            .read<HomeController>()
+                            .addFilter(FilterType.actor, e.id, !checked);
+                      });
+                }).toList(),
               ]),
-            ]),
+            if (videoSeries.isNotEmpty)
+              Menu(title: 'Filter Series', children: [
+                ...videoSeries.map((e) {
+                  final checked = context
+                      .read<HomeController>()
+                      .seriesFilter[e.id]!
+                      .checked;
+                  return MenuAction(
+                      title: e.name,
+                      image: checked
+                          ? MenuImage.icon(Icons.check_box_rounded)
+                          : MenuImage.icon(
+                              Icons.check_box_outline_blank_rounded),
+                      callback: () {
+
+                        context
+                            .read<HomeController>()
+                            .addFilter(FilterType.director, e.id, !checked);
+                      });
+                }).toList(),
+              ]),
+            if (videoTags.isNotEmpty)
+              Menu(title: 'Filter Tag', children: [
+                ...videoTags.map((e) {
+                  final checked =
+                      context.read<HomeController>().tagFilter[e.id]!.checked;
+                  return MenuAction(
+                      title: e.name,
+                      image: checked
+                          ? MenuImage.icon(Icons.check_box_rounded)
+                          : MenuImage.icon(
+                              Icons.check_box_outline_blank_rounded),
+                      callback: () {
+                        // throw UnimplementedError();
+                        context
+                            .read<HomeController>()
+                            .addFilter(FilterType.tag, e.id, !checked);
+                      });
+                }).toList(),
+              ]),
           ],
         );
       },
@@ -183,6 +238,3 @@ class CardParam {
   static const double nameHeight = 25;
   static const double cardWidth = 300;
 }
-
-
-

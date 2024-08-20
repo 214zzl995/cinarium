@@ -17,6 +17,27 @@ abstract class Metadata implements RustOpaqueInterface {
   BigInt get size;
 }
 
+class Attr {
+  final int id;
+  final String name;
+
+  const Attr({
+    required this.id,
+    required this.name,
+  });
+
+  @override
+  int get hashCode => id.hashCode ^ name.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Attr &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          name == other.name;
+}
+
 class HomeVideo {
   final int id;
   final String name;

@@ -25,18 +25,30 @@ pub enum FilterType {
 #[frb(opaque)]
 pub struct HomeVideoData {
     videos: HashMap<u32, FilterHomeVideo>,
+    #[allow(dead_code)]
     pub actor: HashMap<u32, String>,
+    #[allow(dead_code)]
     pub tag: HashMap<u32, String>,
+    #[allow(dead_code)]
     pub maker: HashMap<u32, String>,
+    #[allow(dead_code)]
     pub publisher: HashMap<u32, String>,
+    #[allow(dead_code)]
     pub series: HashMap<u32, String>,
+    #[allow(dead_code)]
     pub director: HashMap<u32, String>,
-    pub actor_videos: HashMap<u32, Vec<u32>>,
-    pub tag_videos: HashMap<u32, Vec<u32>>,
-    pub maker_videos: HashMap<u32, Vec<u32>>,
-    pub publisher_videos: HashMap<u32, Vec<u32>>,
-    pub series_videos: HashMap<u32, Vec<u32>>,
-    pub director_videos: HashMap<u32, Vec<u32>>,
+    actor_videos: HashMap<u32, Vec<u32>>,
+    tag_videos: HashMap<u32, Vec<u32>>,
+    maker_videos: HashMap<u32, Vec<u32>>,
+    publisher_videos: HashMap<u32, Vec<u32>>,
+    series_videos: HashMap<u32, Vec<u32>>,
+    director_videos: HashMap<u32, Vec<u32>>,
+    video_actors: HashMap<u32, Vec<u32>>,
+    video_tags: HashMap<u32, Vec<u32>>,
+    video_makers: HashMap<u32, Vec<u32>>,
+    video_publishers: HashMap<u32, Vec<u32>>,
+    video_series: HashMap<u32, Vec<u32>>,
+    pub video_directors: HashMap<u32, Vec<u32>>,
     pub maker_filter: Vec<u32>,
     pub publisher_filter: Vec<u32>,
     pub series_filter: Vec<u32>,
@@ -205,6 +217,13 @@ impl HomeVideoData {
                 map
             });
 
+        let video_actors = reverse_map(&actor_videos);
+        let video_tags = reverse_map(&tag_videos);
+        let video_makers = reverse_map(&maker_videos);
+        let video_publishers = reverse_map(&publisher_videos);
+        let video_series = reverse_map(&series_videos);
+        let video_directors = reverse_map(&director_videos);
+
         Ok(Self {
             videos,
             actor,
@@ -219,6 +238,12 @@ impl HomeVideoData {
             publisher_videos,
             series_videos,
             director_videos,
+            video_actors,
+            video_tags,
+            video_makers,
+            video_publishers,
+            video_series,
+            video_directors,
             maker_filter: Vec::new(),
             publisher_filter: Vec::new(),
             series_filter: Vec::new(),
@@ -593,4 +618,139 @@ impl HomeVideoData {
     fn refresh_ts(&mut self) {
         self.ts = chrono::Local::now().timestamp_subsec_micros();
     }
+
+    #[frb(sync)]
+    #[allow(dead_code)]
+    pub fn get_video_tags(&self, video_id: u32) -> anyhow::Result<Vec<Attr>> {
+        match self.video_tags.get(&video_id) {
+            Some(tags) => {
+                let tags = tags
+                    .iter()
+                    .filter_map(|tag_id| {
+                        self.tag.get(tag_id).map(|name| Attr {
+                            id: *tag_id,
+                            name: name.clone(),
+                        })
+                    })
+                    .collect();
+                Ok(tags)
+            }
+            None => Ok(Vec::new()),
+        }
+    }
+
+    #[frb(sync)]
+    #[allow(dead_code)]
+    pub fn get_video_actors(&self, video_id: u32) -> anyhow::Result<Vec<Attr>> {
+        match self.video_actors.get(&video_id) {
+            Some(actors) => {
+                let actors = actors
+                    .iter()
+                    .filter_map(|actor_id| {
+                        self.actor.get(actor_id).map(|name| Attr {
+                            id: *actor_id,
+                            name: name.clone(),
+                        })
+                    })
+                    .collect();
+                Ok(actors)
+            }
+            None => Ok(Vec::new()),
+        }
+    }
+
+    #[frb(sync)]
+    #[allow(dead_code)]
+    pub fn get_video_makers(&self, video_id: u32) -> anyhow::Result<Vec<Attr>> {
+        match self.video_makers.get(&video_id) {
+            Some(makers) => {
+                let makers = makers
+                    .iter()
+                    .filter_map(|maker_id| {
+                        self.maker.get(maker_id).map(|name| Attr {
+                            id: *maker_id,
+                            name: name.clone(),
+                        })
+                    })
+                    .collect();
+                Ok(makers)
+            }
+            None => Ok(Vec::new()),
+        }
+    }
+
+    #[frb(sync)]
+    #[allow(dead_code)]
+    pub fn get_video_publishers(&self, video_id: u32) -> anyhow::Result<Vec<Attr>> {
+        match self.video_publishers.get(&video_id) {
+            Some(publishers) => {
+                let publishers = publishers
+                    .iter()
+                    .filter_map(|publisher_id| {
+                        self.publisher.get(publisher_id).map(|name| Attr {
+                            id: *publisher_id,
+                            name: name.clone(),
+                        })
+                    })
+                    .collect();
+                Ok(publishers)
+            }
+            None => Ok(Vec::new()),
+        }
+    }
+
+    #[frb(sync)]
+    #[allow(dead_code)]
+    pub fn get_video_series(&self, video_id: u32) -> anyhow::Result<Vec<Attr>> {
+        match self.video_series.get(&video_id) {
+            Some(series) => {
+                let series = series
+                    .iter()
+                    .filter_map(|series_id| {
+                        self.series.get(series_id).map(|name| Attr {
+                            id: *series_id,
+                            name: name.clone(),
+                        })
+                    })
+                    .collect();
+                Ok(series)
+            }
+            None => Ok(Vec::new()),
+        }
+    }
+
+    #[frb(sync)]
+    #[allow(dead_code)]
+    pub fn get_video_directors(&self, video_id: u32) -> anyhow::Result<Vec<Attr>> {
+        match self.video_directors.get(&video_id) {
+            Some(directors) => {
+                let directors = directors
+                    .iter()
+                    .filter_map(|director_id| {
+                        self.director.get(director_id).map(|name| Attr {
+                            id: *director_id,
+                            name: name.clone(),
+                        })
+                    })
+                    .collect();
+                Ok(directors)
+            }
+            None => Ok(Vec::new()),
+        }
+    }
+}
+
+fn reverse_map(original: &HashMap<u32, Vec<u32>>) -> HashMap<u32, Vec<u32>> {
+    let mut reversed = HashMap::new();
+
+    for (attr_id, video_ids) in original {
+        for video_id in video_ids {
+            reversed
+                .entry(*video_id)
+                .or_insert(Vec::new())
+                .push(*attr_id);
+        }
+    }
+
+    reversed
 }

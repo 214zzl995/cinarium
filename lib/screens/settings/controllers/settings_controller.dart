@@ -10,6 +10,8 @@ class SettingsController with ChangeNotifier {
 
   late List<CrawlerTemplate> _crawlerTemplates;
 
+  List<String> _searchFolders = getSourceNotifyPaths();
+
   SettingsController() {
     init();
   }
@@ -76,6 +78,14 @@ class SettingsController with ChangeNotifier {
         prioritys: crawlerTemplates.map((e) => (e.id, e.priority)).toList());
   }
 
+  void addSearchFolder() async {
+    String? path = await pickFolder();
+    if (path != null) {
+      _searchFolders = [..._searchFolders, path];
+      notifyListeners();
+    }
+  }
+
   init() async {
     _httpConfig = await getHttpConf();
     _taskConfig = await getTaskConf();
@@ -88,6 +98,8 @@ class SettingsController with ChangeNotifier {
   TaskConfig get taskConfig => _taskConfig;
 
   List<CrawlerTemplate> get crawlerTemplates => _crawlerTemplates;
+
+  List<String> get searchFolders => _searchFolders;
 }
 
 extension HttpConfigsExt on HttpConfig {

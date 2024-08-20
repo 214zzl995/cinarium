@@ -43,23 +43,6 @@ class TaskPoolSetting extends StatelessWidget {
                 ),
               ],
             )),
-        const SizedBox(
-          height: 20,
-        ),
-        Container(
-            padding: const EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(
-                Radius.circular(12),
-              ),
-              border: Border.all(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-                width: 1,
-              ),
-            ),
-            child: Column(
-              children: [CrawlerTempSetting()],
-            )),
       ],
     );
   }
@@ -92,7 +75,6 @@ class TaskPoolSetting extends StatelessWidget {
     return Selector<SettingsController, String>(
         selector: (_, settings) => settings.taskConfig.tidyFolder,
         builder: (selectorContext, tidyFolder, __) {
-
           return Row(
             children: [
               Expanded(
@@ -126,7 +108,7 @@ class TaskPoolSetting extends StatelessWidget {
                           cursor: SystemMouseCursors.click,
                           child: GestureDetector(
                             onTap: () {
-                              openInExplorer(path: string2PathBuf(path: tidyFolder));
+                              openInExplorerByString(path: tidyFolder);
                             },
                             child: Text(
                               tidyFolder,

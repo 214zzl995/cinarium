@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../components/search_folder_settings.dart';
+
 class SystemSettingsPage extends StatelessWidget {
   const SystemSettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     const settingsPanel = [
-      Text('TidyFolder'),
-      Text('SearchFolder'),
-      Chip(
-        label: Text('中文'),
-      ),
+      SearchFolderSettings(),
     ];
     return ListView.builder(
       itemCount: settingsPanel.length,

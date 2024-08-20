@@ -45,8 +45,14 @@ Future<void> updateTaskThread({required BigInt thread}) =>
 Future<void> updateTaskTidyFolder() =>
     RustLib.instance.api.crateNativeSystemApiUpdateTaskTidyFolder();
 
+Future<String?> pickFolder() =>
+    RustLib.instance.api.crateNativeSystemApiPickFolder();
+
 Future<void> openInExplorer({required PathBuf path}) =>
     RustLib.instance.api.crateNativeSystemApiOpenInExplorer(path: path);
+
+Future<void> openInExplorerByString({required String path}) =>
+    RustLib.instance.api.crateNativeSystemApiOpenInExplorerByString(path: path);
 
 Future<void> openInDefaultSoftware({required String path}) =>
     RustLib.instance.api.crateNativeSystemApiOpenInDefaultSoftware(path: path);
@@ -63,11 +69,8 @@ Future<void> switchCrawlerTemplateEnabled({required int id}) =>
 List<CrawlerTemplate> getCrawlerTemplates() =>
     RustLib.instance.api.crateNativeSystemApiGetCrawlerTemplates();
 
-String pathBuf2String({required PathBuf path}) =>
-    RustLib.instance.api.crateNativeSystemApiPathBuf2String(path: path);
-
-PathBuf string2PathBuf({required String path}) =>
-    RustLib.instance.api.crateNativeSystemApiString2PathBuf(path: path);
+List<String> getSourceNotifyPaths() =>
+    RustLib.instance.api.crateNativeSystemApiGetSourceNotifyPaths();
 
 Future<ListenerHandle> listenerHttpStatus(
         {required FutureOr<void> Function(bool) dartCallback}) =>

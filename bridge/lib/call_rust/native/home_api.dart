@@ -7,7 +7,7 @@ import '../frb_generated.dart';
 import '../model/video.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions are ignored because they are not marked as `pub`: `add_filter`, `clear_filter`, `hide_other_videos`, `is_hide`, `is_show`, `new`, `refresh_ts`, `remove_filter`, `show_other_videos`
+// These functions are ignored because they are not marked as `pub`: `add_filter`, `clear_filter`, `hide_other_videos`, `is_hide`, `is_show`, `new`, `refresh_ts`, `remove_filter`, `reverse_map`, `show_other_videos`
 // These types are ignored because they are not used by any `pub` functions: `FilterHomeVideo`, `FilterType`
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<HomeVideoData>>
@@ -16,13 +16,9 @@ abstract class HomeVideoData implements RustOpaqueInterface {
 
   Uint32List get actorFilter;
 
-  Map<int, Uint32List> get actorVideos;
-
   Map<int, String> get director;
 
   Uint32List get directorFilter;
-
-  Map<int, Uint32List> get directorVideos;
 
   (int?, int?) get durationFilter;
 
@@ -30,19 +26,13 @@ abstract class HomeVideoData implements RustOpaqueInterface {
 
   Uint32List get makerFilter;
 
-  Map<int, Uint32List> get makerVideos;
-
   Map<int, String> get publisher;
 
   Uint32List get publisherFilter;
 
-  Map<int, Uint32List> get publisherVideos;
-
   Map<int, String> get series;
 
   Uint32List get seriesFilter;
-
-  Map<int, Uint32List> get seriesVideos;
 
   (BigInt?, BigInt?) get sizeFilter;
 
@@ -50,23 +40,19 @@ abstract class HomeVideoData implements RustOpaqueInterface {
 
   Uint32List get tagFilter;
 
-  Map<int, Uint32List> get tagVideos;
-
   String get textFilter;
 
   int get ts;
+
+  Map<int, Uint32List> get videoDirectors;
 
   set actor(Map<int, String> actor);
 
   set actorFilter(Uint32List actorFilter);
 
-  set actorVideos(Map<int, Uint32List> actorVideos);
-
   set director(Map<int, String> director);
 
   set directorFilter(Uint32List directorFilter);
-
-  set directorVideos(Map<int, Uint32List> directorVideos);
 
   set durationFilter((int?, int?) durationFilter);
 
@@ -74,19 +60,13 @@ abstract class HomeVideoData implements RustOpaqueInterface {
 
   set makerFilter(Uint32List makerFilter);
 
-  set makerVideos(Map<int, Uint32List> makerVideos);
-
   set publisher(Map<int, String> publisher);
 
   set publisherFilter(Uint32List publisherFilter);
 
-  set publisherVideos(Map<int, Uint32List> publisherVideos);
-
   set series(Map<int, String> series);
 
   set seriesFilter(Uint32List seriesFilter);
-
-  set seriesVideos(Map<int, Uint32List> seriesVideos);
 
   set sizeFilter((BigInt?, BigInt?) sizeFilter);
 
@@ -94,11 +74,11 @@ abstract class HomeVideoData implements RustOpaqueInterface {
 
   set tagFilter(Uint32List tagFilter);
 
-  set tagVideos(Map<int, Uint32List> tagVideos);
-
   set textFilter(String textFilter);
 
   set ts(int ts);
+
+  set videoDirectors(Map<int, Uint32List> videoDirectors);
 
   void cleanActorFilter();
 
@@ -137,6 +117,18 @@ abstract class HomeVideoData implements RustOpaqueInterface {
   void filterText({required String text});
 
   List<HomeVideo> get video;
+
+  List<Attr> getVideoActors({required int videoId});
+
+  List<Attr> getVideoDirectors({required int videoId});
+
+  List<Attr> getVideoMakers({required int videoId});
+
+  List<Attr> getVideoPublishers({required int videoId});
+
+  List<Attr> getVideoSeries({required int videoId});
+
+  List<Attr> getVideoTags({required int videoId});
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
   static Future<HomeVideoData> newInstance() =>

@@ -175,6 +175,8 @@ class HomeController extends ChangeNotifier {
   FilterReleaseTime get releaseTimeFilter => _releaseTimeFilter;
 
   String get textFilter => _homeVideoData.textFilter;
+
+  HomeVideoData get homeVideoData => _homeVideoData;
 }
 
 enum FilterType {
