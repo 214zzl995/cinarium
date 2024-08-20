@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -9,6 +8,7 @@ class BrightnessSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey menuKey = GlobalKey();
     return Container(
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
@@ -16,9 +16,10 @@ class BrightnessSetting extends StatelessWidget {
           Radius.circular(12),
         ),
         border: Border.all(
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
+          color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
           width: 1,
         ),
+        color: Theme.of(context).colorScheme.surfaceContainerLowest,
       ),
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Row(
@@ -30,80 +31,94 @@ class BrightnessSetting extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 20),
               child: Text(
-                '主题',
+                'Brightness',
                 style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurfaceVariant),
               ),
             ),
-          ],
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        ...ThemeMode.values.map((e) => Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: Row(
+            Expanded(
+                child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Expanded(
-                    child: Row(
-                  children: [
-                    Radio(
-                      value: e,
-                      groupValue: context.watch<SmovbookTheme>().mode,
-                      onChanged: (val) {
-                        final theme = context.read<SmovbookTheme>();
-                        theme.mode = val!;
-                        //设置效果
-                        Brightness brightness;
-                        if (e == ThemeMode.system) {
-                          //应获取系统主题 不然会因为 还没有触发重组 Theme获取的主题还是原来的主题
-                          brightness = WidgetsBinding
-                              .instance.platformDispatcher.platformBrightness;
-                        } else {
-                          brightness = e == ThemeMode.light
-                              ? Brightness.light
-                              : Brightness.dark;
-                        }
-                        theme.setEffect(theme.windowEffect, context,
-                            brightness: brightness);
-                      },
+                Selector<CinariumTheme, ThemeMode>(
+                  builder: (context, mode, _) => PopupMenuButton(
+                    key: menuKey,
+                    initialValue: mode,
+                    color: Theme.of(context).colorScheme.surfaceContainerLowest,
+                    constraints: const BoxConstraints(
+                      minWidth: 100,
                     ),
-                    Text(
-                      e.name,
-                      style: TextStyle(
-                          color:
-                              Theme.of(context).colorScheme.onSurfaceVariant),
-                    ),
-                  ],
-                )),
-                /* 未来可能需要增加的参数 模糊强度
-                if (e == WindowEffect.acrylic)
-                  Row(
-                    children: [
-                      Text('模糊强度',
+                    enabled: false,
+                    child: SizedBox(
+                      width: 100,
+                      child: TextButton(
+                        onPressed: () {
+                          final dynamic popupMenuState = menuKey.currentState;
+                          popupMenuState.showButtonMenu();
+                        },
+                        child: Text(
+                          mode.name,
                           style: TextStyle(
                               color: Theme.of(context)
                                   .colorScheme
-                                  .onSurfaceVariant)),
-                      const SizedBox(
-                        width: 10,
+                                  .onSurfaceVariant),
+                        ),
                       ),
-                      Selector<SmovbookTheme, double>(
-                          selector: (_, theme) => theme.acrylicIntensity,
-                          builder: (_, data, __) {
-                            return Slider(
-                              value: data,
-                              onChanged: (val) {
-                                final theme = context.read<SmovbookTheme>();
-                                theme.acrylicIntensity = val;
-                              },
-                            );
-                          })
+                    ),
+                    onSelected: (val) {
+                      final theme = context.read<CinariumTheme>();
+                      theme.mode = val;
+                      Brightness brightness;
+                      if (val == ThemeMode.system) {
+                        brightness = WidgetsBinding
+                            .instance.platformDispatcher.platformBrightness;
+                      } else {
+                        brightness = val == ThemeMode.light
+                            ? Brightness.light
+                            : Brightness.dark;
+                      }
+                      theme.setEffect(theme.windowEffect, context,
+                          brightness: brightness);
+                    },
+                    itemBuilder: (BuildContext context) =>
+                        <PopupMenuEntry<ThemeMode>>[
+                      const PopupMenuItem<ThemeMode>(
+                        height: 40,
+                        value: ThemeMode.light,
+                        child: Text('Light'),
+                      ),
+                      const PopupMenuItem<ThemeMode>(
+                        height: 40,
+                        value: ThemeMode.dark,
+                        child: Text('Dark'),
+                      ),
+                      const PopupMenuItem<ThemeMode>(
+                        height: 40,
+                        value: ThemeMode.system,
+                        child: Text('System'),
+                      ),
                     ],
-                  )*/
+                  ),
+                  selector: (context, theme) => theme.mode,
+                )
               ],
-            )))
+            ))
+          ],
+        ),
       ]),
     );
+  }
+}
+
+extension ThemeModeExt on ThemeMode {
+  String get name {
+    switch (this) {
+      case ThemeMode.light:
+        return 'Light';
+      case ThemeMode.dark:
+        return 'Dark';
+      case ThemeMode.system:
+        return 'System';
+    }
   }
 }

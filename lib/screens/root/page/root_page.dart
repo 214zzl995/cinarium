@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cinarium/models/theme.dart';
 import 'package:cinarium/screens/settings/controllers/settings_controller.dart';
+import '../../../util/theme_extension_util.dart';
 import '../../http/controllers/http_controller.dart';
 import '../../home/controllers/home_controller.dart';
 import '../../pool/controllers/pool_controller.dart';
@@ -31,7 +32,7 @@ class RootPage extends StatelessWidget {
         context.read<SettingsController>();
         context.read<PoolController>();
         return Scaffold(
-          backgroundColor: Theme.of(context).colorScheme.surface,
+          backgroundColor: Theme.of(context).extension<EffectMenuColors>()!.danger,
           appBar: SAppBar(
             toolbarHeight: 40,
             windowButtonHeight: 30,
@@ -87,7 +88,7 @@ class RootPage extends StatelessWidget {
               child: Switch(
                 value: Theme.of(context).brightness == Brightness.dark,
                 onChanged: (val) {
-                  final theme = context.read<SmovbookTheme>();
+                  final theme = context.read<CinariumTheme>();
                   if (val) {
                     theme.mode = ThemeMode.dark;
                     theme.setEffect(theme.windowEffect, context,

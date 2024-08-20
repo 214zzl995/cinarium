@@ -57,7 +57,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mode = Theme.of(context).brightness;
-    return FutureBuilder<SmovbookTheme>(
+    return FutureBuilder<CinariumTheme>(
       future: getTheme(mode),
       builder: (futureContext, snapshot) {
         if (snapshot.hasData) {
@@ -66,20 +66,20 @@ class MyApp extends StatelessWidget {
           return ChangeNotifierProvider(
               create: (_) => theme,
               builder: (notifierContext, _) {
-                final readTheme = notifierContext.watch<SmovbookTheme>();
+                final readTheme = notifierContext.watch<CinariumTheme>();
                 final effectBackgroundColor =
-                    CustomColors(danger: readTheme.effectBackgroundColor);
+                    EffectMenuColors(danger: readTheme.effectBackgroundColor);
                 return MaterialApp.router(
                   theme: ThemeData(
-                    colorScheme: readTheme.lightColorScheme,
-                    extensions: [effectBackgroundColor],
-                    useMaterial3: true,
-                  ),
+                      colorScheme: readTheme.lightColorScheme,
+                      extensions: [effectBackgroundColor],
+                      scaffoldBackgroundColor:
+                          readTheme.lightColorScheme?.surface),
                   darkTheme: ThemeData(
-                    colorScheme: readTheme.darkColorScheme,
-                    extensions: [effectBackgroundColor],
-                    useMaterial3: true,
-                  ),
+                      colorScheme: readTheme.darkColorScheme,
+                      extensions: [effectBackgroundColor],
+                      scaffoldBackgroundColor:
+                          readTheme.lightColorScheme?.surface),
                   supportedLocales: const [
                     Locale("zh", "CN"),
                     Locale("en", "US")
@@ -110,11 +110,11 @@ class MyApp extends StatelessWidget {
   }
 
   /// 持久化获取theme方法
-  Future<SmovbookTheme> getTheme(Brightness mode) async {
+  Future<CinariumTheme> getTheme(Brightness mode) async {
     final hiveUtil = await HiveUtil.getInstance();
-    var appTheme = hiveUtil.themeBox.get('theme') as SmovbookTheme?;
+    var appTheme = hiveUtil.themeBox.get('theme') as CinariumTheme?;
     if (appTheme == null) {
-      appTheme = SmovbookTheme();
+      appTheme = CinariumTheme();
       hiveUtil.themeBox.put('theme', appTheme);
     }
 

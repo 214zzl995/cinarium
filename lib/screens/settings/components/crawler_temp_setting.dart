@@ -16,9 +16,11 @@ class CrawlerTempSetting extends StatelessWidget {
             Radius.circular(12),
           ),
           border: Border.all(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
+            color:
+                Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
             width: 1,
           ),
+          color: Theme.of(context).colorScheme.surfaceContainerLowest,
         ),
         child: Column(
           children: [
@@ -97,6 +99,18 @@ class CrawlerTempSetting extends StatelessWidget {
                     height: 50,
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     margin: const EdgeInsets.symmetric(vertical: 4.0),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(12),
+                      ),
+                      border: Border.all(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .outlineVariant
+                            .withOpacity(0.5),
+                        width: 1,
+                      ),
+                    ),
                     child: Row(
                       children: [
                         Expanded(
@@ -122,16 +136,13 @@ class CrawlerTempSetting extends StatelessWidget {
                     context.read<SettingsController>().onTemplatesReorder,
                 buildDraggableFeedback: (BuildContext context,
                     BoxConstraints constraints, Widget child) {
-                  return MouseRegion(
-                      cursor: SystemMouseCursors.move,
-                      child: Container(
-                        height: 50,
-                        margin: const EdgeInsets.symmetric(vertical: 4.0),
-                        child: ConstrainedBox(
-                          constraints: constraints,
-                          child: child,
-                        ),
-                      ));
+                  return SizedBox(
+                    height: 58,
+                    child: ConstrainedBox(
+                      constraints: constraints,
+                      child: child,
+                    ),
+                  );
                 },
               ),
             ],

@@ -1,31 +1,31 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 
-class CustomColors extends ThemeExtension<CustomColors> {
-  const CustomColors({
+class EffectMenuColors extends ThemeExtension<EffectMenuColors> {
+  const EffectMenuColors({
     required this.danger,
   });
 
   final Color? danger;
 
   @override
-  CustomColors copyWith({Color? danger}) {
-    return CustomColors(
+  EffectMenuColors copyWith({Color? danger}) {
+    return EffectMenuColors(
       danger: danger ?? this.danger,
     );
   }
 
   @override
-  CustomColors lerp(ThemeExtension<CustomColors>? other, double t) {
-    if (other is! CustomColors) {
+  EffectMenuColors lerp(ThemeExtension<EffectMenuColors>? other, double t) {
+    if (other is! EffectMenuColors) {
       return this;
     }
-    return CustomColors(
+    return EffectMenuColors(
       danger: Color.lerp(danger, other.danger, t),
     );
   }
 
-  CustomColors harmonized(ColorScheme dynamic) {
+  EffectMenuColors harmonized(ColorScheme dynamic) {
     return copyWith(danger: danger!.harmonizeWith(dynamic.primary));
   }
 }

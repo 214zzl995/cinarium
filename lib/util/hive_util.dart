@@ -25,7 +25,7 @@ class HiveUtil {
 
     /// 注册自定义对象（实体）
     /// <https://docs.hivedb.dev/#/custom-objects/type_adapters>
-    Hive.registerAdapter(SmovbookThemeAdapter());
+    Hive.registerAdapter(CinariumThemeAdapter());
     Hive.registerAdapter(ColorAdapter());
     Hive.registerAdapter(TextDirectionAdapter());
     Hive.registerAdapter(ThemeModeAdapter());
@@ -40,7 +40,7 @@ class HiveUtil {
     if (instance == null) {
       instance = HiveUtil();
       await Hive.initFlutter();
-      instance?._themeBox = await Hive.openBox<SmovbookTheme>('theme');
+      instance?._themeBox = await Hive.openBox<CinariumTheme>('theme');
     }
     return instance!;
   }

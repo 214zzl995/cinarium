@@ -6,17 +6,17 @@ part of 'theme.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class SmovbookThemeAdapter extends TypeAdapter<SmovbookTheme> {
+class CinariumThemeAdapter extends TypeAdapter<CinariumTheme> {
   @override
   final int typeId = 0;
 
   @override
-  SmovbookTheme read(BinaryReader reader) {
+  CinariumTheme read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return SmovbookTheme()
+    return CinariumTheme()
       .._color = fields[0] as Color?
       .._autoColor = fields[4] as bool
       .._mode = fields[1] as ThemeMode
@@ -25,7 +25,7 @@ class SmovbookThemeAdapter extends TypeAdapter<SmovbookTheme> {
   }
 
   @override
-  void write(BinaryWriter writer, SmovbookTheme obj) {
+  void write(BinaryWriter writer, CinariumTheme obj) {
     writer
       ..writeByte(5)
       ..writeByte(0)
@@ -46,7 +46,7 @@ class SmovbookThemeAdapter extends TypeAdapter<SmovbookTheme> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SmovbookThemeAdapter &&
+      other is CinariumThemeAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

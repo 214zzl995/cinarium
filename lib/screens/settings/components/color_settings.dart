@@ -28,15 +28,16 @@ class ColorSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(
           Radius.circular(12),
         ),
         border: Border.all(
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
+          color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
           width: 1,
         ),
+        color: Theme.of(context).colorScheme.surfaceContainerLowest,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -52,7 +53,7 @@ class ColorSettings extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 20),
                   child: Text(
-                    '主题色',
+                    'Theme Colours',
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurfaceVariant),
                   ),
@@ -61,31 +62,38 @@ class ColorSettings extends StatelessWidget {
             )),
             Row(
               children: [
-                Text('自动跟随系统',
+                Text('follow-up system',
                     style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                        color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.8))),
                 const SizedBox(
                   width: 10,
                 ),
-                Selector<SmovbookTheme, bool>(
+                Selector<CinariumTheme, bool>(
                     selector: (_, theme) => theme.autoColor,
                     builder: (_, data, __) {
-                      return Switch(
-                        value: data,
-                        onChanged: (val) {
-                          final theme = context.read<SmovbookTheme>();
-                          theme.autoColor = val;
-                        },
+                      return Transform.scale(
+                        scale: 0.85,
+                        child: Switch(
+                          value: data,
+                          onChanged: (val) {
+                            final theme = context.read<CinariumTheme>();
+                            theme.autoColor = val;
+                          },
+                        ),
                       );
-                    })
+                    }),
+                const SizedBox(
+                  width: 20,
+                )
               ],
             ),
           ]),
-          Selector<SmovbookTheme, bool>(
+          Selector<CinariumTheme, bool>(
             selector: (_, theme) => theme.autoColor,
             builder: (_, data, __) {
               return AnimatedOpacity(
                   duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeOutQuart,
                   opacity: data ? 0.0 : 1.0,
                   child: AnimatedSize(
                     duration: const Duration(milliseconds: 200),

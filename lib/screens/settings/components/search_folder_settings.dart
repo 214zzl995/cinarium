@@ -16,9 +16,10 @@ class SearchFolderSettings extends StatelessWidget {
             Radius.circular(12),
           ),
           border: Border.all(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
+            color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
             width: 1,
           ),
+          color: Theme.of(context).colorScheme.surfaceContainerLowest,
         ),
         child: Column(
           children: [
@@ -87,16 +88,21 @@ class SearchFolderSettings extends StatelessWidget {
               margin: const EdgeInsets.only(bottom: 10),
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(12),
+                ),
                 border: Border.all(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  color: Theme.of(context)
+                      .colorScheme
+                      .outlineVariant
+                      .withOpacity(0.5),
                   width: 1,
                 ),
               ),
               child: Row(children: [
                 Text(
                   path,
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.w400,
                   ),
                 )

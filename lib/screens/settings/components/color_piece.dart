@@ -12,7 +12,7 @@ class ColorPiece extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 1),
-        child: Selector<SmovbookTheme, bool>(
+        child: Selector<CinariumTheme, bool>(
             selector: (_, theme) => theme.color?.value == color.value,
             builder: (_, data, __) {
               return ValueListenableBuilder(
@@ -29,7 +29,7 @@ class ColorPiece extends StatelessWidget {
                 },
                 child: GestureDetector(
                     onTap: () {
-                      context.read<SmovbookTheme>().color = color;
+                      context.read<CinariumTheme>().color = color;
                     },
                     child: Container(
                       width: 50,

@@ -9,7 +9,7 @@ import '../util/hive_util.dart';
 part 'theme.g.dart';
 
 @HiveType(typeId: 0)
-class SmovbookTheme extends ChangeNotifier {
+class CinariumTheme extends ChangeNotifier {
   ColorScheme? _lightColorScheme;
   ColorScheme? _darkColorScheme;
 
@@ -46,14 +46,19 @@ class SmovbookTheme extends ChangeNotifier {
           seedColor: accentColor,
           brightness: Brightness.dark,
         ).harmonized();
-
-        return;
       }
+
+      _lightColorScheme = _lightColorScheme?.copyWith(
+          surface: const Color.fromARGB(255, 250, 250, 250)
+      );
+
+      _darkColorScheme = _darkColorScheme?.copyWith(
+         surface: const Color.fromARGB(255, 33, 33, 33)
+      );
+
     } on PlatformException {
       debugPrint('dynamic_color: Failed to obtain accent color.');
     }
-
-    debugPrint('dynamic_color: Dynamic color not detected on this device.');
   }
 
   ///代表当前的重点色
@@ -74,6 +79,14 @@ class SmovbookTheme extends ChangeNotifier {
       seedColor: color,
       brightness: Brightness.dark,
     ).harmonized();
+
+    _lightColorScheme = _lightColorScheme?.copyWith(
+        surface: const Color.fromARGB(255, 250, 250, 250)
+    );
+
+    _darkColorScheme = _darkColorScheme?.copyWith(
+        surface: const Color.fromARGB(255, 33, 33, 33)
+    );
 
     notifyListeners();
   }
@@ -137,6 +150,12 @@ class SmovbookTheme extends ChangeNotifier {
     notifyListeners();
   }
 
+  set brightness(ThemeMode mode) {
+    _mode = mode;
+
+    notifyListeners();
+  }
+
   void setEffect(WindowEffect effect, BuildContext context,
       {Brightness? brightness}) async {
     brightness ??= Theme.of(context).brightness;
@@ -186,5 +205,6 @@ class SmovbookTheme extends ChangeNotifier {
 
   Future<void> init(BuildContext context) async {
     setEffect(windowEffect, context);
+
   }
 }

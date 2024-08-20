@@ -147,6 +147,11 @@ class ThreadFieldState extends State<ThreadField> {
             controller: _textEditingController,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
+                isDense: true,
+                contentPadding:
+                const EdgeInsets.only(
+                  left: 10,
+                ),
                 border: const OutlineInputBorder(),
                 hintStyle: TextStyle(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -165,7 +170,7 @@ class ThreadFieldState extends State<ThreadField> {
       children: [
         SizedBox(
           width: 30,
-          height: 30,
+          height: 22,
           child: TextButton(
             onPressed: () async {
               if (_focusNode.hasFocus) {
@@ -206,7 +211,7 @@ class ThreadFieldState extends State<ThreadField> {
         ),
         SizedBox(
           width: 30,
-          height: 30,
+          height: 22,
           child: TextButton(
             onPressed: () async {
               if (_focusNode.hasFocus) {

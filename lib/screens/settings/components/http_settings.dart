@@ -16,9 +16,10 @@ class HttpSetting extends StatelessWidget {
             Radius.circular(12),
           ),
           border: Border.all(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
+            color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
             width: 1,
           ),
+          color: Theme.of(context).colorScheme.surfaceContainerLowest,
         ),
         child: Column(
           children: [

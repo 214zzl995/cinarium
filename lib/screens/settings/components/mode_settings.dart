@@ -85,9 +85,10 @@ class ModeSetting extends StatelessWidget {
           Radius.circular(12),
         ),
         border: Border.all(
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
+          color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
           width: 1,
         ),
+        color: Theme.of(context).colorScheme.surfaceContainerLowest,
       ),
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Row(
@@ -99,7 +100,7 @@ class ModeSetting extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 20),
               child: Text(
-                '窗口效果',
+                'Window Effect',
                 style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurfaceVariant),
               ),
@@ -118,9 +119,9 @@ class ModeSetting extends StatelessWidget {
                   children: [
                     Radio(
                       value: e,
-                      groupValue: context.watch<SmovbookTheme>().windowEffect,
+                      groupValue: context.watch<CinariumTheme>().windowEffect,
                       onChanged: (val) {
-                        final theme = context.read<SmovbookTheme>();
+                        final theme = context.read<CinariumTheme>();
                         theme.windowEffect = val!;
                         //设置效果
                         theme.setEffect(val, context);

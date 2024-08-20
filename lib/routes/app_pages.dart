@@ -26,7 +26,7 @@ class AppPages {
     StatefulShellRoute.indexedStack(
         builder: (BuildContext context, GoRouterState state,
             StatefulNavigationShell navigationShell) {
-          final theme = context.read<SmovbookTheme>();
+          final theme = context.read<CinariumTheme>();
           if (theme.mode == ThemeMode.system) {
             //获取系统亮度(暗/亮
             final Brightness platformBrightness =
@@ -105,7 +105,7 @@ class AppPages {
   static final routers = GoRouter(initialLocation: initial, routes: [
     ShellRoute(
         builder: (BuildContext context, GoRouterState state, Widget child) {
-          final theme = context.read<SmovbookTheme>();
+          final theme = context.read<CinariumTheme>();
           if (theme.mode == ThemeMode.system) {
             final Brightness platformBrightness =
                 MediaQuery.platformBrightnessOf(context);

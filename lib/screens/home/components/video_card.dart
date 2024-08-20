@@ -145,6 +145,11 @@ class MovCard extends StatelessWidget {
                 title: 'Open with default player',
                 image: MenuImage.icon(Icons.play_circle_fill_outlined),
                 callback: () {}),
+            MenuAction(
+                title: 'Delete',
+                image: MenuImage.icon(Icons.delete_forever_outlined),
+                attributes: const MenuActionAttributes(destructive: true),
+                callback: () {}),
             MenuSeparator(),
             if (videoActors.isNotEmpty)
               Menu(title: 'Filter Actors', children: [
@@ -178,7 +183,6 @@ class MovCard extends StatelessWidget {
                           : MenuImage.icon(
                               Icons.check_box_outline_blank_rounded),
                       callback: () {
-
                         context
                             .read<HomeController>()
                             .addFilter(FilterType.director, e.id, !checked);
