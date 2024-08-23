@@ -8,8 +8,8 @@ import '../../../models/theme.dart';
 
 const win11Mode = [
   WindowEffect.disabled,
-  //支持大于 1803
-  WindowEffect.acrylic,
+  // 支持大于 1803 不是很喜欢这个效果移除了
+  // WindowEffect.acrylic,
   WindowEffect.mica,
   //此效果 只支持 22523以上
   WindowEffect.tabbed,

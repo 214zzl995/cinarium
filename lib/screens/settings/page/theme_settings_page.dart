@@ -11,7 +11,8 @@ class ThemeSettingsPage extends StatelessWidget {
     const settingsPanel = [
       BrightnessSetting(),
       ColorSettings(),
-      ModeSetting(),
+      // 这东西改着怪怪的 反正我自己用 默认mica了
+      // ModeSetting(),
     ];
 
     return ListView.builder(

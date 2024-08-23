@@ -6,20 +6,17 @@ import 'color_piece.dart';
 
 const accColors = [
   Color(0xFFBBC3FF),
-  Color(0xFFA03F28),
-  Color(0xFF496727),
-  Color(0xff255fa4),
-  Color(0xFF616036),
-  Color(0xff45617c),
-  Color(0xFF6750A4),
-  Color(0xFF984061),
-  Color(0xff006a67),
-  Color(0xff8e437f),
-  Color(0xff694fa3),
-  Color(0xff2e6b27),
-  Color(0xFF984813),
-  Color(0xff3a5ba9),
-  Color(0xFF646100),
+  Color(0xFFF2F0FF), // 薰衣草色
+  Color(0xFFFFFAFA), // 雪白色
+  Color(0xFFF0FFF0), // 蜜瓜色
+  Color(0xFFE0FFFF), // 淡青色
+  Color(0xFFDCDCDC), // Gainsboro
+  Color(0xFFF8F8FF), // Ghost White
+  Color(0xFFF0FFFF), // Azure
+  Color(0xFF87CEFA), // Light Sky Blue
+  Color(0xFFB0C4DE), // Light Steel Blue
+
+
 ];
 
 class ColorSettings extends StatelessWidget {

@@ -48,14 +48,7 @@ class CinariumTheme extends ChangeNotifier {
         ).harmonized();
       }
 
-      _lightColorScheme = _lightColorScheme?.copyWith(
-          surface: const Color.fromARGB(255, 250, 250, 250)
-      );
-
-      _darkColorScheme = _darkColorScheme?.copyWith(
-         surface: const Color.fromARGB(255, 33, 33, 33)
-      );
-
+      setSurfaceColor();
     } on PlatformException {
       debugPrint('dynamic_color: Failed to obtain accent color.');
     }
@@ -80,15 +73,28 @@ class CinariumTheme extends ChangeNotifier {
       brightness: Brightness.dark,
     ).harmonized();
 
-    _lightColorScheme = _lightColorScheme?.copyWith(
-        surface: const Color.fromARGB(255, 250, 250, 250)
-    );
-
-    _darkColorScheme = _darkColorScheme?.copyWith(
-        surface: const Color.fromARGB(255, 33, 33, 33)
-    );
+    setSurfaceColor();
 
     notifyListeners();
+  }
+
+  void setSurfaceColor() {
+    int opacity;
+
+    if (windowEffect == WindowEffect.tabbed ||
+        windowEffect == WindowEffect.mica) {
+      opacity = 130;
+    } else if (windowEffect == WindowEffect.acrylic) {
+      opacity = 0;
+    } else {
+      opacity = 255;
+    }
+
+    _lightColorScheme = _lightColorScheme?.copyWith(
+        surface: Color.fromARGB(opacity, 250, 250, 250));
+
+    _darkColorScheme = _darkColorScheme?.copyWith(
+        surface: Color.fromARGB(opacity, 33, 33, 33));
   }
 
   /// 添加 autoColor 标志 代表是否使用自动颜色 当这个值变动 也会出发重组 重新计算重点色
@@ -118,7 +124,7 @@ class CinariumTheme extends ChangeNotifier {
   }
 
   @HiveField(2)
-  WindowEffect _windowEffect = WindowEffect.disabled;
+  WindowEffect _windowEffect = WindowEffect.mica;
 
   WindowEffect get windowEffect => _windowEffect;
 
@@ -205,6 +211,5 @@ class CinariumTheme extends ChangeNotifier {
 
   Future<void> init(BuildContext context) async {
     setEffect(windowEffect, context);
-
   }
 }
