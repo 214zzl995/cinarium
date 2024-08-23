@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:window_manager/window_manager.dart';
 
-class SAppBar extends StatefulWidget implements PreferredSizeWidget {
-  const SAppBar(
+class CinariumAppBar extends StatefulWidget implements PreferredSizeWidget {
+  const CinariumAppBar(
       {super.key,
       this.title,
       this.actions,
@@ -64,7 +64,7 @@ class SAppBar extends StatefulWidget implements PreferredSizeWidget {
   final double? windowButtonHeight;
 
   @override
-  State<SAppBar> createState() => _SAppBarState();
+  State<CinariumAppBar> createState() => _CinariumAppBarState();
 
   @override
   Size get preferredSize =>
@@ -80,7 +80,7 @@ class _PreferredAppBarSize extends Size {
   final double? bottomHeight;
 }
 
-class _SAppBarState extends State<SAppBar> with WindowListener {
+class _CinariumAppBarState extends State<CinariumAppBar> with WindowListener {
   @override
   void initState() {
     windowManager.addListener(this);
@@ -180,8 +180,6 @@ class _SAppBarState extends State<SAppBar> with WindowListener {
             notificationPredicate: widget.notificationPredicate,
             scrolledUnderElevation: widget.scrolledUnderElevation,
             surfaceTintColor: widget.surfaceTintColor));
-
-    //为了防止 action 被影响 将action 和 appbar分离
 
     final windowButton = [
       SizedBox(

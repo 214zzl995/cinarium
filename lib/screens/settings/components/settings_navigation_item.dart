@@ -28,7 +28,7 @@ class SettingNavigationItemState extends State<SettingNavigationItem> {
               fontWeight: FontWeight.w600,
               color: GoRouter.of(context).location == widget.settingRoute.router
                   ? Theme.of(context).colorScheme.onSurface
-                  : Theme.of(context).colorScheme.outlineVariant),
+                  : Theme.of(context).colorScheme.onSurface.withOpacity(0.2)),
         ),
       ),
     );

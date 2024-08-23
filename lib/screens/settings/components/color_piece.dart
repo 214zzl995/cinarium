@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../models/theme.dart';
@@ -42,7 +43,7 @@ class ColorPiece extends StatelessWidget {
                                 Radius.circular(12),
                               ),
                               border: Border.all(
-                                color: const Color(0xFF494949),
+                                color: Theme.of(context).colorScheme.outline,
                                 width: 2,
                               ),
                             )
@@ -57,15 +58,15 @@ class ColorPiece extends StatelessWidget {
                               alignment: Alignment.center,
                               width: 17,
                               height: 17,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFF494949),
-                                borderRadius: BorderRadius.only(
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.outline,
+                                borderRadius: const BorderRadius.only(
                                     topRight: Radius.circular(5),
                                     bottomLeft: Radius.circular(5)),
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 CupertinoIcons.checkmark_alt,
-                                color: CupertinoColors.white,
+                                color: Theme.of(context).colorScheme.onPrimary,
                                 size: 15,
                               ),
                             )

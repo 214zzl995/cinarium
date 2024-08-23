@@ -16,7 +16,6 @@ class HiveUtil {
 
   Box get themeBox => _themeBox;
 
-  /// 初始化，需要在 s_app.dart 调用
   /// <https://docs.hivedb.dev/>
   static Future<void> install() async {
     /// 初始化Hive地址

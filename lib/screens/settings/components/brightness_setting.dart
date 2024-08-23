@@ -1,3 +1,4 @@
+import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -8,7 +9,6 @@ class BrightnessSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey menuKey = GlobalKey();
     return Container(
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
@@ -41,71 +41,65 @@ class BrightnessSetting extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Selector<CinariumTheme, ThemeMode>(
-                  builder: (context, mode, _) => PopupMenuButton(
-                    key: menuKey,
-                    initialValue: mode,
-                    color: Theme.of(context).colorScheme.surfaceContainerLowest,
-                    constraints: const BoxConstraints(
-                      minWidth: 100,
+                  builder: (context, mode, _) =>
+                      AnimatedToggleSwitch<ThemeMode?>.rolling(
+                    allowUnlistedValues: true,
+                    styleAnimationType: AnimationType.onHover,
+                    current: mode,
+                    values: ThemeMode.values,
+                    borderWidth: 0,
+                    height: 40,
+                    indicatorSize: const Size.square(40),
+                    style: ToggleStyle(
+                      borderColor: Colors.transparent,
+                      indicatorColor: Theme.of(context).colorScheme.primary,
+                      backgroundColor:
+                          Theme.of(context).colorScheme.surfaceContainerHigh,
                     ),
-                    enabled: false,
-                    child: SizedBox(
-                      width: 100,
-                      child: TextButton(
-                        onPressed: () {
-                          final dynamic popupMenuState = menuKey.currentState;
-                          popupMenuState.showButtonMenu();
-                        },
-                        child: Text(
-                          mode.name,
-                          style: TextStyle(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant),
-                        ),
-                      ),
-                    ),
-                    onSelected: (val) {
+                    onChanged: (val) {
                       final theme = context.read<CinariumTheme>();
-                      theme.mode = val;
-                      Brightness brightness;
-                      if (val == ThemeMode.system) {
-                        brightness = WidgetsBinding
-                            .instance.platformDispatcher.platformBrightness;
-                      } else {
-                        brightness = val == ThemeMode.light
-                            ? Brightness.light
-                            : Brightness.dark;
-                      }
-                      theme.setEffect(theme.windowEffect, context,
-                          brightness: brightness);
+                      theme.themeMode = val!;
                     },
-                    itemBuilder: (BuildContext context) =>
-                        <PopupMenuEntry<ThemeMode>>[
-                      const PopupMenuItem<ThemeMode>(
-                        height: 40,
-                        value: ThemeMode.light,
-                        child: Text('Light'),
-                      ),
-                      const PopupMenuItem<ThemeMode>(
-                        height: 40,
-                        value: ThemeMode.dark,
-                        child: Text('Dark'),
-                      ),
-                      const PopupMenuItem<ThemeMode>(
-                        height: 40,
-                        value: ThemeMode.system,
-                        child: Text('System'),
-                      ),
-                    ],
+                    iconBuilder: (ThemeMode? value, bool? foreground) =>
+                        rollingIconBuilder(value, foreground, context),
+                    customStyleBuilder: (context, local, global) {
+                      final color = local.isValueListed
+                          ? null
+                          : Theme.of(context).colorScheme.error;
+                      return ToggleStyle(
+                          borderColor: color, indicatorColor: color);
+                    },
                   ),
-                  selector: (context, theme) => theme.mode,
+                  selector: (context, theme) => theme.themeMode,
                 )
               ],
             ))
           ],
         ),
       ]),
+    );
+  }
+
+  Widget rollingIconBuilder(
+      ThemeMode? value, bool? foreground, BuildContext context) {
+    IconData icon;
+    switch (value!) {
+      case ThemeMode.light:
+        icon = Icons.sunny;
+        break;
+      case ThemeMode.dark:
+        icon = Icons.nightlight;
+        break;
+      case ThemeMode.system:
+        icon = Icons.brightness_auto;
+        break;
+    }
+    return Icon(
+      icon,
+      size: 20,
+      color: foreground!
+          ? Theme.of(context).colorScheme.onPrimary
+          : Theme.of(context).colorScheme.onSurface,
     );
   }
 }

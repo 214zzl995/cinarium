@@ -63,7 +63,7 @@ rust-version = "1.56"
 version = "0.1.1"
 
 [build-dependencies]
-flutter_rust_bridge_codegen = "2.2"
+flutter_rust_bridge_codegen = "2.3"
 prost-build = "0.12"
 anyhow = { workspace = true }
 winres = { git = "https://github.com/Nilstrieb/winres", branch = "linking-flags" }
@@ -97,7 +97,7 @@ tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
 tracing-appender = "0.2.3"
 uuid = { workspace = true }
-flutter_rust_bridge = { version = "2.2", features = ["default", "chrono"] }
+flutter_rust_bridge = { version = "2.3", features = ["default", "chrono"] }
 rfd = "0.11.4"
 open = "5.0.0"
 walkdir = "2"

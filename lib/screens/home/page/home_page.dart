@@ -33,8 +33,7 @@ class HomePage extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: Stack(
         children: [
-          Positioned.fill(
-              child: Listener(
+          Listener(
             onPointerDown: (event) {
               if (!filterPanelLock.value) {
                 filterPanelVisible.value = false;
@@ -47,7 +46,7 @@ class HomePage extends StatelessWidget {
               ),
               child: _buildBody(),
             ),
-          )),
+          ),
           // _buildFilterBar(context),
           ValueListenableBuilder<bool>(
               valueListenable: filterPanelVisible,
@@ -101,17 +100,9 @@ class HomePage extends StatelessWidget {
                           : LastChildLayoutType.none,
                 ),
                 itemBuilder: (BuildContext context, int index) {
-                  if (index == videoList.length) {
-                    return const SizedBox(
-                      height: 0,
-                    );
-                  } else {
-                    final video =
-                        context.read<HomeController>().videoList[index];
-                    return SlideFadeTransition(
-                        offset: 0.1,
-                        child: MovCard(video, video.thumbnailRatio));
-                  }
+                  final video = context.read<HomeController>().videoList[index];
+                  return SlideFadeTransition(
+                      offset: 1, child: MovCard(video));
                 },
               ));
         });
@@ -164,7 +155,7 @@ class HomePage extends StatelessWidget {
     return Selector<HomeController, bool>(
         selector: (_, homeController) => (homeController.loading),
         builder: (selectorContext, loading, __) {
-          if (loading){
+          if (loading) {
             return const SizedBox();
           }
           return Selector<HomeController, double>(
@@ -367,7 +358,7 @@ class HomePage extends StatelessWidget {
         mouseCursor: lock
             ? SystemMouseCursors.basic
             : filterPanelVisible.value
-                ? SystemMouseCursors.allScroll
+                ? SystemMouseCursors.move
                 : SystemMouseCursors.click,
         onHover: (hover) {
           if (!filterPanelVisible.value && !filterPanelLock.value) {

@@ -19,7 +19,7 @@ class CinariumThemeAdapter extends TypeAdapter<CinariumTheme> {
     return CinariumTheme()
       .._color = fields[0] as Color?
       .._autoColor = fields[4] as bool
-      .._mode = fields[1] as ThemeMode
+      .._themeMode = fields[1] as ThemeMode
       .._windowEffect = fields[2] as WindowEffect
       .._textDirection = fields[3] as TextDirection;
   }
@@ -33,7 +33,7 @@ class CinariumThemeAdapter extends TypeAdapter<CinariumTheme> {
       ..writeByte(4)
       ..write(obj._autoColor)
       ..writeByte(1)
-      ..write(obj._mode)
+      ..write(obj._themeMode)
       ..writeByte(2)
       ..write(obj._windowEffect)
       ..writeByte(3)

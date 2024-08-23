@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
+import 'package:window_manager/window_manager.dart';
 
 import '../util/hive_util.dart';
 
@@ -13,29 +14,48 @@ class CinariumTheme extends ChangeNotifier {
   ColorScheme? _lightColorScheme;
   ColorScheme? _darkColorScheme;
 
+  late Brightness _brightness = _themeMode == ThemeMode.dark
+      ? Brightness.dark
+      : _themeMode == ThemeMode.light
+          ? Brightness.light
+          : WidgetsBinding.instance.platformDispatcher.platformBrightness;
+
+  @HiveField(0)
+  Color? _color;
+  @HiveField(1)
+  ThemeMode _themeMode = ThemeMode.system;
+  @HiveField(2)
+  WindowEffect _windowEffect = WindowEffect.mica;
+  @HiveField(3)
+  TextDirection _textDirection = TextDirection.ltr;
+  @HiveField(4)
+  bool _autoColor = true;
+
+  Locale? _locale;
+
+  Locale? get locale => _locale;
+
+  TextDirection get textDirection => _textDirection;
+
+  WindowEffect get windowEffect => _windowEffect;
+
+  ThemeMode get themeMode => _themeMode;
+
+  bool get autoColor => _autoColor;
+
+  Color? get color => _color;
+
   ColorScheme? get lightColorScheme => _lightColorScheme;
 
   ColorScheme? get darkColorScheme => _darkColorScheme;
 
-  set lightColorScheme(lightColorScheme) {
-    _lightColorScheme = lightColorScheme;
-    notifyListeners();
-  }
+  Brightness get brightness => _brightness;
 
-  set darkColorScheme(darkColorScheme) {
-    _darkColorScheme = darkColorScheme;
-    notifyListeners();
-  }
-
-  ///获取ColorScheme
   Future<void> initPlatformState({Color? color}) async {
     try {
       Color? accentColor;
-      if (color != null) {
-        accentColor = color;
-      } else {
-        accentColor = await DynamicColorPlugin.getAccentColor();
-      }
+
+      accentColor = color ?? await DynamicColorPlugin.getAccentColor();
       if (accentColor != null) {
         _lightColorScheme = ColorScheme.fromSeed(
           seedColor: accentColor,
@@ -54,11 +74,28 @@ class CinariumTheme extends ChangeNotifier {
     }
   }
 
-  ///代表当前的重点色
-  @HiveField(0)
-  Color? _color;
+  Future<void> refreshWindowEffect() async {
+    await windowManager.waitUntilReadyToShow().then((_) async {
+      ThemeMode themeMode;
+      if (_themeMode != ThemeMode.system) {
+        themeMode = _themeMode;
+      } else {
+        themeMode =
+            brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
+      }
 
-  Color? get color => _color;
+      Window.setEffect(
+        effect: windowEffect,
+        color: effectBackgroundColor,
+        dark: themeMode == ThemeMode.dark,
+      );
+    });
+  }
+
+  set brightness(Brightness brightness) {
+    _brightness = brightness;
+    refreshWindowEffect();
+  }
 
   set color(Color? color) {
     _color = color;
@@ -97,12 +134,6 @@ class CinariumTheme extends ChangeNotifier {
         surface: Color.fromARGB(opacity, 33, 33, 33));
   }
 
-  /// 添加 autoColor 标志 代表是否使用自动颜色 当这个值变动 也会出发重组 重新计算重点色
-  @HiveField(4)
-  bool _autoColor = true;
-
-  bool get autoColor => _autoColor;
-
   set autoColor(bool autoColor) {
     _autoColor = autoColor;
     if (_autoColor) {
@@ -113,27 +144,27 @@ class CinariumTheme extends ChangeNotifier {
     notifyListeners();
   }
 
-  @HiveField(1)
-  ThemeMode _mode = ThemeMode.system;
-
-  ThemeMode get mode => _mode;
-
-  set mode(ThemeMode mode) {
-    _mode = mode;
+  set themeMode(ThemeMode mode) {
+    _themeMode = mode;
+    if (mode == ThemeMode.system) {
+      final brightness =
+          WidgetsBinding.instance.platformDispatcher.platformBrightness;
+      _brightness = brightness;
+    } else if (mode == ThemeMode.light) {
+      _brightness = Brightness.light;
+    } else {
+      _brightness = Brightness.dark;
+    }
+    refreshWindowEffect();
     notifyListeners();
   }
-
-  @HiveField(2)
-  WindowEffect _windowEffect = WindowEffect.mica;
-
-  WindowEffect get windowEffect => _windowEffect;
 
   /// 获取背景色
   Color get effectBackgroundColor {
     if (windowEffect == WindowEffect.disabled) {
-      if (mode == ThemeMode.light) {
+      if (_themeMode == ThemeMode.light) {
         return lightColorScheme!.surface;
-      } else if (mode == ThemeMode.dark) {
+      } else if (_themeMode == ThemeMode.dark) {
         return darkColorScheme!.surface;
       } else {
         final brightness =
@@ -151,21 +182,11 @@ class CinariumTheme extends ChangeNotifier {
     }
   }
 
-  set windowEffect(WindowEffect windowEffect) {
-    _windowEffect = windowEffect;
-    notifyListeners();
-  }
-
-  set brightness(ThemeMode mode) {
-    _mode = mode;
-
-    notifyListeners();
-  }
-
-  void setEffect(WindowEffect effect, BuildContext context,
-      {Brightness? brightness}) async {
-    brightness ??= Theme.of(context).brightness;
-
+  set windowEffect(WindowEffect effect) {
+    _windowEffect = effect;
+    final surfaceColor = brightness == Brightness.light
+        ? lightColorScheme!.surface
+        : darkColorScheme!.surface;
     Window.setEffect(
       effect: effect,
       color: [
@@ -173,25 +194,16 @@ class CinariumTheme extends ChangeNotifier {
         WindowEffect.acrylic,
         WindowEffect.disabled,
       ].contains(effect)
-          ? Theme.of(context).colorScheme.surface
+          ? surfaceColor
           : Colors.transparent,
       dark: brightness == Brightness.dark,
     );
   }
 
-  @HiveField(3)
-  TextDirection _textDirection = TextDirection.ltr;
-
-  TextDirection get textDirection => _textDirection;
-
   set textDirection(TextDirection direction) {
     _textDirection = direction;
     notifyListeners();
   }
-
-  Locale? _locale;
-
-  Locale? get locale => _locale;
 
   set locale(Locale? locale) {
     _locale = locale;
@@ -207,9 +219,5 @@ class CinariumTheme extends ChangeNotifier {
   void save() async {
     final hiveUtil = await HiveUtil.getInstance();
     await hiveUtil.themeBox.put('theme', this);
-  }
-
-  Future<void> init(BuildContext context) async {
-    setEffect(windowEffect, context);
   }
 }

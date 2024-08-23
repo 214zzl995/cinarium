@@ -9,10 +9,9 @@ import 'package:provider/provider.dart';
 import 'package:super_context_menu/super_context_menu.dart';
 
 class MovCard extends StatelessWidget {
-  const MovCard(this.video, this.thumbnailRatio, {super.key});
+  const MovCard(this.video, {super.key});
 
   final HomeVideo video;
-  final double thumbnailRatio;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +31,6 @@ class MovCard extends StatelessWidget {
                     behavior: HitTestBehavior.deferToChild,
                     onTap: () {
                       debugPrint("open file");
-                      // systemApi.openInDefaultSoftware(path:"${smov.path}\\${smov.filename}.${smov.extension}" );
                     },
                     onSecondaryTapUp: (details) {
                       // _buildMenuItems(context, details).show(context);
@@ -48,47 +46,29 @@ class MovCard extends StatelessWidget {
                         );
                       },
                       child: Positioned(
-                          child: Container(
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(12),
-                                  ),
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onSurfaceVariant),
-                              child: AspectRatio(
-                                aspectRatio: thumbnailRatio,
-                                child: ValueListenableBuilder<bool>(
-                                  valueListenable: hover,
-                                  builder: (context, value, child) {
-                                    return AnimatedScale(
-                                        scale: value ? 1 : 1,
-                                        curve: const Cubic(1, .21, .2, .9),
-                                        duration:
-                                            const Duration(milliseconds: 400),
-                                        child: ExtendedImage(
-                                          image: ExtendedResizeImage(
-                                            ExtendedFileImageProvider(
-                                              File(
-                                                  "${video.matedata.path}/img/thumbnail.webp"),
-                                              imageCacheName: video.name,
-                                            ),
-                                            compressionRatio: null,
-                                            // maxBytes: 125 << 10,
-                                            width: null,
-                                            height: null,
-                                            imageCacheName: video.name,
-                                          ),
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(11.0)),
-                                          fit: BoxFit.contain,
-                                          clearMemoryCacheWhenDispose: true,
-                                          shape: BoxShape.rectangle,
-                                        ));
-                                  },
+                          child: AspectRatio(
+                        aspectRatio: video.thumbnailRatio,
+                        child: ValueListenableBuilder<bool>(
+                          valueListenable: hover,
+                          builder: (context, value, child) {
+                            return ExtendedImage(
+                              image: ExtendedResizeImage(
+                                ExtendedFileImageProvider(
+                                  File(
+                                      "${video.matedata.path}/img/thumbnail.webp"),
+                                  imageCacheName: video.name,
                                 ),
-                              ))),
+                                imageCacheName: video.name,
+                              ),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(7.0)),
+                              fit: BoxFit.contain,
+                              clearMemoryCacheWhenDispose: true,
+                              shape: BoxShape.rectangle,
+                            );
+                          },
+                        ),
+                      )),
                     )))),
         Row(
           children: [
@@ -185,7 +165,7 @@ class MovCard extends StatelessWidget {
                       callback: () {
                         context
                             .read<HomeController>()
-                            .addFilter(FilterType.director, e.id, !checked);
+                            .addFilter(FilterType.series, e.id, !checked);
                       });
                 }).toList(),
               ]),

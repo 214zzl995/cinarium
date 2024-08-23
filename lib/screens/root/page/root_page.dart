@@ -8,7 +8,7 @@ import '../../home/controllers/home_controller.dart';
 import '../../pool/controllers/pool_controller.dart';
 import '../../retrieve/controllers/retrieve_controller.dart';
 import '../components/menu.dart';
-import '../components/s_app_bar.dart';
+import '../components/cinarium_app_bar.dart';
 import '../controllers/root_controller.dart';
 
 class RootPage extends StatelessWidget {
@@ -32,8 +32,9 @@ class RootPage extends StatelessWidget {
         context.read<SettingsController>();
         context.read<PoolController>();
         return Scaffold(
-          backgroundColor: Theme.of(context).extension<EffectMenuColors>()!.danger,
-          appBar: SAppBar(
+          backgroundColor:
+              Theme.of(context).extension<EffectMenuColors>()!.danger,
+          appBar: CinariumAppBar(
             toolbarHeight: 40,
             windowButtonHeight: 30,
             title: Row(
@@ -90,13 +91,9 @@ class RootPage extends StatelessWidget {
                 onChanged: (val) {
                   final theme = context.read<CinariumTheme>();
                   if (val) {
-                    theme.mode = ThemeMode.dark;
-                    theme.setEffect(theme.windowEffect, context,
-                        brightness: Brightness.dark);
+                    theme.themeMode = ThemeMode.dark;
                   } else {
-                    theme.mode = ThemeMode.light;
-                    theme.setEffect(theme.windowEffect, context,
-                        brightness: Brightness.light);
+                    theme.themeMode = ThemeMode.light;
                   }
                 },
               )),

@@ -15,8 +15,6 @@ const accColors = [
   Color(0xFFF0FFFF), // Azure
   Color(0xFF87CEFA), // Light Sky Blue
   Color(0xFFB0C4DE), // Light Steel Blue
-
-
 ];
 
 class ColorSettings extends StatelessWidget {
@@ -61,7 +59,10 @@ class ColorSettings extends StatelessWidget {
               children: [
                 Text('follow-up system',
                     style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.8))),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurfaceVariant
+                            .withOpacity(0.8))),
                 const SizedBox(
                   width: 10,
                 ),
@@ -79,9 +80,6 @@ class ColorSettings extends StatelessWidget {
                         ),
                       );
                     }),
-                const SizedBox(
-                  width: 20,
-                )
               ],
             ),
           ]),

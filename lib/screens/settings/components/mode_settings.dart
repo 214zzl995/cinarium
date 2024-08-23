@@ -121,10 +121,7 @@ class ModeSetting extends StatelessWidget {
                       value: e,
                       groupValue: context.watch<CinariumTheme>().windowEffect,
                       onChanged: (val) {
-                        final theme = context.read<CinariumTheme>();
-                        theme.windowEffect = val!;
-                        //设置效果
-                        theme.setEffect(val, context);
+                        context.read<CinariumTheme>().windowEffect = val!;
                       },
                     ),
                     Text(

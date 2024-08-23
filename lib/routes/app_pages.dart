@@ -27,14 +27,12 @@ class AppPages {
         builder: (BuildContext context, GoRouterState state,
             StatefulNavigationShell navigationShell) {
           final theme = context.read<CinariumTheme>();
-          if (theme.mode == ThemeMode.system) {
-            //获取系统亮度(暗/亮
+          if (theme.themeMode == ThemeMode.system) {
+            //获取系统主题
             final Brightness platformBrightness =
-                MediaQuery.platformBrightnessOf(context);
-            //重设效果
+            MediaQuery.platformBrightnessOf(context);
 
-            theme.setEffect(theme.windowEffect, context,
-                brightness: platformBrightness);
+            theme.brightness = platformBrightness;
           }
           return RootPage(child: navigationShell);
         },
@@ -106,21 +104,21 @@ class AppPages {
     ShellRoute(
         builder: (BuildContext context, GoRouterState state, Widget child) {
           final theme = context.read<CinariumTheme>();
-          if (theme.mode == ThemeMode.system) {
+          if (theme.themeMode == ThemeMode.system) {
+            //获取系统主题
             final Brightness platformBrightness =
                 MediaQuery.platformBrightnessOf(context);
-            theme.setEffect(theme.windowEffect, context,
-                brightness: platformBrightness);
-          }
 
+            theme.brightness = platformBrightness;
+          }
           return RootPage(child: child);
         },
         routes: [
           GoRoute(
             path: Routes.home.router,
             name: Routes.home.name,
-            pageBuilder: (context, state) => FadeTransitionPage(
-                key: state.pageKey, child: const HomePage()),
+            pageBuilder: (context, state) =>
+                FadeTransitionPage(key: state.pageKey, child: const HomePage()),
           ),
           GoRoute(
             path: Routes.settings.router,
@@ -143,14 +141,14 @@ class AppPages {
           GoRoute(
             path: Routes.http.router,
             name: Routes.http.name,
-            pageBuilder: (context, state) => FadeTransitionPage(
-                key: state.pageKey, child: const HttpPage()),
+            pageBuilder: (context, state) =>
+                FadeTransitionPage(key: state.pageKey, child: const HttpPage()),
           ),
           GoRoute(
             path: Routes.pool.router,
             name: Routes.pool.name,
-            pageBuilder: (context, state) => FadeTransitionPage(
-                key: state.pageKey, child: const PoolPage()),
+            pageBuilder: (context, state) =>
+                FadeTransitionPage(key: state.pageKey, child: const PoolPage()),
           ),
           ShellRoute(
               pageBuilder: (context, state, child) => FadeTransitionPage(

@@ -5,7 +5,6 @@ import 'package:bridge/call_rust/native/task_api.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
-import 'package:flutter_acrylic/window.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import './models/theme.dart';
@@ -47,103 +46,67 @@ void main(List<String> args) async {
       //await WindowManager.instance.setAsFrameless();
     });
   }
+  CinariumTheme theme = await buildTheme();
+  theme.refreshWindowEffect();
 
-  runApp(const MyApp());
+  runApp(MyApp(
+    theme: theme,
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.theme});
+
+  final CinariumTheme theme;
 
   @override
   Widget build(BuildContext context) {
-    final mode = Theme.of(context).brightness;
-    return FutureBuilder<CinariumTheme>(
-      future: getTheme(mode),
-      builder: (futureContext, snapshot) {
-        if (snapshot.hasData) {
-          final theme = snapshot.data!;
-
-          return ChangeNotifierProvider(
-              create: (_) => theme,
-              builder: (notifierContext, _) {
-                final readTheme = notifierContext.watch<CinariumTheme>();
-                final effectBackgroundColor =
-                    EffectMenuColors(danger: readTheme.effectBackgroundColor);
-                return MaterialApp.router(
-                  theme: ThemeData(
-                      colorScheme: readTheme.lightColorScheme,
-                      extensions: [effectBackgroundColor],
-                      scaffoldBackgroundColor:
-                          readTheme.lightColorScheme?.surface),
-                  darkTheme: ThemeData(
-                      colorScheme: readTheme.darkColorScheme,
-                      extensions: [effectBackgroundColor],
-                      scaffoldBackgroundColor:
-                          readTheme.lightColorScheme?.surface),
-                  supportedLocales: const [
-                    Locale("zh", "CN"),
-                    Locale("en", "US")
-                  ],
-                  localizationsDelegates: const [
-                    GlobalMaterialLocalizations.delegate,
-                    GlobalWidgetsLocalizations.delegate,
-                    GlobalCupertinoLocalizations.delegate,
-                  ],
-                  routerConfig: AppPages.routers,
-                  themeMode: readTheme.mode,
-                  debugShowCheckedModeBanner: false,
-                );
-              });
-        } else {
-          //此时背景颜色未初始化
-          return Column(
-            children: [
-              const Center(
-                child: CircularProgressIndicator(),
-              ),
-              Container()
+    return ChangeNotifierProvider(
+        create: (_) => theme,
+        builder: (notifierContext, _) {
+          final readTheme = notifierContext.watch<CinariumTheme>();
+          final effectBackgroundColor =
+              EffectMenuColors(danger: readTheme.effectBackgroundColor);
+          return MaterialApp.router(
+            theme: ThemeData(
+                colorScheme: readTheme.lightColorScheme,
+                extensions: [effectBackgroundColor],
+                scaffoldBackgroundColor: readTheme.lightColorScheme?.surface),
+            darkTheme: ThemeData(
+                colorScheme: readTheme.darkColorScheme,
+                extensions: [effectBackgroundColor],
+                scaffoldBackgroundColor: readTheme.lightColorScheme?.surface),
+            supportedLocales: const [Locale("zh", "CN"), Locale("en", "US")],
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
             ],
+            routerConfig: AppPages.routers,
+            themeMode: readTheme.themeMode,
+            debugShowCheckedModeBanner: false,
           );
-        }
-      },
-    );
+        });
+  }
+}
+
+Future<CinariumTheme> buildTheme() async {
+  final hiveUtil = await HiveUtil.getInstance();
+  var cinariumTheme = hiveUtil.themeBox.get('theme') as CinariumTheme?;
+  if (cinariumTheme == null) {
+    cinariumTheme = CinariumTheme();
+    hiveUtil.themeBox.put('theme', cinariumTheme);
   }
 
-  /// 持久化获取theme方法
-  Future<CinariumTheme> getTheme(Brightness mode) async {
-    final hiveUtil = await HiveUtil.getInstance();
-    var appTheme = hiveUtil.themeBox.get('theme') as CinariumTheme?;
-    if (appTheme == null) {
-      appTheme = CinariumTheme();
-      hiveUtil.themeBox.put('theme', appTheme);
+  if (cinariumTheme.autoColor || cinariumTheme.color == null) {
+    await cinariumTheme.initPlatformState();
+    if (cinariumTheme.color == null) {
+      cinariumTheme.color = cinariumTheme.lightColorScheme!.primary;
+      hiveUtil.themeBox.put('theme', cinariumTheme);
     }
-
-    windowManager.waitUntilReadyToShow().then((_) async {
-      ThemeMode themeMode;
-      if (appTheme?.mode != ThemeMode.system) {
-        themeMode = appTheme!.mode;
-      } else {
-        themeMode = mode == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
-      }
-
-      Window.setEffect(
-        effect: appTheme!.windowEffect,
-        color: appTheme.effectBackgroundColor,
-        dark: themeMode == ThemeMode.dark,
-      );
-    });
-
-    //初始化 ColorScheme
-    if (appTheme.autoColor || appTheme.color == null) {
-      await appTheme.initPlatformState();
-      if (appTheme.color == null) {
-        appTheme.color = appTheme.lightColorScheme!.primary;
-        hiveUtil.themeBox.put('theme', appTheme);
-      }
-    } else {
-      await appTheme.initPlatformState(color: appTheme.color);
-    }
-
-    return appTheme;
+  } else {
+    await cinariumTheme.initPlatformState(color: cinariumTheme.color);
   }
+
+  return cinariumTheme;
 }
