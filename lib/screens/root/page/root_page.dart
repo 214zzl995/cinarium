@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:cinarium/models/theme.dart';
 import 'package:cinarium/screens/settings/controllers/settings_controller.dart';
@@ -39,18 +40,16 @@ class RootPage extends StatelessWidget {
             windowButtonHeight: 30,
             title: Row(
               children: [
-                const ImageIcon(
-                  AssetImage('assets/app_icon.ico'),
-                  size: 20,
-                ),
+                SvgPicture.asset('assets/logo.svg',
+                    width: 17, height: 20, semanticsLabel: 'Logo'),
                 const SizedBox(
-                  width: 20,
+                  width: 10,
                 ),
                 Text(
                   context.select<RootController, String>(
                       (RootController p) => p.title),
                   style: const TextStyle(
-                      fontSize: 12.0,
+                      fontSize: 13.0,
                       fontWeight: FontWeight.w500,
                       fontFamily: 'SystemFont'),
                 )

@@ -33,19 +33,20 @@ class HomePage extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: Stack(
         children: [
-          Listener(
-            onPointerDown: (event) {
-              if (!filterPanelLock.value) {
-                filterPanelVisible.value = false;
-                filterPanelIndicatorVisible.value = false;
-              }
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-              ),
-              child: _buildBody(),
-            ),
+          Positioned.fill(
+            child: Listener(
+                onPointerDown: (event) {
+                  if (!filterPanelLock.value) {
+                    filterPanelVisible.value = false;
+                    filterPanelIndicatorVisible.value = false;
+                  }
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                  ),
+                  child: _buildBody(),
+                )),
           ),
           // _buildFilterBar(context),
           ValueListenableBuilder<bool>(
@@ -101,8 +102,7 @@ class HomePage extends StatelessWidget {
                 ),
                 itemBuilder: (BuildContext context, int index) {
                   final video = context.read<HomeController>().videoList[index];
-                  return SlideFadeTransition(
-                      offset: 1, child: MovCard(video));
+                  return SlideFadeTransition(offset: 1, child: MovCard(video));
                 },
               ));
         });

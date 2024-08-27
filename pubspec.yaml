@@ -41,6 +41,7 @@ dependencies:
   super_context_menu:
     path: ./super_context_menu
   animated_toggle_switch: ^0.8.3
+  flutter_svg: ^2.0.10+1
 
 
 dev_dependencies:
@@ -64,7 +65,8 @@ flutter:
 flutter_launcher_icons:
   android: false
   ios: false
-  web: false
+  web:
+    generate: false
   windows:
     generate: true
     image_path: "assets/logo.png"
