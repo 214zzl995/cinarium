@@ -121,13 +121,36 @@ class MenuItemState extends State<MenuItem>
                       Lottie.asset(
                         widget.lottie!,
                         controller: _lottieController,
-                        width: MenuParam.menuItemsHeight/2.3,
-                        height: MenuParam.menuItemsHeight/2.3,
+                        width: MenuParam.menuItemsHeight / 2.3,
+                        height: MenuParam.menuItemsHeight / 2.3,
                         frameRate: FrameRate.max,
                         onLoaded: (composition) {
                           _lottieController.duration =
                               const Duration(milliseconds: 500);
                         },
+                        delegates: LottieDelegates(
+                          values: [
+                            if (Theme.of(context).brightness == Brightness.dark)
+                              ValueDelegate.colorFilter(
+                                const [
+                                  '**',
+                                ],
+                                value: const ColorFilter.mode(
+                                  Colors.white,
+                                  BlendMode.exclusion,
+                                ),
+                              ),
+                            /*ValueDelegate.colorFilter(
+                              const [
+                                '**',
+                              ],
+                              value: ColorFilter.mode(
+                                Theme.of(context).colorScheme.onSurface,
+                                BlendMode.exclusion,
+                              ),
+                            ),*/
+                          ],
+                        ),
                       )
                     else
                       widget.builder!(context, _lottieController)
