@@ -79,11 +79,9 @@ class SettingsController with ChangeNotifier {
   }
 
   void addSearchFolder() async {
-    String? path = await pickFolder();
-    if (path != null) {
-      _searchFolders = [..._searchFolders, path];
-      notifyListeners();
-    }
+    await addSourceNotifyPath();
+    _searchFolders = getSourceNotifyPaths();
+    notifyListeners();
   }
 
   init() async {

@@ -14,7 +14,7 @@ use parking_lot::Mutex;
 use tokio::sync::{
     broadcast,
     mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender},
-    oneshot,
+    oneshot, watch,
 };
 
 use crate::{
@@ -24,6 +24,7 @@ use crate::{
 
 static SOURCE_NOTIFY: OnceLock<SourceNotify> = OnceLock::new();
 static LISTENER: OnceLock<broadcast::Sender<()>> = OnceLock::new();
+static SCAN_STORAGE_LISTENER: OnceLock<watch::Sender<bool>> = OnceLock::new();
 
 pub struct SourceNotify(Mutex<SourceNotifyInner>);
 
@@ -165,12 +166,28 @@ impl SourceNotify {
 
                 if !modifys.is_empty() {
                     Metadata::insert_replace_batch(&modifys).await.unwrap();
+                    if let Err(err) = LISTENER
+                        .get_or_init(|| {
+                            let (tx, _) = broadcast::channel(1);
+                            tx
+                        })
+                        .send(())
+                    {
+                        tracing::error!("Failed to send event: {:?}", err);
+                    };
                 }
             }
         });
     }
 
     async fn full_scale_retrieval(&self) -> anyhow::Result<()> {
+        let tx = SCAN_STORAGE_LISTENER.get_or_init(|| {
+            let (tx, _) = watch::channel(false);
+            tx
+        });
+
+        tx.send_replace(true);
+
         let phy_videos: HashSet<(String, PathBuf)> = self
             .0
             .lock()
@@ -209,10 +226,13 @@ impl SourceNotify {
                 })
                 .send(());
         }
+
+        tx.send_replace(false);
+
         Ok(())
     }
 
-    pub fn paths(&self) -> Vec<String> {
+    pub fn paths(&self) -> Vec<PathBuf> {
         let mut sources = self
             .0
             .lock()
@@ -223,20 +243,79 @@ impl SourceNotify {
 
         sources.sort_by(|a, b| a.id.cmp(&b.id));
 
-        sources
-            .into_iter()
-            .map(|s| s.path.to_string_lossy().to_string())
-            .collect()
+        sources.into_iter().map(|s| s.path).collect()
+    }
+
+    pub async fn watch_source(&self, path: &PathBuf) -> anyhow::Result<()> {
+        let source = Source::insert(path).await?;
+        self.0.lock().sources.push(source);
+
+        let path = path.clone();
+
+        tokio::spawn(async move {
+            let tx = SCAN_STORAGE_LISTENER.get().unwrap();
+            tx.send_replace(true);
+
+            let new_videos = retrieve_phy_videos(&path)
+                .unwrap()
+                .into_iter()
+                .map(|(_, p)| Metadata::try_from(&p))
+                .collect::<Result<Vec<_>, _>>()
+                .unwrap();
+
+            if !new_videos.is_empty() {
+                Metadata::insert_replace_batch(&new_videos).await.unwrap();
+            }
+
+            tx.send_replace(false);
+
+            SOURCE_NOTIFY
+                .get()
+                .unwrap()
+                .0
+                .lock()
+                .watcher
+                .watch(&path, ::notify::RecursiveMode::Recursive)
+                .unwrap();
+        });
+
+        Ok(())
+    }
+
+    pub async fn unwatch_source(&self, path: &PathBuf) -> anyhow::Result<()> {
+        let source = Source::query_by_path(path).await?;
+        source.delete().await?;
+        self.0.lock().sources.retain(|s| s.id != source.id);
+        self.0.lock().watcher.unwatch(path)?;
+        self.full_scale_retrieval().await?;
+
+        Ok(())
     }
 }
 
 impl SourceNotifyInner {}
 
-pub fn get_source_notify_paths() -> anyhow::Result<Vec<String>> {
+pub fn get_source_notify_paths() -> anyhow::Result<Vec<PathBuf>> {
     Ok(crate::notify::SOURCE_NOTIFY
         .get()
         .ok_or_else(|| anyhow::anyhow!("SourceNotify not initialized"))?
         .paths())
+}
+
+pub async fn watch_source(path: &PathBuf) -> anyhow::Result<()> {
+    crate::notify::SOURCE_NOTIFY
+        .get()
+        .ok_or_else(|| anyhow::anyhow!("SourceNotify not initialized"))?
+        .watch_source(path)
+        .await
+}
+
+pub async fn unwatch_source(path: &PathBuf) -> anyhow::Result<()> {
+    crate::notify::SOURCE_NOTIFY
+        .get()
+        .ok_or_else(|| anyhow::anyhow!("SourceNotify not initialized"))?
+        .unwatch_source(path)
+        .await
 }
 
 #[cfg(target_os = "windows")]
@@ -343,4 +422,35 @@ pub fn listener_untreated_file(
         };
     });
     ListenerHandle::new(handle_tx)
+}
+
+pub fn listener_scan_storage(
+    dart_callback: impl Fn(bool) -> DartFnFuture<()> + Send + Sync + 'static,
+) -> ListenerHandle {
+    let (handle_tx, handle_rx) = oneshot::channel::<()>();
+    tokio::spawn(async move {
+        let mut rx = SCAN_STORAGE_LISTENER
+            .get_or_init(|| {
+                let (tx, _) = watch::channel(false);
+                tx
+            })
+            .subscribe();
+
+        let linstener = async {
+            while let Ok(()) = rx.changed().await {
+                let status = *rx.borrow_and_update();
+                dart_callback(status).await;
+            }
+        };
+
+        tokio::select! {
+            _ = handle_rx => {},
+            _ = linstener => {},
+        };
+    });
+    ListenerHandle::new(handle_tx)
+}
+
+pub fn get_scan_storage_status() -> bool {
+    *SCAN_STORAGE_LISTENER.get().unwrap().borrow()
 }

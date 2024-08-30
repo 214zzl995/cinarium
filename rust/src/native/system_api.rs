@@ -98,6 +98,34 @@ pub async fn update_task_tidy_folder() -> anyhow::Result<()> {
 }
 
 #[allow(dead_code)]
+pub async fn add_source_notify_path() -> anyhow::Result<()> {
+    let pick_folder = rfd::AsyncFileDialog::new().pick_folder().await;
+
+    if let Some(folder) = pick_folder {
+        let paths = crate::notify::get_source_notify_paths()?;
+        let folder = folder.path().to_path_buf();
+
+        for path in paths {
+            if path.eq(&folder) {
+                return Ok(());
+            }
+
+            if folder.starts_with(&path) {
+                return Ok(());
+            }
+
+            if path.starts_with(&folder) {
+                crate::notify::unwatch_source(&path).await?;
+            }
+        }
+
+        crate::notify::watch_source(&folder).await?;
+    };
+
+    Ok(())
+}
+
+#[allow(dead_code)]
 pub async fn pick_folder() -> anyhow::Result<Option<String>> {
     let folder = rfd::AsyncFileDialog::new().pick_folder().await;
     if let Some(folder) = folder {
@@ -145,7 +173,12 @@ pub fn get_crawler_templates() -> anyhow::Result<Vec<CrawlerTemplate>> {
 #[allow(dead_code)]
 #[frb(sync)]
 pub fn get_source_notify_paths() -> anyhow::Result<Vec<String>> {
-    crate::notify::get_source_notify_paths()
+    let paths = crate::notify::get_source_notify_paths()?
+        .into_iter()
+        .map(|s| s.to_string_lossy().to_string())
+        .collect();
+
+    Ok(paths)
 }
 
 #[allow(dead_code)]
@@ -160,6 +193,19 @@ pub async fn listener_untreated_file(
     dart_callback: impl Fn() -> DartFnFuture<()> + Send + Sync + 'static,
 ) -> ListenerHandle {
     crate::notify::listener_untreated_file(dart_callback)
+}
+
+#[allow(dead_code)]
+pub async fn listener_scan_storage(
+    dart_callback: impl Fn(bool) -> DartFnFuture<()> + Send + Sync + 'static,
+) -> ListenerHandle {
+    crate::notify::listener_scan_storage(dart_callback)
+}
+
+#[allow(dead_code)]
+#[frb(sync)]
+pub fn get_scan_storage_status() -> bool {
+    crate::notify::get_scan_storage_status()
 }
 
 impl TaskConfig {

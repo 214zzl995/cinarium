@@ -45,6 +45,9 @@ Future<void> updateTaskThread({required BigInt thread}) =>
 Future<void> updateTaskTidyFolder() =>
     RustLib.instance.api.crateNativeSystemApiUpdateTaskTidyFolder();
 
+Future<void> addSourceNotifyPath() =>
+    RustLib.instance.api.crateNativeSystemApiAddSourceNotifyPath();
+
 Future<String?> pickFolder() =>
     RustLib.instance.api.crateNativeSystemApiPickFolder();
 
@@ -81,6 +84,14 @@ Future<ListenerHandle> listenerUntreatedFile(
         {required FutureOr<void> Function() dartCallback}) =>
     RustLib.instance.api
         .crateNativeSystemApiListenerUntreatedFile(dartCallback: dartCallback);
+
+Future<ListenerHandle> listenerScanStorage(
+        {required FutureOr<void> Function(bool) dartCallback}) =>
+    RustLib.instance.api
+        .crateNativeSystemApiListenerScanStorage(dartCallback: dartCallback);
+
+bool getScanStorageStatus() =>
+    RustLib.instance.api.crateNativeSystemApiGetScanStorageStatus();
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Template < VideoDataInterim >>>
 abstract class TemplateVideoDataInterim implements RustOpaqueInterface {}

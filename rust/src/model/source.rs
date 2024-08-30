@@ -3,7 +3,7 @@ use std::path::PathBuf;
 
 use super::get_pool;
 
-#[derive(Serialize, Deserialize, Debug,Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Source {
     pub id: u32,
     pub path: PathBuf,
@@ -11,17 +11,20 @@ pub struct Source {
 
 impl Source {
     #[allow(dead_code)]
-    pub async fn insert(path: PathBuf) -> anyhow::Result<u32> {
-        let path = path.to_str().unwrap();
+    pub async fn insert(path: &PathBuf) -> anyhow::Result<Self> {
+        let path_str = path.to_str().unwrap();
         let id = sqlx::query!(
             r#"insert into source (path) values (?1) returning id as "id!:u32""#,
-            path
+            path_str
         )
         .fetch_one(get_pool().await)
         .await?
         .id;
 
-        Ok(id)
+        Ok(Self {
+            id,
+            path: path.clone(),
+        })
     }
 
     #[allow(dead_code)]
@@ -41,5 +44,18 @@ impl Source {
         .fetch_all(get_pool().await)
         .await?;
         Ok(sources)
+    }
+
+    pub async fn query_by_path(path: &PathBuf) -> anyhow::Result<Source> {
+        let path_str = path.to_str().unwrap();
+        let source = sqlx::query_as!(
+            Source,
+            r#"select id as "id!:u32",path as "path!" from source where path = ?1"#,
+            path_str
+        )
+        .fetch_one(get_pool().await)
+        .await?;
+
+        Ok(source)
     }
 }

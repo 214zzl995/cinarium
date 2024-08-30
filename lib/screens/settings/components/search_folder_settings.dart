@@ -1,7 +1,5 @@
-import 'package:bridge/call_rust/task/crawler.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:reorderables/reorderables.dart';
 import 'package:cinarium/screens/settings/controllers/settings_controller.dart';
 
 class SearchFolderSettings extends StatelessWidget {
@@ -16,7 +14,8 @@ class SearchFolderSettings extends StatelessWidget {
             Radius.circular(12),
           ),
           border: Border.all(
-            color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+            color:
+                Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
             width: 1,
           ),
           color: Theme.of(context).colorScheme.surfaceContainerLowest,
@@ -46,9 +45,15 @@ class SearchFolderSettings extends StatelessWidget {
                       width: 100,
                       child: ElevatedButton(
                           onPressed: () {
-                            context
-                                .read<SettingsController>()
-                                .addSearchFolder();
+                            try {
+                              context
+                                  .read<SettingsController>()
+                                  .addSearchFolder();
+                            } catch (e) {
+                              showAboutDialog(
+                                  context: context,
+                                  children: [Text(e.toString())]);
+                            }
                           },
                           child: const Row(
                             children: [
@@ -85,8 +90,14 @@ class SearchFolderSettings extends StatelessWidget {
       builder: (context, paths, child) => Column(
         children: [
           ...paths.map((path) => Container(
+              key: ValueKey(path),
               margin: const EdgeInsets.only(bottom: 10),
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.only(
+                left: 10,
+                right: 10,
+                top: 5,
+                bottom: 5,
+              ),
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.all(
                   Radius.circular(12),
@@ -100,11 +111,53 @@ class SearchFolderSettings extends StatelessWidget {
                 ),
               ),
               child: Row(children: [
-                Text(
+                Expanded(
+                    child: Text(
                   path,
                   style: const TextStyle(
-                      fontWeight: FontWeight.w400,
+                      fontWeight: FontWeight.w500, fontSize: 14),
+                )),
+                IconButton(
+                  icon: Icon(
+                    Icons.delete_outline,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    size: 20,
                   ),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+
+                        return AlertDialog(
+                          title: const Text('Delete Search Folder'),
+                          content:
+                              Text('Are you sure you want to delete $path?'),
+                          actions: [
+                            Row(
+                              children: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    // context.read<SettingsController>().removeSearchFolder(path);
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('Delete'),
+                                ),
+                              ],
+                            )
+
+                          ],
+                        );
+                      },
+                    );
+                    // context.read<SettingsController>().removeSearchFolder(path);
+                  },
                 )
               ])))
         ],

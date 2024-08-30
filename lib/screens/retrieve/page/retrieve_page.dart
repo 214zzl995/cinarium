@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:cinarium/screens/retrieve/components/file_col.dart';
 import '../components/file_row.dart';
@@ -154,6 +155,35 @@ class RetrievePage extends StatelessWidget {
                       );
                     },
                   ),
+                  Selector<RetrieveController, bool>(
+                      builder: (context, status, child) => AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 200),
+                            child: status
+                                ? Padding(
+                                    key: const ValueKey(1),
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Lottie.asset(
+                                      "assets/lottie/system-solid-9-inbox.json",
+                                      width: 20,
+                                      height: 20,
+                                      delegates: LottieDelegates(
+                                        values: [
+                                          ValueDelegate.colorFilter(
+                                            const ['**'],
+                                            value: ColorFilter.mode(
+                                              Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
+                                              BlendMode.srcATop,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ))
+                                : Container(key: const ValueKey(2)),
+                          ),
+                      selector: (context, controller) =>
+                          controller.scanStorageStatus)
                 ],
               ),
             ),

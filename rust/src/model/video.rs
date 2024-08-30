@@ -623,7 +623,7 @@ impl Metadata {
             r#"
                 select hash as "hash!", path || '/' || filename || '.' || extension as "path!"
                 from video
-                where is_deleted = false
+                where is_deleted = false and is_retrieve = false
             "#
         )
         .fetch_all(get_pool().await)

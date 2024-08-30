@@ -18,9 +18,16 @@ class RetrieveController with ChangeNotifier {
 
   final Map<int, bool> _checkMap = {};
 
-  late ListenerHandle _listenerHandle;
+  late ListenerHandle _untreatedFileListenerHandle;
+  late ListenerHandle _scanStorageListenerHandle;
 
-  bool untreatedFileHasChange = false;
+  bool _untreatedFileHasChange = false;
+
+  bool get untreatedFileHasChange => _untreatedFileHasChange;
+
+  bool _scanStorageStatus = getScanStorageStatus();
+
+  bool get scanStorageStatus => _scanStorageStatus;
 
   RetrieveController() {
     getVideoFiles();
@@ -29,12 +36,21 @@ class RetrieveController with ChangeNotifier {
   }
 
   initListener() async {
-    _listenerHandle =
+    _untreatedFileListenerHandle =
         await listenerUntreatedFile(dartCallback: untreatedFileHasChangeHandle);
+    _scanStorageListenerHandle =
+        await listenerScanStorage(dartCallback: scanStorageChangeHandle);
   }
 
   void untreatedFileHasChangeHandle() async {
-    untreatedFileHasChange = false;
+    debugPrint("untreatedFileHasChangeHandle");
+    _untreatedFileHasChange = true;
+    notifyListeners();
+  }
+
+  void scanStorageChangeHandle(bool val) async {
+    debugPrint("scanStorageChangeHandle: $val");
+    _scanStorageStatus = val;
     notifyListeners();
   }
 
@@ -209,7 +225,8 @@ class RetrieveController with ChangeNotifier {
 
   @override
   void dispose() {
-    _listenerHandle.cancel();
+    _untreatedFileListenerHandle.cancel();
+    _scanStorageListenerHandle.cancel();
     super.dispose();
   }
 
