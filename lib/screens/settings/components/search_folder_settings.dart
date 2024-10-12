@@ -128,13 +128,84 @@ class SearchFolderSettings extends StatelessWidget {
                       context: context,
                       barrierDismissible: false,
                       builder: (BuildContext context) {
-
+                        ValueNotifier<bool> syncDelete =
+                            ValueNotifier<bool>(false);
                         return AlertDialog(
                           title: const Text('Delete Search Folder'),
-                          content:
-                              Text('Are you sure you want to delete $path?'),
+                          contentPadding: const EdgeInsets.only(
+                            left: 20,
+                            right: 20,
+                            top: 20,
+                            bottom: 20,
+                          ),
+                          content: SizedBox(
+                              height: 100,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const SizedBox(
+                                    width: 400,
+                                  ),
+                                  RichText(
+                                    text: TextSpan(
+                                      text: 'Are you sure you want to delete ',
+                                      style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 14,
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text: path,
+                                          style: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Row(
+                                    children: [
+                                      MouseRegion(
+                                        cursor: SystemMouseCursors.click,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            syncDelete.value =
+                                                !syncDelete.value;
+                                          },
+                                          child: const Text(
+                                              'Synchronized deletion index',
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                              )),
+                                        ),
+                                      ),
+                                      ValueListenableBuilder(
+                                        valueListenable: syncDelete,
+                                        builder: (context, value, child) {
+                                          return Checkbox(
+                                              value: value,
+                                              onChanged: (value) {
+                                                syncDelete.value = value!;
+                                              });
+                                        },
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              )),
                           actions: [
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 TextButton(
                                   onPressed: () {
@@ -151,7 +222,6 @@ class SearchFolderSettings extends StatelessWidget {
                                 ),
                               ],
                             )
-
                           ],
                         );
                       },
