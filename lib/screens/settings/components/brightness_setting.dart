@@ -26,6 +26,7 @@ class BrightnessSetting extends StatelessWidget {
           children: [
             Icon(
               Icons.wb_sunny_outlined,
+              weight: 10,
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             Padding(

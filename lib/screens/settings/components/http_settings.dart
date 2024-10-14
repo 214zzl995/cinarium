@@ -10,30 +10,25 @@ class HttpSetting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(
-            Radius.circular(12),
+            Radius.circular(6),
           ),
           border: Border.all(
-            color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+            color:
+                Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
             width: 1,
           ),
           color: Theme.of(context).colorScheme.surfaceContainerLowest,
         ),
+        padding: const EdgeInsets.all(10),
         child: Column(
           children: [
             _buildHeader(context),
-            const Padding(
-              padding: EdgeInsets.only(left: 40),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 20,
-                  ),
-                  PortField(),
-                ],
-              ),
+            const Column(
+              children: [
+                PortField(),
+              ],
             ),
           ],
         ));
@@ -42,49 +37,39 @@ class HttpSetting extends StatelessWidget {
   Widget _buildHeader(BuildContext context) {
     return Row(
       children: [
-        Expanded(
-            child: Row(
-          children: [
-            Icon(
-              Icons.upload_file_outlined,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Text(
-                'Http File Server',
-                style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant),
-              ),
-            ),
-          ],
-        )),
-        SizedBox(
-          height: 30,
-          child: Selector<RootController, bool>(
-              builder: (selectorContext, httpRunning, __) {
-                if (httpRunning) {
-                  return Row(
-                    children: [
-                      const Text(
-                          "The http file server is running and cannot be modified",
-                          style: TextStyle(color: Colors.red)),
-                      const SizedBox(
-                        width: 10,
+        Selector<RootController, bool>(
+            builder: (selectorContext, httpRunning, __) {
+              return AnimatedSize(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                child: httpRunning
+                    ? SizedBox(
+                        key: const Key("httpRunning"),
+                        height: 30,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                                "The http file server is running and cannot be modified",
+                                style: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.error)),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            TextButton(
+                                onPressed: () {
+                                  stopWebApi();
+                                },
+                                child: const Text("Stop Http File Server"))
+                          ],
+                        ))
+                    : Container(
+                        key: const Key("httpNotRunning"),
                       ),
-                      TextButton(
-                          onPressed: () {
-                            stopWebApi();
-                          },
-                          child: const Text("Stop Http File Server"))
-                    ],
-                  );
-                } else {
-                  return Container();
-                }
-              },
-              selector: (_, controller) => controller.httpStatus),
-        ),
+              );
+            },
+            selector: (_, controller) => controller.httpStatus),
       ],
     );
   }

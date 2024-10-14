@@ -50,7 +50,6 @@ class PortFieldState extends State<PortField> {
   bool _handleKeyEvent(KeyEvent event) {
     if (event is KeyUpEvent) {
       if (event.logicalKey == LogicalKeyboardKey.enter) {
-
       } else if (event.logicalKey == LogicalKeyboardKey.escape) {
         _focusNode.unfocus();
       }

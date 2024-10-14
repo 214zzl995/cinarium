@@ -6,24 +6,13 @@ enum Routes {
   http(true),
   pool(true),
   debug(true, isDebug: true),
-  settings(false, initial: SettingRoutes.theme);
+  settings(false);
 
-  const Routes(this.isTop, {this.isDebug = false, this.initial});
+  const Routes(this.isTop, {this.isDebug = false});
 
   final bool isTop;
   final bool isDebug;
-  final dynamic initial;
 
   String get router => '/$name';
 }
 
-enum SettingRoutes {
-  theme,
-  httpFileServer,
-  taskPool,
-  system;
-
-  const SettingRoutes();
-
-  String get router => '/settings/$name';
-}

@@ -30,7 +30,7 @@ class AppPages {
           if (theme.themeMode == ThemeMode.system) {
             //获取系统主题
             final Brightness platformBrightness =
-            MediaQuery.platformBrightnessOf(context);
+                MediaQuery.platformBrightnessOf(context);
 
             theme.brightness = platformBrightness;
           }
@@ -121,12 +121,6 @@ class AppPages {
                 FadeTransitionPage(key: state.pageKey, child: const HomePage()),
           ),
           GoRoute(
-            path: Routes.settings.router,
-            name: Routes.settings.name,
-            pageBuilder: (context, state) => FadeTransitionPage(
-                key: state.pageKey, child: const ThemeSettingsPage()),
-          ),
-          GoRoute(
             path: Routes.retrieve.router,
             name: Routes.retrieve.name,
             pageBuilder: (context, state) => FadeTransitionPage(
@@ -150,35 +144,12 @@ class AppPages {
             pageBuilder: (context, state) =>
                 FadeTransitionPage(key: state.pageKey, child: const PoolPage()),
           ),
-          ShellRoute(
-              pageBuilder: (context, state, child) => FadeTransitionPage(
-                  key: state.pageKey, child: SettingsPage(child: child)),
-              routes: [
-                GoRoute(
-                  path: SettingRoutes.theme.router,
-                  name: SettingRoutes.theme.name,
-                  pageBuilder: (context, state) => FadeTransitionPage(
-                      key: state.pageKey, child: const ThemeSettingsPage()),
-                ),
-                GoRoute(
-                  path: SettingRoutes.system.router,
-                  name: SettingRoutes.system.name,
-                  pageBuilder: (context, state) => FadeTransitionPage(
-                      key: state.pageKey, child: const SystemSettingsPage()),
-                ),
-                GoRoute(
-                  path: SettingRoutes.taskPool.router,
-                  name: SettingRoutes.taskPool.name,
-                  pageBuilder: (context, state) => FadeTransitionPage(
-                      key: state.pageKey, child: const TaskPoolSettingsPage()),
-                ),
-                GoRoute(
-                  path: SettingRoutes.httpFileServer.router,
-                  name: SettingRoutes.httpFileServer.name,
-                  pageBuilder: (context, state) => FadeTransitionPage(
-                      key: state.pageKey, child: const HfsSettingsPage()),
-                ),
-              ])
+          GoRoute(
+              path: Routes.settings.router,
+              name: Routes.settings.name,
+              pageBuilder: (context, state) => FadeTransitionPage(
+                  key: state.pageKey, child: const SettingsPage())
+          ),
         ]),
   ]);
 }

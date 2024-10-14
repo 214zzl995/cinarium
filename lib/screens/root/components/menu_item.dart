@@ -98,11 +98,6 @@ class MenuItemState extends State<MenuItem>
                 _lottieController.value = 0;
                 _lottieController.forward();
                 context.read<RootController>().route = widget.route;
-                //跳转到对应路由
-                if (widget.route.initial != null) {
-                  GoRouter.of(context).go(widget.route.initial!.router);
-                  return;
-                }
                 GoRouter.of(context).go(widget.route.router);
               },
               child: Container(

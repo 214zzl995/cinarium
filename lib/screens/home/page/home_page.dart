@@ -1,11 +1,7 @@
 import 'package:cinarium/components/scroll_animator.dart';
 import 'package:cinarium/screens/home/components/attr_filter_panel_menu.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:cinarium/screens/home/components/video_card.dart';

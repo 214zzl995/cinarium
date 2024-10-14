@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cinarium/screens/settings/components/brightness_setting.dart';
 import 'package:cinarium/screens/settings/components/color_settings.dart';
-import 'package:cinarium/screens/settings/components/mode_settings.dart';
 
 class ThemeSettingsPage extends StatelessWidget {
   const ThemeSettingsPage({super.key});
