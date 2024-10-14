@@ -77,62 +77,35 @@ pub async fn update_task_thread(thread: &usize) -> anyhow::Result<()> {
 }
 
 #[allow(dead_code)]
-pub async fn update_task_tidy_folder() -> anyhow::Result<()> {
-    let tidy_folder = get_cinarium_config().task.tidy_folder;
-    let folder = rfd::AsyncFileDialog::new()
-        .set_directory(tidy_folder)
-        .pick_folder()
-        .await;
-
+pub async fn update_task_tidy_folder(folder: String) -> anyhow::Result<()> {
+    let folder = PathBuf::from(&folder);
     let mut task_conf = get_cinarium_config().task;
-
-    match folder {
-        Some(folder) => {
-            let folder = folder.path().to_path_buf();
-
-            task_conf.tidy_folder = folder;
-            app::update_task_config(&task_conf).await
-        }
-        None => Ok(()),
-    }
+    task_conf.tidy_folder = folder;
+    app::update_task_config(&task_conf).await
 }
 
 #[allow(dead_code)]
-pub async fn add_source_notify_path() -> anyhow::Result<()> {
-    let pick_folder = rfd::AsyncFileDialog::new().pick_folder().await;
+pub async fn add_source_notify_path(path: String) -> anyhow::Result<()> {
+    let folder = PathBuf::from(&path);
 
-    if let Some(folder) = pick_folder {
-        let paths = crate::notify::get_source_notify_paths()?;
-        let folder = folder.path().to_path_buf();
-
-        for path in paths {
-            if path.eq(&folder) {
-                return Ok(());
-            }
-
-            if folder.starts_with(&path) {
-                return Ok(());
-            }
-
-            if path.starts_with(&folder) {
-                crate::notify::unwatch_source(&path).await?;
-            }
+    let paths = crate::notify::get_source_notify_paths()?;
+    for path in paths {
+        if path.eq(&folder) {
+            return Ok(());
         }
 
-        crate::notify::watch_source(&folder).await?;
-    };
+        if folder.starts_with(&path) {
+            return Ok(());
+        }
+
+        if path.starts_with(&folder) {
+            crate::notify::unwatch_source(&path).await?;
+        }
+    }
+
+    crate::notify::watch_source(&folder).await?;
 
     Ok(())
-}
-
-#[allow(dead_code)]
-pub async fn pick_folder() -> anyhow::Result<Option<String>> {
-    let folder = rfd::AsyncFileDialog::new().pick_folder().await;
-    if let Some(folder) = folder {
-        Ok(Some(folder.path().to_string_lossy().to_string()))
-    } else {
-        Ok(None)
-    }
 }
 
 #[allow(dead_code)]

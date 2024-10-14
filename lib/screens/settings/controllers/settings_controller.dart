@@ -1,6 +1,7 @@
 import 'package:bridge/call_rust/app.dart';
 import 'package:bridge/call_rust/native/system_api.dart';
 import 'package:bridge/call_rust/task/crawler.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 
 class SettingsController with ChangeNotifier {
@@ -42,13 +43,14 @@ class SettingsController with ChangeNotifier {
     );
   }
 
-  void updateTidyFolder() {
-    updateTaskTidyFolder().then(
-      (_) async {
-        _taskConfig = await getTaskConf();
-        notifyListeners();
-      },
+  void updateTidyFolder() async {
+    final path = await FilePicker.platform.getDirectoryPath(
+      lockParentWindow: true,
+      initialDirectory: taskConfig.tidyFolder,
     );
+    if (path != null) {
+      await updateTaskTidyFolder(folder: path);
+    }
   }
 
   switchTemplateEnabled(int id) async {
@@ -79,9 +81,14 @@ class SettingsController with ChangeNotifier {
   }
 
   void addSearchFolder() async {
-    await addSourceNotifyPath();
-    _searchFolders = getSourceNotifyPaths();
-    notifyListeners();
+    final path = await FilePicker.platform.getDirectoryPath(
+      lockParentWindow: true,
+    );
+    if (path != null) {
+      await addSourceNotifyPath(path: path);
+      _searchFolders = getSourceNotifyPaths();
+      notifyListeners();
+    }
   }
 
   init() async {

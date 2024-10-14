@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  super_native_extensions: ^0.8.19
+  super_native_extensions: 0.8.19
   collection: ^1.16.0
   device_info_plus: ^10.0.1
   pixel_snap: ^0.1.1

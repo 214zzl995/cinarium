@@ -35,6 +35,8 @@ void main(List<String> args) async {
       await flutter_acrylic.Window.hideWindowControls();
     }
 
+
+
     windowManager.waitUntilReadyToShow().then((_) async {
       await windowManager.setTitleBarStyle(
         TitleBarStyle.hidden,
