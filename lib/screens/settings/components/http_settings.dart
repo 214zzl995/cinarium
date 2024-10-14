@@ -10,6 +10,7 @@ class HttpSetting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+        padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(
             Radius.circular(6),
@@ -21,13 +22,12 @@ class HttpSetting extends StatelessWidget {
           ),
           color: Theme.of(context).colorScheme.surfaceContainerLowest,
         ),
-        padding: const EdgeInsets.all(10),
         child: Column(
           children: [
             _buildHeader(context),
-            const Column(
+            Column(
               children: [
-                PortField(),
+                PortSetting(),
               ],
             ),
           ],

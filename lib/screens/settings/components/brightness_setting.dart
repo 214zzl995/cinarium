@@ -1,5 +1,6 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 
 import '../../../models/theme.dart';
@@ -13,7 +14,7 @@ class BrightnessSetting extends StatelessWidget {
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(
-          Radius.circular(12),
+          Radius.circular(6),
         ),
         border: Border.all(
           color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
@@ -25,16 +26,17 @@ class BrightnessSetting extends StatelessWidget {
         Row(
           children: [
             Icon(
-              Icons.wb_sunny_outlined,
-              weight: 10,
+              Symbols.light_mode,
+              weight: 300,
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             Padding(
               padding: const EdgeInsets.only(left: 20),
               child: Text(
-                'Brightness',
+                'App theme',
                 style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
               ),
             ),
             Expanded(

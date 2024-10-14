@@ -1,11 +1,12 @@
+import 'package:cinarium/screens/settings/components/thread_count_setting.dart';
 import 'package:flutter/material.dart';
 import '../../../components/scroll_animator.dart';
 import '../components/brightness_setting.dart';
-import '../components/color_settings.dart';
+import '../components/app_theme_setting.dart';
 import '../components/crawler_temp_setting.dart';
 import '../components/http_settings.dart';
-import '../components/search_folder_settings.dart';
-import '../components/task_pool_settings.dart';
+import '../components/monitor_folder_setting.dart';
+import '../components/tidy_folder_settings.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -33,15 +34,17 @@ class SettingsPage extends StatelessWidget {
                   ),
                   _buildMenuItemHeader(context, 'Appearance'),
                   const BrightnessSetting(),
-                  SizedBox(height: 3),
-                  const ColorSettings(),
+                  const SizedBox(height: 3),
+                  const AppThemeSetting(),
                   _buildMenuItemHeader(context, 'Http File Server'),
                   const HttpSetting(),
                   _buildMenuItemHeader(context, 'Advanced'),
-                  const SearchFolderSettings(),
+                  const MonitorFolderSetting(),
                   _buildMenuItemHeader(context, 'Crawler'),
-                  const TaskPoolSetting(),
-                  _buildMenuItemHeader(context, 'Crawler'),
+                  const ThreadCountSetting(),
+                  const SizedBox(height: 3),
+                  const TidyFolderSetting(),
+                  const SizedBox(height: 3),
                   const CrawlerTempSetting(),
                 ],
               )),

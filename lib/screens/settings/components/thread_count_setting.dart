@@ -2,17 +2,18 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import '../controllers/settings_controller.dart';
 
-class ThreadField extends StatefulWidget {
-  const ThreadField({super.key});
+class ThreadCountSetting extends StatefulWidget {
+  const ThreadCountSetting({super.key});
 
   @override
   ThreadFieldState createState() => ThreadFieldState();
 }
 
-class ThreadFieldState extends State<ThreadField> {
+class ThreadFieldState extends State<ThreadCountSetting> {
   final FocusNode _focusNode = FocusNode();
   final TextEditingController _textEditingController = TextEditingController();
   Timer? _clearErrorTimer;
@@ -105,63 +106,77 @@ class ThreadFieldState extends State<ThreadField> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-            flex: 1,
-            child: Row(
-              children: [
-                Icon(
-                  Icons.access_time_outlined,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: Text(
-                    'ThreadCount',
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant),
-                  ),
-                ),
-              ],
-            )),
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 200),
-          child: SizedBox(
-            key: ValueKey(_errorText),
-            width: 500,
-            child: Text(_errorText,
-                textAlign: TextAlign.right,
-                style: const TextStyle(color: Colors.red)),
+    return Container(
+        padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(6),
           ),
+          border: Border.all(
+            color:
+                Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+            width: 1,
+          ),
+          color: Theme.of(context).colorScheme.surfaceContainerLowest,
         ),
-        const SizedBox(width: 20),
-        SizedBox(
-          width: 80,
-          child: TextField(
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-              LengthLimitingTextInputFormatter(1),
-            ],
-            focusNode: _focusNode,
-            controller: _textEditingController,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-                isDense: true,
-                contentPadding:
-                const EdgeInsets.only(
-                  left: 10,
-                ),
-                border: const OutlineInputBorder(),
-                hintStyle: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-                suffixIcon: _buildSuffixIcon(context)),
-            onChanged: checkThread,
-          ),
-        )
-      ],
-    );
+        child: Row(
+          children: [
+            Expanded(
+                flex: 1,
+                child: Row(
+                  children: [
+                    Icon(
+                      Symbols.stacks,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Text(
+                        'Number of threads',
+                        style: TextStyle(
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant),
+                      ),
+                    ),
+                  ],
+                )),
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              child: SizedBox(
+                key: ValueKey(_errorText),
+                width: 500,
+                child: Text(_errorText,
+                    textAlign: TextAlign.right,
+                    style: const TextStyle(color: Colors.red)),
+              ),
+            ),
+            const SizedBox(width: 20),
+            SizedBox(
+              width: 80,
+              child: TextField(
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                  LengthLimitingTextInputFormatter(1),
+                ],
+                focusNode: _focusNode,
+                controller: _textEditingController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                    isDense: true,
+                    contentPadding: const EdgeInsets.only(
+                      left: 10,
+                    ),
+                    border: const OutlineInputBorder(),
+                    hintStyle: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                    suffixIcon: _buildSuffixIcon(context)),
+                onChanged: checkThread,
+              ),
+            )
+          ],
+        ));
   }
 
   Widget _buildSuffixIcon(BuildContext context) {

@@ -1,87 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 
 import '../../../util/port_util.dart';
 import '../../root/controllers/root_controller.dart';
 import '../controllers/settings_controller.dart';
 
-class PortField extends StatefulWidget {
-  const PortField({super.key});
-
-  @override
-  PortFieldState createState() => PortFieldState();
-}
-
-class PortFieldState extends State<PortField> {
-  final FocusNode _focusNode = FocusNode();
-  final TextEditingController _textEditingController = TextEditingController();
-
-  String _errorText = '';
-
-  @override
-  void initState() {
-    _textEditingController.text =
-        context.read<SettingsController>().httpConfig.port.toString();
-    _focusNode.addListener(_handleFocusChange);
-    super.initState();
-  }
-
-  void _handleFocusChange() {
-    if (_focusNode.hasFocus) {
-      HardwareKeyboard.instance.addHandler(_handleKeyEvent);
-    } else {
-      HardwareKeyboard.instance.removeHandler(_handleKeyEvent);
-      if (_errorText != '') {
-        _textEditingController.text =
-            context.read<SettingsController>().httpConfig.port.toString();
-        setState(() {
-          _errorText = '';
-        });
-      } else {
-        context.read<SettingsController>().changePort(
-            _textEditingController.text == ''
-                ? 80
-                : int.parse(_textEditingController.text));
-      }
-    }
-  }
-
-  bool _handleKeyEvent(KeyEvent event) {
-    if (event is KeyUpEvent) {
-      if (event.logicalKey == LogicalKeyboardKey.enter) {
-      } else if (event.logicalKey == LogicalKeyboardKey.escape) {
-        _focusNode.unfocus();
-      }
-    }
-    return false;
-  }
-
-  @override
-  void dispose() {
-    _textEditingController.dispose();
-    _focusNode.dispose();
-    super.dispose();
-  }
-
-  checkPort(String port) async {
-    var error = "";
-    if (port == '') {
-      error = 'Port is empty';
-    } else {
-      if (int.parse(port) < 0 || int.parse(port) > 65535) {
-        error = 'Port is invalid,Please input 0-65535';
-      } else {
-        if (await isPortInUse(int.parse(port))) {
-          error = 'Port is in use';
-        }
-      }
-    }
-    setState(() {
-      _errorText = error;
-    });
-  }
-
+class PortSetting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.select((value) => value);
@@ -92,8 +18,9 @@ class PortFieldState extends State<PortField> {
             child: Row(
               children: [
                 Icon(
-                  Icons.wifi_outlined,
+                  Symbols.wifi_tethering,
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  weight: 300,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 20),
@@ -105,44 +32,140 @@ class PortFieldState extends State<PortField> {
                 ),
               ],
             )),
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 200),
-          child: SizedBox(
-            key: ValueKey(_errorText),
-            width: 500,
-            child: Text(_errorText,
-                textAlign: TextAlign.right,
-                style: const TextStyle(color: Colors.red)),
-          ),
-        ),
         const SizedBox(width: 20),
-        SizedBox(
-          width: 80,
-          child: Selector<RootController, bool>(
-              builder: (selectorContext, httpRunning, __) {
-                return TextField(
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                    LengthLimitingTextInputFormatter(5),
-                  ],
-                  focusNode: _focusNode,
-                  enabled: !httpRunning,
-                  controller: _textEditingController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    hintText: 'Port',
-                    border: const OutlineInputBorder(),
-                    hintStyle: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+        Selector<RootController, bool>(
+            builder: (selectorContext, httpRunning, __) => TextButton(
+                  onPressed: httpRunning
+                      ? null
+                      : () {
+                          showDialog(
+                            context: context,
+                            builder: (buildContext) {
+                              var port = context
+                                  .read<SettingsController>()
+                                  .httpConfig
+                                  .port;
+                              final textEditingController =
+                                  TextEditingController();
+
+                              textEditingController.text = port.toString();
+
+                              ValueNotifier<String> errorText =
+                                  ValueNotifier('Please input 0-65535');
+
+                              Future<bool> checkPort(String port) async {
+                                if (port == '') {
+                                  errorText.value = 'Port is empty';
+                                  return false;
+                                } else {
+                                  if (int.parse(port) < 0 ||
+                                      int.parse(port) > 65535) {
+                                    errorText.value =
+                                        'Port is invalid,Please input 0-65535';
+                                    return false;
+                                  } else {
+                                    if (await isPortInUse(int.parse(port))) {
+                                      errorText.value = 'Port is in use';
+                                      return false;
+                                    }
+                                  }
+                                  errorText.value = 'Please input 0-65535';
+                                  return true;
+                                }
+                              }
+
+                              return AlertDialog(
+                                title: const Text('Port'),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ValueListenableBuilder(
+                                      valueListenable: errorText,
+                                      builder: (context, value, child) {
+                                        return Text(value);
+                                      },
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    TextField(
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(
+                                            RegExp(r'[0-9]')),
+                                        LengthLimitingTextInputFormatter(5),
+                                      ],
+                                      controller: textEditingController,
+                                      keyboardType: TextInputType.number,
+                                      decoration: const InputDecoration(
+                                        hintText: 'Port',
+                                        border: OutlineInputBorder(),
+                                      ),
+                                      onChanged: (value) {
+                                        checkPort(value);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(buildContext).pop();
+                                    },
+                                    child: const Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      checkPort(port.toString()).then((ok) {
+                                        if (ok) {
+                                          context
+                                              .read<SettingsController>()
+                                              .changePort(int.parse(
+                                                  textEditingController.text));
+                                          Navigator.of(buildContext).pop();
+                                        }
+                                      });
+                                    },
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                  child: const Icon(
+                    Symbols.open_in_new,
+                    size: 20,
                   ),
-                  onChanged: (value) {
-                    checkPort(value);
-                  },
-                );
-              },
-              selector: (_, controller) => controller.httpStatus),
-        ),
+                ),
+            selector: (_, controller) => controller.httpStatus),
+        // SizedBox(
+        //   width: 80,
+        //   child: Selector<RootController, bool>(
+        //       builder: (selectorContext, httpRunning, __) {
+        //         return TextField(
+        //           inputFormatters: [
+        //             FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+        //             LengthLimitingTextInputFormatter(5),
+        //           ],
+        //           focusNode: _focusNode,
+        //           enabled: !httpRunning,
+        //           controller: _textEditingController,
+        //           keyboardType: TextInputType.number,
+        //           decoration: InputDecoration(
+        //             hintText: 'Port',
+        //             border: const OutlineInputBorder(),
+        //             hintStyle: TextStyle(
+        //               color: Theme.of(context).colorScheme.onSurfaceVariant,
+        //             ),
+        //           ),
+        //           onChanged: (value) {
+        //             checkPort(value);
+        //           },
+        //         );
+        //       },
+        //       selector: (_, controller) => controller.httpStatus),
+        // ),
       ],
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 
 import '../../../models/theme.dart';
@@ -65,9 +66,10 @@ class ColorPiece extends StatelessWidget {
                                     bottomLeft: Radius.circular(5)),
                               ),
                               child: Icon(
-                                CupertinoIcons.checkmark_alt,
+                                Symbols.check,
                                 color: Theme.of(context).colorScheme.onPrimary,
                                 size: 15,
+                                weight: 1000,
                               ),
                             )
                           : Container(),

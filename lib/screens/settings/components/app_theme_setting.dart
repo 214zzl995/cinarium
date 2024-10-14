@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 
 import '../../../models/theme.dart';
@@ -17,16 +18,16 @@ const accColors = [
   Color(0xFFB0C4DE), // Light Steel Blue
 ];
 
-class ColorSettings extends StatelessWidget {
-  const ColorSettings({super.key});
+class AppThemeSetting extends StatelessWidget {
+  const AppThemeSetting({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(
-          Radius.circular(12),
+          Radius.circular(6),
         ),
         border: Border.all(
           color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
@@ -42,13 +43,14 @@ class ColorSettings extends StatelessWidget {
                 child: Row(
               children: [
                 Icon(
-                  Icons.color_lens_outlined,
+                  Symbols.colors,
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  weight: 300,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 20),
                   child: Text(
-                    'Theme Colours',
+                    'Theme Colors',
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurfaceVariant),
                   ),

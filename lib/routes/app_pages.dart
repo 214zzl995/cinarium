@@ -7,11 +7,7 @@ import '../screens/home/page/home_page.dart';
 import '../screens/http/page/http_page.dart';
 import '../screens/pool/page/pool_page.dart';
 import '../screens/retrieve/page/retrieve_page.dart';
-import '../screens/settings/page/http_settings_page.dart';
 import '../screens/settings/page/settings_page.dart';
-import '../screens/settings/page/system_settings_page.dart';
-import '../screens/settings/page/task_pool_settings_page.dart';
-import '../screens/settings/page/theme_settings_page.dart';
 import 'package:go_router/go_router.dart';
 
 part 'app_routes.dart';
@@ -53,7 +49,7 @@ class AppPages {
                 path: Routes.settings.router,
                 name: Routes.settings.name,
                 pageBuilder: (context, state) => SlideUpFadeTransitionPage(
-                    key: state.pageKey, child: const ThemeSettingsPage()),
+                    key: state.pageKey, child: const SettingsPage()),
               ),
             ],
           ),

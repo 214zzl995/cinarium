@@ -5,6 +5,7 @@ import 'package:bridge/call_rust/model/video.dart';
 import 'package:cinarium/screens/home/controllers/home_controller.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import 'package:super_context_menu/super_context_menu.dart';
 
@@ -118,16 +119,19 @@ class MovCard extends StatelessWidget {
         .getVideoTags(videoId: video.id);
 
     return ContextMenuWidget(
+      iconTheme: const IconThemeData(fill: 1, opticalSize: 20),
       menuProvider: (_) {
         return Menu(
           children: [
             MenuAction(
                 title: 'Open with default player',
-                image: MenuImage.icon(Icons.play_circle_fill_outlined),
+                image: MenuImage.icon(
+                  Symbols.play_circle,
+                ),
                 callback: () {}),
             MenuAction(
                 title: 'Delete',
-                image: MenuImage.icon(Icons.delete_forever_outlined),
+                image: MenuImage.icon(Symbols.delete),
                 attributes: const MenuActionAttributes(destructive: true),
                 callback: () {}),
             MenuSeparator(),
@@ -139,9 +143,8 @@ class MovCard extends StatelessWidget {
                   return MenuAction(
                       title: e.name,
                       image: checked
-                          ? MenuImage.icon(Icons.check_box_rounded)
-                          : MenuImage.icon(
-                              Icons.check_box_outline_blank_rounded),
+                          ? MenuImage.icon(Symbols.check_box)
+                          : MenuImage.icon(Symbols.check_box_outline_blank),
                       callback: () {
                         context
                             .read<HomeController>()

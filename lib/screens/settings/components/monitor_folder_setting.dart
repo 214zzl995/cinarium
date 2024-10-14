@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import 'package:cinarium/screens/settings/controllers/settings_controller.dart';
 
-class SearchFolderSettings extends StatelessWidget {
-  const SearchFolderSettings({super.key});
+class MonitorFolderSetting extends StatelessWidget {
+  const MonitorFolderSetting({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +12,7 @@ class SearchFolderSettings extends StatelessWidget {
         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(
-            Radius.circular(12),
+            Radius.circular(6),
           ),
           border: Border.all(
             color:
@@ -25,13 +26,14 @@ class SearchFolderSettings extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.search,
+                  Symbols.manage_search,
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  weight: 300,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 20),
                   child: Text(
-                    'SearchFolder',
+                    'Monitor folder',
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurfaceVariant),
                   ),
@@ -58,8 +60,10 @@ class SearchFolderSettings extends StatelessWidget {
                           child: const Row(
                             children: [
                               Icon(
-                                Icons.add_circle_outlined,
+                                Symbols.add,
                                 size: 12,
+                                weight: 700,
+                                opticalSize: 24,
                               ),
                               SizedBox(
                                 width: 5,
@@ -119,7 +123,7 @@ class SearchFolderSettings extends StatelessWidget {
                 )),
                 IconButton(
                   icon: Icon(
-                    Icons.delete_outline,
+                    Symbols.delete,
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                     size: 20,
                   ),
@@ -131,7 +135,22 @@ class SearchFolderSettings extends StatelessWidget {
                         ValueNotifier<bool> syncDelete =
                             ValueNotifier<bool>(false);
                         return AlertDialog(
-                          title: const Text('Delete Search Folder'),
+                          title: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Symbols.delete,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurfaceVariant,
+                                weight: 700,
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              const Text('Delete Search Folder')
+                            ],
+                          ),
                           contentPadding: const EdgeInsets.only(
                             left: 20,
                             right: 20,

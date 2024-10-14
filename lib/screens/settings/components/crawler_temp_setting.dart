@@ -1,5 +1,6 @@
 import 'package:bridge/call_rust/task/crawler.dart';
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import 'package:reorderables/reorderables.dart';
 import 'package:cinarium/screens/settings/controllers/settings_controller.dart';
@@ -13,7 +14,7 @@ class CrawlerTempSetting extends StatelessWidget {
         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(
-            Radius.circular(12),
+            Radius.circular(6),
           ),
           border: Border.all(
             color:
@@ -27,8 +28,9 @@ class CrawlerTempSetting extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.bug_report_outlined,
+                  Symbols.travel_explore,
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  weight: 300,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 20),

@@ -98,7 +98,8 @@ class HomePage extends StatelessWidget {
                 ),
                 itemBuilder: (BuildContext context, int index) {
                   final video = context.read<HomeController>().videoList[index];
-                  return SlideFadeTransition(offset: 1, child: MovCard(video));
+                  // return SlideFadeTransition(offset: 1, child: MovCard(video));
+                  return MovCard(video);
                 },
               ));
         });
