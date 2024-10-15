@@ -8,8 +8,7 @@ import 'menu_param.dart';
 class MenuIndicatorLinear extends StatefulWidget {
   final double parentHeight;
 
-  const MenuIndicatorLinear({Key? key, required this.parentHeight})
-      : super(key: key);
+  const MenuIndicatorLinear({super.key, required this.parentHeight});
 
   @override
   MenuIndicatorLinearState createState() => MenuIndicatorLinearState();

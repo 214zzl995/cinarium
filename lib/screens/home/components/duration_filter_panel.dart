@@ -5,7 +5,7 @@ import '../controllers/home_controller.dart';
 import 'bilateral_range_slider.dart';
 
 class DurationFilterPanel extends StatelessWidget {
-  const DurationFilterPanel({Key? key}) : super(key: key);
+  const DurationFilterPanel({super.key});
 
   @override
   Widget build(BuildContext context) {

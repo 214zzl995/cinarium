@@ -8,11 +8,10 @@ import 'file_col.dart';
 
 class FileRow extends StatelessWidget {
   const FileRow(
-      {Key? key,
+      {super.key,
       required this.untreatedVideo,
       required this.index,
-      this.doubleTap})
-      : super(key: key);
+      this.doubleTap});
 
   final UntreatedVideo untreatedVideo;
   final int index;

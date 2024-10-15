@@ -4,7 +4,7 @@ import '../controllers/home_controller.dart';
 import 'bilateral_range_slider.dart';
 
 class SizeFilterPanel extends StatelessWidget {
-  const SizeFilterPanel({Key? key}) : super(key: key);
+  const SizeFilterPanel({super.key});
 
   @override
   Widget build(BuildContext context) {

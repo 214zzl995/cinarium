@@ -17,20 +17,18 @@ class MenuItem extends StatefulWidget {
   final MenuItemIconBuilder? builder;
 
   const MenuItem({
-    Key? key,
+    super.key,
     required this.lottie,
     required this.index,
     required this.route,
-  })  : builder = null,
-        super(key: key);
+  })  : builder = null;
 
   const MenuItem.build({
-    Key? key,
+    super.key,
     required this.index,
     required this.route,
     required this.builder,
-  })  : lottie = null,
-        super(key: key);
+  })  : lottie = null;
 
   @override
   MenuItemState createState() => MenuItemState();

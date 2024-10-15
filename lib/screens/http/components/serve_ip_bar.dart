@@ -6,7 +6,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import '../controllers/http_controller.dart';
 
 class ServeIpBar extends StatelessWidget {
-  const ServeIpBar({Key? key}) : super(key: key);
+  const ServeIpBar({super.key});
 
   @override
   Widget build(BuildContext context) {

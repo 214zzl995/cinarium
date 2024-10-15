@@ -6,8 +6,7 @@ import 'package:cinarium/screens/home/controllers/home_controller.dart';
 /// 搜索框默认不显示 在 头部边上添加搜索按钮 点击后出现小搜索框 失去焦点后隐藏 但会在这个icon按钮 边上显示搜索字符串
 
 class AttrFilterPanel extends StatelessWidget {
-  const AttrFilterPanel(this.filterType, this.icon, {Key? key})
-      : super(key: key);
+  const AttrFilterPanel(this.filterType, this.icon, {super.key});
   final FilterType filterType;
   final IconData icon;
 

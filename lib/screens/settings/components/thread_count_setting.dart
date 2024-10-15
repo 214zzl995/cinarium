@@ -1,17 +1,16 @@
-import 'dart:async';
-
+import 'package:cinarium/screens/settings/controllers/settings_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
-import '../../../components/scroll_animator.dart';
-import '../controllers/settings_controller.dart';
 
 class ThreadCountSetting extends StatelessWidget {
   const ThreadCountSetting({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ValueNotifier<int> threadCount = ValueNotifier<int>(
+        context.read<SettingsController>().taskConfig.thread);
+
     return Container(
         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
@@ -37,15 +36,62 @@ class ThreadCountSetting extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 20),
-                      child: Text(
-                        'Number of threads',
-                        style: TextStyle(
-                            color:
-                                Theme.of(context).colorScheme.onSurfaceVariant),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Number of threads',
+                            style: TextStyle(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurfaceVariant),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 )),
+            SizedBox(
+              width: 220,
+              height: 30,
+              child: ValueListenableBuilder<int>(
+                valueListenable: threadCount,
+                builder: (context, value, child) {
+                  return Row(
+                    children: [
+                      SliderTheme(
+                          data: SliderTheme.of(context).copyWith(
+                            thumbShape: const RoundSliderThumbShape(
+                                enabledThumbRadius: 5, disabledThumbRadius: 5),
+                            overlayShape: const RoundSliderOverlayShape(
+                                overlayRadius: 8),
+                          ),
+                          child: Slider(
+                            value: value.toDouble(),
+                            min: 1,
+                            max: 8,
+                            divisions: 7,
+                            label: value.toString(),
+                            onChanged: (value) {
+                              threadCount.value = value.toInt();
+                            },
+                            onChangeEnd: (value) {
+                              context
+                                  .read<SettingsController>()
+                                  .changeThread(value.toInt());
+                            },
+                          )),
+                      Text(
+                        value.toString(),
+                        style: TextStyle(
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
           ],
         ));
   }

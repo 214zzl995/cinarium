@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../controllers/home_controller.dart';
-import 'bilateral_range_slider.dart';
 
 class DurationFilterPanelMenu extends StatelessWidget {
-  const DurationFilterPanelMenu({Key? key}) : super(key: key);
+  const DurationFilterPanelMenu({super.key});
 
   @override
   Widget build(BuildContext context) {

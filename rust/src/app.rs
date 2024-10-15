@@ -24,7 +24,7 @@ pub struct HttpConfig {
 
 #[derive(Deserialize, Serialize, Clone, Debug)]
 pub struct TaskConfig {
-    pub thread: usize,
+    pub thread: u8,
     pub tidy_folder: PathBuf,
 }
 

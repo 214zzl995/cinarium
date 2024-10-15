@@ -4313,7 +4313,7 @@ fn wire__crate__native__system_api__update_task_thread_impl(
             };
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_thread = <usize>::sse_decode(&mut deserializer);
+            let api_thread = <u8>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| async move {
                 transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(

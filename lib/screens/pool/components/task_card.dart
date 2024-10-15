@@ -5,8 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:cinarium/screens/pool/controllers/pool_controller.dart';
 
 class TaskCard extends StatelessWidget {
-  const TaskCard({Key? key, required this.id, required this.task})
-      : super(key: key);
+  const TaskCard({super.key, required this.id, required this.task});
   final String id;
   final TaskOperationalData task;
 

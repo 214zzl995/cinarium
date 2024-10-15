@@ -1,5 +1,4 @@
 import 'package:bridge/call_rust/native/system_api.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:material_symbols_icons/symbols.dart';

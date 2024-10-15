@@ -3,8 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:cinarium/screens/home/controllers/home_controller.dart';
 
 class AttrFilterPanelMenu extends StatelessWidget {
-  const AttrFilterPanelMenu(this.filterType, this.icon, {Key? key})
-      : super(key: key);
+  const AttrFilterPanelMenu(this.filterType, this.icon, {super.key});
   final FilterType filterType;
   final IconData icon;
 

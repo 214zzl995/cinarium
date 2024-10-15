@@ -34,7 +34,7 @@ class SettingsController with ChangeNotifier {
     super.dispose();
   }
 
-  void changeThread(BigInt thread) {
+  void changeThread(int thread) {
     updateTaskThread(thread: thread).then(
       (_) async {
         _taskConfig = await getTaskConf();

@@ -70,7 +70,7 @@ pub async fn update_http_port(port: &u16) -> anyhow::Result<()> {
 }
 
 #[allow(dead_code)]
-pub async fn update_task_thread(thread: &usize) -> anyhow::Result<()> {
+pub async fn update_task_thread(thread: &u8) -> anyhow::Result<()> {
     let mut task_conf = get_cinarium_config().task;
     task_conf.thread = thread.clone();
     app::update_task_config(&task_conf).await
@@ -190,7 +190,7 @@ impl TaskConfig {
 
     #[frb(sync, getter)]
     #[allow(dead_code)]
-    pub fn thread(&self) -> usize {
+    pub fn thread(&self) -> u8 {
         self.thread
     }
 }

@@ -9,9 +9,7 @@ use tokio::sync::watch::Sender;
 
 pub mod crawler;
 
-use crate::{
-    app::get_cinarium_config, model::VideoDataInterim, native::ListenerHandle,
-};
+use crate::{app::get_cinarium_config, model::VideoDataInterim, native::ListenerHandle};
 
 static TASK_MANAGER: OnceLock<RunnerManger<TaskMetadata>> = OnceLock::new();
 static LISTENER: OnceLock<Sender<(String, TaskStatus)>> = OnceLock::new();
@@ -42,7 +40,7 @@ pub fn get_task_manager() -> RunnerManger<TaskMetadata> {
         .get_or_init(|| {
             let thread = get_cinarium_config().task.thread;
             RunnerManger::new(
-                thread,
+                thread as usize,
                 true,
                 |data| async move { VideoDataInterim::run(&data).await },
                 |task_id: String, status: TaskStatus| {
@@ -56,16 +54,15 @@ pub fn get_task_manager() -> RunnerManger<TaskMetadata> {
                         change_status,
                     ));
 
-                    let sender = LISTENER
-                        .get_or_init(|| {
-                            let (tx, _) =
-                                tokio::sync::watch::channel((task_id.clone(), status.clone()));
-                            tx
-                        });
+                    let sender = LISTENER.get_or_init(|| {
+                        let (tx, _) =
+                            tokio::sync::watch::channel((task_id.clone(), status.clone()));
+                        tx
+                    });
 
-                        if sender.receiver_count() > 0 {
-                            sender.send((task_id, status)).unwrap();
-                        }
+                    if sender.receiver_count() > 0 {
+                        sender.send((task_id, status)).unwrap();
+                    }
                 },
             )
         })

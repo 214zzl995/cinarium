@@ -39,7 +39,7 @@ Future<HttpConfig> getHttpConf() =>
 Future<void> updateHttpPort({required int port}) =>
     RustLib.instance.api.crateNativeSystemApiUpdateHttpPort(port: port);
 
-Future<void> updateTaskThread({required BigInt thread}) =>
+Future<void> updateTaskThread({required int thread}) =>
     RustLib.instance.api.crateNativeSystemApiUpdateTaskThread(thread: thread);
 
 Future<void> updateTaskTidyFolder({required String folder}) =>

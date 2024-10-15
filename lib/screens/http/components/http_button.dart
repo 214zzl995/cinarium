@@ -1,4 +1,3 @@
-import 'package:bridge/call_rust/native/system_api.dart';
 import 'package:cinarium/screens/http/controllers/http_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -8,8 +7,8 @@ import '../../root/controllers/root_controller.dart';
 
 class HttpButton extends StatefulWidget {
   const HttpButton({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   HttpButtonState createState() => HttpButtonState();

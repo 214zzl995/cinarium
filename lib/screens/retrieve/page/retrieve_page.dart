@@ -9,7 +9,7 @@ import '../controllers/retrieve_controller.dart';
 
 // 如果list 需要有动画可能需要 SliverFadeTransition
 class RetrievePage extends StatelessWidget {
-  const RetrievePage({Key? key}) : super(key: key);
+  const RetrievePage({super.key});
 
   @override
   Widget build(BuildContext context) {

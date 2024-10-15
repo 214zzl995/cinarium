@@ -5,7 +5,7 @@ import 'package:cinarium/screens/home/components/size_filter_edits.dart';
 import '../controllers/home_controller.dart';
 
 class SizeFilterPanelMenu extends StatelessWidget {
-  const SizeFilterPanelMenu({Key? key}) : super(key: key);
+  const SizeFilterPanelMenu({super.key});
 
   @override
   Widget build(BuildContext context) {

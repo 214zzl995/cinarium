@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:cinarium/screens/http/components/serve_ip_bar.dart';
 import '../components/http_button.dart';
 
 class HttpPage extends StatelessWidget {
-  const HttpPage({Key? key}) : super(key: key);
+  const HttpPage({super.key});
 
   @override
   Widget build(BuildContext context) {

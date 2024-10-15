@@ -86,7 +86,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 }
 
 abstract class RustLibApi extends BaseApi {
-  BigInt crateAppTaskConfigThread({required TaskConfig that});
+  int crateAppTaskConfigThread({required TaskConfig that});
 
   String crateAppTaskConfigTidyFolder({required TaskConfig that});
 
@@ -343,7 +343,7 @@ abstract class RustLibApi extends BaseApi {
 
   Future<void> crateNativeSystemApiUpdateHttpPort({required int port});
 
-  Future<void> crateNativeSystemApiUpdateTaskThread({required BigInt thread});
+  Future<void> crateNativeSystemApiUpdateTaskThread({required int thread});
 
   Future<void> crateNativeSystemApiUpdateTaskTidyFolder(
       {required String folder});
@@ -431,7 +431,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   });
 
   @override
-  BigInt crateAppTaskConfigThread({required TaskConfig that}) {
+  int crateAppTaskConfigThread({required TaskConfig that}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
@@ -440,7 +440,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 1)!;
       },
       codec: SseCodec(
-        decodeSuccessData: sse_decode_usize,
+        decodeSuccessData: sse_decode_u_8,
         decodeErrorData: null,
       ),
       constMeta: kCrateAppTaskConfigThreadConstMeta,
@@ -2941,11 +2941,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<void> crateNativeSystemApiUpdateTaskThread({required BigInt thread}) {
+  Future<void> crateNativeSystemApiUpdateTaskThread({required int thread}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_usize(thread, serializer);
+        sse_encode_u_8(thread, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
             funcId: 95, port: port_);
       },
@@ -5584,7 +5584,7 @@ class TaskConfigImpl extends RustOpaque implements TaskConfig {
         RustLib.instance.api.rust_arc_decrement_strong_count_TaskConfigPtr,
   );
 
-  BigInt get thread => RustLib.instance.api.crateAppTaskConfigThread(
+  int get thread => RustLib.instance.api.crateAppTaskConfigThread(
         that: this,
       );
 

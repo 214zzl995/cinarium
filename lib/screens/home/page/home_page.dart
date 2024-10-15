@@ -11,13 +11,12 @@ import 'package:waterfall_flow/waterfall_flow.dart';
 
 import '../components/attr_filter_panel.dart';
 import '../components/duration_filter_panel.dart';
-import '../components/slide_fade_transition.dart';
 import '../components/text_filter_edit.dart';
 
 const filterPanelIndicatorHoverHeight = 25.0;
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {

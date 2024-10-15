@@ -7,8 +7,7 @@ import 'menu_param.dart';
 class MenuIndicatorSticky extends StatefulWidget {
   final double parentHeight;
 
-  const MenuIndicatorSticky({Key? key, required this.parentHeight})
-      : super(key: key);
+  const MenuIndicatorSticky({super.key, required this.parentHeight});
 
   @override
   MenuIndicatorStickyState createState() => MenuIndicatorStickyState();
