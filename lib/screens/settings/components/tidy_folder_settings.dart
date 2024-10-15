@@ -1,10 +1,7 @@
-import 'package:bridge/call_rust/native/system_api.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
-import 'package:cinarium/screens/settings/components/thread_count_setting.dart';
 import '../controllers/settings_controller.dart';
-import 'crawler_temp_setting.dart';
 
 class TidyFolderSetting extends StatelessWidget {
   const TidyFolderSetting({super.key});

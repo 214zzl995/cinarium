@@ -1,4 +1,6 @@
+import 'package:cinarium/routes/app_pages.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import 'package:cinarium/screens/settings/controllers/settings_controller.dart';
@@ -8,85 +10,80 @@ class MonitorFolderSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        padding: const EdgeInsets.all(15),
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(6),
-          ),
-          border: Border.all(
-            color:
-                Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
-            width: 1,
-          ),
-          color: Theme.of(context).colorScheme.surfaceContainerLowest,
-        ),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Icon(
-                  Symbols.manage_search,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  weight: 300,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: Text(
-                    'Monitor folder',
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant),
+    ValueNotifier<bool> hover = ValueNotifier<bool>(false);
+
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (event) {
+        hover.value = true;
+      },
+      onExit: (event) {
+        hover.value = false;
+      },
+      child: GestureDetector(
+        onTap: () {
+          GoRouter.of(context).go(SettingsRoutes.monitorFolder.jumpRouter);
+        },
+        child: ValueListenableBuilder(
+          valueListenable: hover,
+          builder: (context, value, child) {
+            return Container(
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(6),
                   ),
+                  border: Border.all(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .outlineVariant
+                        .withOpacity(0.5),
+                    width: 1,
+                  ),
+                  color: Theme.of(context).colorScheme.surfaceContainerLowest,
                 ),
-                Expanded(
-                    child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    SizedBox(
-                      width: 100,
-                      child: ElevatedButton(
-                          onPressed: () {
-                            try {
-                              context
-                                  .read<SettingsController>()
-                                  .addSearchFolder();
-                            } catch (e) {
-                              showAboutDialog(
-                                  context: context,
-                                  children: [Text(e.toString())]);
-                            }
-                          },
-                          child: const Row(
-                            children: [
-                              Icon(
-                                Symbols.add,
-                                size: 12,
-                                weight: 700,
-                                opticalSize: 24,
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                "Add",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                ),
-                              )
-                            ],
-                          )),
-                    )
-                  ],
-                ))
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            _buildSearchFolderList(context)
-          ],
-        ));
+                child: child);
+          },
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Symbols.manage_search,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    weight: 300,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Text(
+                      'Monitor folder',
+                      style: TextStyle(
+                          color:
+                              Theme.of(context).colorScheme.onSurfaceVariant),
+                    ),
+                  ),
+                  const Expanded(
+                      child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Icon(
+                        Symbols.arrow_forward_ios,
+                        size: 15,
+                      ),
+                      SizedBox(
+                        width: 18,
+                      )
+                    ],
+                  ))
+                ],
+              ),
+              // _buildSearchFolderList(context)
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildSearchFolderList(BuildContext context) {

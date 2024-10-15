@@ -1,3 +1,4 @@
+import 'package:cinarium/screens/settings/page/settings_main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cinarium/screens/root/page/root_page.dart';
@@ -7,8 +8,11 @@ import '../screens/home/page/home_page.dart';
 import '../screens/http/page/http_page.dart';
 import '../screens/pool/page/pool_page.dart';
 import '../screens/retrieve/page/retrieve_page.dart';
-import '../screens/settings/page/settings_page.dart';
+import '../screens/settings/page/settings_crawler_template_page.dart';
 import 'package:go_router/go_router.dart';
+
+import '../screens/settings/page/settings_monitor_folder_page.dart';
+import '../screens/settings/page/settings_root.dart';
 
 part 'app_routes.dart';
 
@@ -38,18 +42,8 @@ class AppPages {
               GoRoute(
                 path: Routes.home.router,
                 name: Routes.home.name,
-                pageBuilder: (context, state) => SlideUpFadeTransitionPage(
+                pageBuilder: (context, state) => FadeTransitionPage(
                     key: state.pageKey, child: const HomePage()),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: <RouteBase>[
-              GoRoute(
-                path: Routes.settings.router,
-                name: Routes.settings.name,
-                pageBuilder: (context, state) => SlideUpFadeTransitionPage(
-                    key: state.pageKey, child: const SettingsPage()),
               ),
             ],
           ),
@@ -58,7 +52,7 @@ class AppPages {
               GoRoute(
                 path: Routes.retrieve.router,
                 name: Routes.retrieve.name,
-                pageBuilder: (context, state) => SlideUpFadeTransitionPage(
+                pageBuilder: (context, state) => FadeTransitionPage(
                     key: state.pageKey, child: const RetrievePage()),
               ),
             ],
@@ -68,7 +62,7 @@ class AppPages {
               GoRoute(
                 path: Routes.debug.router,
                 name: Routes.debug.name,
-                pageBuilder: (context, state) => SlideUpFadeTransitionPage(
+                pageBuilder: (context, state) => FadeTransitionPage(
                     key: state.pageKey, child: const DebugPage()),
               ),
             ],
@@ -78,7 +72,7 @@ class AppPages {
               GoRoute(
                 path: Routes.http.router,
                 name: Routes.http.name,
-                pageBuilder: (context, state) => SlideUpFadeTransitionPage(
+                pageBuilder: (context, state) => FadeTransitionPage(
                     key: state.pageKey, child: const HttpPage()),
               ),
             ],
@@ -88,7 +82,7 @@ class AppPages {
               GoRoute(
                 path: Routes.pool.router,
                 name: Routes.pool.name,
-                pageBuilder: (context, state) => SlideUpFadeTransitionPage(
+                pageBuilder: (context, state) => FadeTransitionPage(
                     key: state.pageKey, child: const PoolPage()),
               ),
             ],
@@ -98,118 +92,135 @@ class AppPages {
 
   static final routers = GoRouter(initialLocation: initial, routes: [
     ShellRoute(
-        builder: (BuildContext context, GoRouterState state, Widget child) {
-          final theme = context.read<CinariumTheme>();
-          if (theme.themeMode == ThemeMode.system) {
-            //获取系统主题
-            final Brightness platformBrightness =
-                MediaQuery.platformBrightnessOf(context);
+      builder: (BuildContext context, GoRouterState state, Widget child) {
+        final theme = context.read<CinariumTheme>();
+        if (theme.themeMode == ThemeMode.system) {
+          //获取系统主题
+          final Brightness platformBrightness =
+              MediaQuery.platformBrightnessOf(context);
 
-            theme.brightness = platformBrightness;
-          }
-          return RootPage(child: child);
-        },
-        routes: [
-          GoRoute(
-            path: Routes.home.router,
-            name: Routes.home.name,
-            pageBuilder: (context, state) =>
-                FadeTransitionPage(key: state.pageKey, child: const HomePage()),
-          ),
-          GoRoute(
-            path: Routes.retrieve.router,
-            name: Routes.retrieve.name,
-            pageBuilder: (context, state) => FadeTransitionPage(
-                key: state.pageKey, child: const RetrievePage()),
-          ),
-          GoRoute(
-            path: Routes.debug.router,
-            name: Routes.debug.name,
-            pageBuilder: (context, state) => FadeTransitionPage(
-                key: state.pageKey, child: const DebugPage()),
-          ),
-          GoRoute(
-            path: Routes.http.router,
-            name: Routes.http.name,
-            pageBuilder: (context, state) =>
-                FadeTransitionPage(key: state.pageKey, child: const HttpPage()),
-          ),
-          GoRoute(
-            path: Routes.pool.router,
-            name: Routes.pool.name,
-            pageBuilder: (context, state) =>
-                FadeTransitionPage(key: state.pageKey, child: const PoolPage()),
-          ),
-          GoRoute(
+          theme.brightness = platformBrightness;
+        }
+        return RootPage(child: child);
+      },
+      routes: [
+        GoRoute(
+          path: Routes.home.router,
+          name: Routes.home.name,
+          pageBuilder: (context, state) =>
+              FadeTransitionPage(key: state.pageKey, child: const HomePage()),
+        ),
+        GoRoute(
+          path: Routes.retrieve.router,
+          name: Routes.retrieve.name,
+          pageBuilder: (context, state) => FadeTransitionPage(
+              key: state.pageKey, child: const RetrievePage()),
+        ),
+        GoRoute(
+          path: Routes.debug.router,
+          name: Routes.debug.name,
+          pageBuilder: (context, state) =>
+              FadeTransitionPage(key: state.pageKey, child: const DebugPage()),
+        ),
+        GoRoute(
+          path: Routes.http.router,
+          name: Routes.http.name,
+          pageBuilder: (context, state) =>
+              FadeTransitionPage(key: state.pageKey, child: const HttpPage()),
+        ),
+        GoRoute(
+          path: Routes.pool.router,
+          name: Routes.pool.name,
+          pageBuilder: (context, state) =>
+              FadeTransitionPage(key: state.pageKey, child: const PoolPage()),
+        ),
+        ShellRoute(
+          builder: (BuildContext context, GoRouterState state, Widget child) {
+            return SettingsRoot(child: child);
+          },
+          pageBuilder: (context, state, Widget child) => FadeTransitionPage(
+              key: state.pageKey,
+              child: SettingsRoot(
+                child: child,
+              )),
+          routes: [
+            GoRoute(
               path: Routes.settings.router,
               name: Routes.settings.name,
-              pageBuilder: (context, state) => FadeTransitionPage(
-                  key: state.pageKey, child: const SettingsPage())
-          ),
-        ]),
+              pageBuilder: (context, state) => SlideTransitionPage(
+                key: state.pageKey,
+                child: const SettingsMainPage(),
+              ),
+              routes: [
+                GoRoute(
+                  path: SettingsRoutes.monitorFolder.router,
+                  name: SettingsRoutes.monitorFolder.name,
+                  pageBuilder: (context, state) => SlideTransitionPage(
+                    key: state.pageKey,
+                    child: const SettingsMonitorFolderPage(),
+                  ),
+                ),
+                GoRoute(
+                  path: SettingsRoutes.crawlerTemplate.router,
+                  name: SettingsRoutes.crawlerTemplate.name,
+                  pageBuilder: (context, state) => SlideTransitionPage(
+                    key: state.pageKey,
+                    child: const SettingsCrawlerTemplatePage(),
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
+      ],
+    ),
   ]);
 }
 
-/// A page that fades in an out.
-class SlideUpFadeTransitionPage extends CustomTransitionPage<void> {
-  /// Creates a [SlideUpFadeTransitionPage].
-  SlideUpFadeTransitionPage({
+class SlideTransitionPage extends CustomTransitionPage<void> {
+  /// Creates a [SlideTransitionPage] with the old page sliding to the left.
+  SlideTransitionPage({
     required LocalKey super.key,
     required super.child,
-  }) : super(
-            transitionsBuilder: (BuildContext context,
-                    Animation<double> animation,
-                    Animation<double> secondaryAnimation,
-                    Widget child) =>
-                SlideTransition(
-                    position: Tween<Offset>(
-                      begin: const Offset(0, 0.02),
-                      end: Offset.zero,
-                    ).animate(animation),
-                    child: FadeTransition(
-                      opacity: Tween<double>(
-                        begin: 1,
-                        end: 0,
-                      ).animate(secondaryAnimation),
-                      child: child,
-                    )));
+  }) : super(transitionsBuilder: (BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child) {
+          // 新页面从右向左进入
+          const beginOffset = Offset(1.0, 0.0); // 新页面从右边进入
+          const endOffset = Offset.zero; // 停留在中间
 
-  static final CurveTween _curveTween = CurveTween(curve: Curves.easeIn);
-}
+          // 旧页面向左滑出
+          const oldPageBeginOffset = Offset.zero; // 旧页面从中间开始
+          const oldPageEndOffset = Offset(-1.0, 0.0); // 旧页面向左滑出
 
-class SlideHorizontalTransitionPage extends CustomTransitionPage<void> {
-  /// Creates a [SlideUpFadeTransitionPage].
-  SlideHorizontalTransitionPage({
-    required LocalKey super.key,
-    required super.child,
-    required this.xBegin,
-  }) : super(
-            transitionsBuilder: (BuildContext context,
-                    Animation<double> animation,
-                    Animation<double> secondaryAnimation,
-                    Widget child) =>
-                SlideTransition(
-                    position: Tween<Offset>(
-                      begin: Offset(xBegin, 0),
-                      end: Offset.zero,
-                    ).animate(CurvedAnimation(
-                      parent: animation,
-                      curve: _curve,
-                    )),
-                    child: SlideTransition(
-                      position: Tween<Offset>(
-                        begin: Offset.zero,
-                        end: Offset(xBegin, 0),
-                      ).animate(CurvedAnimation(
-                        parent: secondaryAnimation,
-                        curve: _curve,
-                      )),
-                      child: child,
-                    )));
+          // 新页面的滑动动画：从右边进入
+          final slideInAnimation =
+              Tween<Offset>(begin: beginOffset, end: endOffset)
+                  .animate(CurvedAnimation(
+            parent: animation,
+            curve: _curve,
+          ));
 
-  final double xBegin;
+          // 旧页面的滑动动画：向左滑出
+          final slideOutAnimation =
+              Tween<Offset>(begin: oldPageBeginOffset, end: oldPageEndOffset)
+                  .animate(CurvedAnimation(
+            parent: secondaryAnimation,
+            curve: _curve,
+          ));
 
-  static const Curve _curve = Cubic(1, .19, 0, .81);
+          // 使用 Stack 叠加新旧页面的滑动效果
+          return SlideTransition(
+            position: slideOutAnimation, // 旧页面向左滑出
+            child: SlideTransition(
+              position: slideInAnimation, // 新页面从右滑入
+              child: child,
+            ),
+          );
+        });
+
+  static const Curve _curve = Curves.easeInOut; // 平滑的过渡曲线
 }
 
 class FadeTransitionPage extends CustomTransitionPage<void> {

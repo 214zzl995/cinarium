@@ -16,3 +16,16 @@ enum Routes {
   String get router => '/$name';
 }
 
+enum SettingsRoutes {
+  main,
+  monitorFolder(title: 'Monitor Folder'),
+  crawlerTemplate(title: 'Crawler Template'),;
+
+  const SettingsRoutes({this.title = ''});
+
+  final String title;
+
+  String get router => name;
+
+  String get jumpRouter => '/settings/$name';
+}
