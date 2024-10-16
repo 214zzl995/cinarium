@@ -8,31 +8,30 @@ class TidyFolderSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(15),
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(
-              Radius.circular(6),
-            ),
-            border: Border.all(
-              color:
-                  Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
-              width: 1,
-            ),
-            color: Theme.of(context).colorScheme.surfaceContainerLowest,
-          ),
-          child: MouseRegion(
-              cursor: SystemMouseCursors.click,
-              child: GestureDetector(
-                  onTap: () {
-                    context.read<SettingsController>().updateTidyFolder();
-                  },
-                  child: _buildTidyFolder(context))),
-        ),
-      ],
-    );
+    return MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          onTap: () {
+            context.read<SettingsController>().updateTidyFolder();
+          },
+          child: Container(
+              height: 70,
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(6),
+                ),
+                border: Border.all(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .outlineVariant
+                      .withOpacity(0.5),
+                  width: 1,
+                ),
+                color: Theme.of(context).colorScheme.surfaceContainerLowest,
+              ),
+              child: _buildTidyFolder(context)),
+        ));
   }
 
   Widget _buildTidyFolder(BuildContext context) {
@@ -52,33 +51,30 @@ class TidyFolderSetting extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 20),
-                        child: Text(
-                          'Tidy Folder',
-                          style: TextStyle(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Tidy Folder',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                            Text(
+                              tidyFolder,
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   )),
-              Row(
-                children: [
-                  AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 100),
-                      child: SizedBox(
-                        key: ValueKey(tidyFolder),
-                        width: 200,
-                        child: Text(
-                          tidyFolder,
-                          textAlign: TextAlign.right,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onSurface,
-                            fontSize: 12,
-                          ),
-                        ),
-                      )),
-                ],
+              TextButton(
+                onPressed: () {
+                  context.read<SettingsController>().updateTidyFolder();
+                },
+                child: const Icon(
+                  Symbols.open_in_new,
+                  size: 20,
+                ),
               ),
             ],
           );

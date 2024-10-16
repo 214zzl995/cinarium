@@ -8,10 +8,8 @@ class ThreadCountSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ValueNotifier<int> threadCount = ValueNotifier<int>(
-        context.read<SettingsController>().taskConfig.thread);
-
     return Container(
+        height: 70,
         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(
@@ -39,60 +37,115 @@ class ThreadCountSetting extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Selector<SettingsController, int>(
+                            selector: (context, controller) =>
+                                controller.taskConfig.thread,
+                            builder: (context, thread, _) {
+                              return Text(
+                                'Number of threads: $thread',
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              );
+                            },
+                          ),
                           Text(
-                            'Number of threads',
-                            style: TextStyle(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onSurfaceVariant),
+                            'The number of threads that can be run simultaneously',
+                            style: Theme.of(context).textTheme.bodySmall,
                           ),
                         ],
                       ),
                     ),
                   ],
                 )),
-            SizedBox(
-              width: 220,
-              height: 30,
-              child: ValueListenableBuilder<int>(
-                valueListenable: threadCount,
-                builder: (context, value, child) {
-                  return Row(
-                    children: [
-                      SliderTheme(
-                          data: SliderTheme.of(context).copyWith(
-                            thumbShape: const RoundSliderThumbShape(
-                                enabledThumbRadius: 5, disabledThumbRadius: 5),
-                            overlayShape: const RoundSliderOverlayShape(
-                                overlayRadius: 8),
-                          ),
-                          child: Slider(
-                            value: value.toDouble(),
-                            min: 1,
-                            max: 8,
-                            divisions: 7,
-                            label: value.toString(),
-                            onChanged: (value) {
-                              threadCount.value = value.toInt();
-                            },
-                            onChangeEnd: (value) {
-                              context
-                                  .read<SettingsController>()
-                                  .changeThread(value.toInt());
-                            },
-                          )),
-                      Text(
-                        value.toString(),
-                        style: TextStyle(
-                            color:
-                                Theme.of(context).colorScheme.onSurfaceVariant),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
+            _buildEditButton(context),
           ],
         ));
+  }
+
+  Widget _buildEditButton(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        showDialog(
+            context: context,
+            builder: (dialogContext) {
+              ValueNotifier<int> threadCount = ValueNotifier<int>(
+                  context.read<SettingsController>().taskConfig.thread);
+              return AlertDialog(
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Number of threads',
+                      style: TextStyle(
+                          color:
+                              Theme.of(context).colorScheme.onSurfaceVariant),
+                    ),
+                    const SizedBox(
+                      height: 3,
+                    ),
+                    Text('The number of threads that can be run simultaneously',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          fontSize: 13,
+                        )),
+                  ],
+                ),
+                content: ValueListenableBuilder<int>(
+                  valueListenable: threadCount,
+                  builder: (buildContext, value, child) {
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          value.toString(),
+                          style: Theme.of(context).textTheme.displayMedium,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        SliderTheme(
+                            data: SliderTheme.of(buildContext).copyWith(
+                              thumbShape: const RoundSliderThumbShape(
+                                  enabledThumbRadius: 8,
+                                  disabledThumbRadius: 8),
+                              overlayShape: const RoundSliderOverlayShape(
+                                  overlayRadius: 12),
+                            ),
+                            child: Slider(
+                              value: value.toDouble(),
+                              min: 1,
+                              max: 8,
+                              divisions: 7,
+                              label: value.toString(),
+                              onChanged: (value) {
+                                threadCount.value = value.toInt();
+                              },
+                            )),
+                      ],
+                    );
+                  },
+                ),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(dialogContext).pop();
+                      },
+                      child: const Text('Cancel')),
+                  TextButton(
+                      onPressed: () {
+                        context
+                            .read<SettingsController>()
+                            .changeThread(threadCount.value);
+                        Navigator.of(dialogContext).pop();
+                      },
+                      child: const Text('Save')),
+                ],
+              );
+            });
+      },
+      child: const Icon(
+        Symbols.open_in_new,
+        size: 20,
+      ),
+    );
   }
 }

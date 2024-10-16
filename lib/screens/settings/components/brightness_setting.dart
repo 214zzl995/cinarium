@@ -11,6 +11,7 @@ class BrightnessSetting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 70,
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(
@@ -34,9 +35,7 @@ class BrightnessSetting extends StatelessWidget {
               padding: const EdgeInsets.only(left: 20),
               child: Text(
                 'App theme',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
             Expanded(
@@ -51,8 +50,8 @@ class BrightnessSetting extends StatelessWidget {
                     current: mode,
                     values: ThemeMode.values,
                     borderWidth: 0,
-                    height: 40,
-                    indicatorSize: const Size.square(40),
+                    height: 38,
+                    indicatorSize: const Size.square(38),
                     style: ToggleStyle(
                       borderColor: Colors.transparent,
                       indicatorColor: Theme.of(context).colorScheme.primary,

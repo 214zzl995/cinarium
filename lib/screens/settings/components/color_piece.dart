@@ -12,7 +12,7 @@ class ColorPiece extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 1),
+        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
         child: Selector<CinariumTheme, bool>(
             selector: (_, theme) => theme.color?.value == color.value,
             builder: (_, data, __) {

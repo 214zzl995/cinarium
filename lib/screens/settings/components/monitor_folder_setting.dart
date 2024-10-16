@@ -28,6 +28,7 @@ class MonitorFolderSetting extends StatelessWidget {
           valueListenable: hover,
           builder: (context, value, child) {
             return Container(
+                height: 70,
                 padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(
@@ -54,14 +55,20 @@ class MonitorFolderSetting extends StatelessWidget {
                     weight: 300,
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: Text(
-                      'Monitor folder',
-                      style: TextStyle(
-                          color:
-                              Theme.of(context).colorScheme.onSurfaceVariant),
-                    ),
-                  ),
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Monitor folder',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          Text(
+                            'Listen for video file changes in this list folder',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
+                      )),
                   const Expanded(
                       child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,

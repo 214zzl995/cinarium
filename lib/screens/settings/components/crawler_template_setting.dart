@@ -25,9 +25,11 @@ class CrawlerTemplateSetting extends StatelessWidget {
         },
         child: GestureDetector(
             onTap: () {
-              GoRouter.of(context).go(SettingsRoutes.crawlerTemplate.jumpRouter);
+              GoRouter.of(context)
+                  .go(SettingsRoutes.crawlerTemplate.jumpRouter);
             },
             child: Container(
+                height: 70,
                 padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(
@@ -43,6 +45,7 @@ class CrawlerTemplateSetting extends StatelessWidget {
                   color: Theme.of(context).colorScheme.surfaceContainerLowest,
                 ),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Row(
                       children: [
@@ -55,10 +58,7 @@ class CrawlerTemplateSetting extends StatelessWidget {
                           padding: const EdgeInsets.only(left: 20),
                           child: Text(
                             'CrawlerTemp',
-                            style: TextStyle(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onSurfaceVariant),
+                            style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ),
                         const Expanded(

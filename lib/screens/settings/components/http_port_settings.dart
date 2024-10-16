@@ -14,6 +14,7 @@ class HttpPortSetting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+        height: 70,
         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(
@@ -47,27 +48,35 @@ class HttpPortSetting extends StatelessWidget {
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeInOut,
                 child: httpRunning
-                    ? SizedBox(
-                        key: const Key("httpRunning"),
-                        height: 30,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                                "The http file server is running and cannot be modified",
-                                style: TextStyle(
-                                    color:
-                                        Theme.of(context).colorScheme.error)),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            TextButton(
-                                onPressed: () {
-                                  stopWebApi();
-                                },
-                                child: const Text("Stop Http File Server"))
-                          ],
-                        ))
+                    ? Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: SizedBox(
+                            key: const Key("httpRunning"),
+                            height: 30,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                    "The http file server is running and cannot be modified",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .error,
+                                        )),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                TextButton(
+                                    onPressed: () {
+                                      stopWebApi();
+                                    },
+                                    child: const Text("Stop Http File Server"))
+                              ],
+                            )),
+                      )
                     : Container(
                         key: const Key("httpNotRunning"),
                       ),
@@ -93,10 +102,21 @@ class HttpPortSetting extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 20),
-                  child: Text(
-                    'Port',
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Selector<SettingsController, int>(
+                        selector: (_, controller) => controller.httpConfig.port,
+                        builder: (_, port, __) => Text(
+                          'Port: $port',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ),
+                      Text(
+                        'The port number of the http file server',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -238,7 +258,7 @@ class HttpPortSetting extends StatelessWidget {
                                 onPressed: () {
                                   submitPort();
                                 },
-                                child: const Text('OK'),
+                                child: const Text('Save'),
                               ),
                             ],
                           );
