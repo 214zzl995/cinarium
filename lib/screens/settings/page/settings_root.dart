@@ -48,14 +48,14 @@ class SettingsRoot extends StatelessWidget {
                     Row(
                       children: [
                         const SizedBox(
-                          width: 10,
+                          width: 5,
                         ),
                         const Icon(
                           Symbols.arrow_back_ios_new,
                           size: 20,
                         ),
                         const SizedBox(
-                          width: 10,
+                          width: 5,
                         ),
                         Text(
                           getCurrentRoute(context).title,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 
 import '../controllers/retrieve_controller.dart';
@@ -44,7 +45,7 @@ class SearchFieldState extends State<SearchField> {
       child: TextField(
         controller: _textEditingController,
         cursorHeight: 22,
-        cursorWidth: 8,
+        cursorWidth: 2,
         autofocus: context.read<RetrieveController>().searchFlag != "",
         cursorOpacityAnimates: true,
         style: const TextStyle(
@@ -89,7 +90,7 @@ class SearchFieldState extends State<SearchField> {
                                 .changeSearchFiles('');
                           });
                         },
-                        child: const Icon(Icons.clear),
+                        child: const Icon(Symbols.clear),
                       )
                     : const SizedBox(
                         key: Key('emptyContainer'),
@@ -101,7 +102,7 @@ class SearchFieldState extends State<SearchField> {
                       child: child,
                     )),
             prefixIcon: Icon(
-              Icons.search,
+              Symbols.search,
               color: Theme.of(context).colorScheme.primary,
             )),
       ),

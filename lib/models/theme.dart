@@ -56,9 +56,7 @@ class CinariumTheme extends ChangeNotifier {
       Color? accentColor;
 
       accentColor = color ?? await DynamicColorPlugin.getAccentColor();
-      debugPrint('dynamic_color: $accentColor');
       if (accentColor != null) {
-
         _lightColorScheme = ColorScheme.fromSeed(
           seedColor: accentColor,
           brightness: Brightness.light,

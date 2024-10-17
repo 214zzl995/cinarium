@@ -461,17 +461,23 @@ impl Metadata {
     pub async fn insert(&self) -> anyhow::Result<u32> {
         let path = self.path.to_string_lossy().to_string();
         let size = self.size as i64;
+        let crawler_name = regex::Regex::new(r"[^a-zA-Z0-9]")
+            .unwrap()
+            .replace_all(&self.filename, "")
+            .to_ascii_lowercase();
+
         let id = sqlx::query!(
             r#"
-                insert into video (hash, filename, path, size, extension)
-                values ($1, $2, $3, $4, $5)
+                insert into video (hash, filename, path, size, extension,crawl_name)
+                values ($1, $2, $3, $4, $5, $6)
                 returning id as "id!:u32"
             "#,
             self.hash,
             self.filename,
             path,
             size,
-            self.extension
+            self.extension,
+            crawler_name
         )
         .fetch_one(get_pool().await)
         .await
@@ -507,10 +513,11 @@ impl Metadata {
 
     #[allow(dead_code)]
     pub async fn insert_replace_batch(videos: &Vec<Metadata>) -> anyhow::Result<()> {
+        let regex = regex::Regex::new(r"[^a-zA-Z0-9]").unwrap();
         let mut transaction = get_pool().await.begin().await?;
         let mut query_builder: QueryBuilder<Sqlite> = QueryBuilder::new(
             r#"
-                insert or replace into video (hash, filename, path, size, extension, is_deleted)
+                insert or replace into video (hash, filename, path, size, extension, crawl_name, is_deleted)
             "#,
         );
 
@@ -521,6 +528,7 @@ impl Metadata {
                 .push_bind(video.path.to_str())
                 .push_bind(video.size as i64)
                 .push_bind(&video.extension)
+                .push_bind(regex.replace_all(&video.filename, "").to_ascii_lowercase())
                 .push_bind(false);
         });
 

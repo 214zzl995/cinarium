@@ -1,5 +1,6 @@
 import 'package:bridge/call_rust/model/video.dart';
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import 'package:cinarium/screens/retrieve/components/crawl_name_field.dart';
 
@@ -83,10 +84,7 @@ class FileRow extends StatelessWidget {
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: value
-                        ? Theme.of(context)
-                            .colorScheme
-                            .secondaryContainer
-                            .withOpacity(0.6)
+                        ? Theme.of(context).colorScheme.surfaceContainerHigh
                         : Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(5),
                   ),
@@ -193,9 +191,10 @@ class FileRow extends StatelessWidget {
                           .read<RetrieveController>()
                           .switchVideosHidden([untreatedVideo.id]);
                     },
-                    icon: Icon(value
-                        ? Icons.delete_outlined
-                        : Icons.add_circle_outline),
+                    icon: Icon(
+                        value ? Symbols.visibility : Symbols.visibility_off,
+                        size: 20,
+                        weight: 600),
                   );
                 }),
             IconButton(
@@ -206,7 +205,11 @@ class FileRow extends StatelessWidget {
                     .read<RetrieveController>()
                     .insertionOfTasks([untreatedVideo.id]);
               },
-              icon: const Icon(Icons.search_outlined),
+              icon: const Icon(
+                Symbols.travel_explore,
+                size: 20,
+                weight: 600,
+              ),
             )
           ],
         ));

@@ -14,7 +14,6 @@ class HttpPortSetting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 70,
         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(
@@ -30,11 +29,7 @@ class HttpPortSetting extends StatelessWidget {
         child: Column(
           children: [
             _buildHeader(context),
-            Column(
-              children: [
-                _buildPortField(context),
-              ],
-            ),
+            _buildPortField(context),
           ],
         ));
   }
@@ -88,45 +83,48 @@ class HttpPortSetting extends StatelessWidget {
   }
 
   Widget _buildPortField(BuildContext context) {
-    context.select((value) => value);
-    return Row(
-      children: [
-        Expanded(
-            flex: 1,
-            child: Row(
-              children: [
-                Icon(
-                  Symbols.wifi_tethering,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  weight: 300,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Selector<SettingsController, int>(
-                        selector: (_, controller) => controller.httpConfig.port,
-                        builder: (_, port, __) => Text(
-                          'Port: $port',
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ),
-                      Text(
-                        'The port number of the http file server',
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ],
+    return SizedBox(
+      height: 40,
+      child: Row(
+        children: [
+          Expanded(
+              flex: 1,
+              child: Row(
+                children: [
+                  Icon(
+                    Symbols.wifi_tethering,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    weight: 300,
                   ),
-                ),
-              ],
-            )),
-        const SizedBox(width: 20),
-        SizedBox(
-          height: 25,
-          child: _buildEditButton(context),
-        ),
-      ],
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Selector<SettingsController, int>(
+                          selector: (_, controller) =>
+                              controller.httpConfig.port,
+                          builder: (_, port, __) => Text(
+                            'Port: $port',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ),
+                        Text(
+                          'The port number of the http file server',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )),
+          const SizedBox(width: 20),
+          SizedBox(
+            height: 25,
+            child: _buildEditButton(context),
+          ),
+        ],
+      ),
     );
   }
 

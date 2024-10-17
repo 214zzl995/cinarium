@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import 'package:cinarium/screens/retrieve/components/file_col.dart';
 import '../components/file_row.dart';
@@ -66,7 +67,7 @@ class RetrievePage extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 15),
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.secondaryContainer,
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(5),
           ),
           child: Row(
@@ -250,7 +251,7 @@ class RetrievePage extends StatelessWidget {
                             .read<RetrieveController>()
                             .switchVideoHiddenWithCheck(true);
                       },
-                      child: const Icon(Icons.delete_outlined),
+                      child: const Icon(Symbols.visibility_off),
                     ),
                     TextButton(
                       onPressed: () {
@@ -258,7 +259,7 @@ class RetrievePage extends StatelessWidget {
                             .read<RetrieveController>()
                             .switchVideoHiddenWithCheck(false);
                       },
-                      child: const Icon(Icons.add_circle_outline),
+                      child: const Icon(Symbols.visibility),
                     ),
                     TextButton(
                       onPressed: () {
@@ -266,7 +267,7 @@ class RetrievePage extends StatelessWidget {
                             .read<RetrieveController>()
                             .insertionOfTasksCheck();
                       },
-                      child: const Icon(Icons.search_outlined),
+                      child: const Icon(Symbols.travel_explore),
                     ),
                   ],
                 ),
@@ -303,10 +304,10 @@ class StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => 68.0;
+  double get maxExtent => 50.0;
 
   @override
-  double get minExtent => 68.0;
+  double get minExtent => 50.0;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {

@@ -50,7 +50,10 @@ class SettingsController with ChangeNotifier {
     );
     if (path != null) {
       await updateTaskTidyFolder(folder: path);
+      _taskConfig = await getTaskConf();
+      notifyListeners();
     }
+
   }
 
   switchTemplateEnabled(int id) async {

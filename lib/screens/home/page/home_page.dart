@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cinarium/components/scroll_animator.dart';
 import 'package:cinarium/screens/home/components/attr_filter_panel_menu.dart';
 import 'package:extended_image/extended_image.dart';
@@ -158,87 +160,93 @@ class HomePage extends StatelessWidget {
             builder: (context, height, child) {
               return SizedBox(
                 height: height,
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  curve: Curves.bounceInOut,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10),
-                    ),
-                    color: filterPanelVisible.value
-                        ? Theme.of(context).colorScheme.surfaceContainer
-                        : Theme.of(context).colorScheme.surface,
-                  ),
-                  child: ValueListenableBuilder<bool>(
-                    valueListenable: filterPanelIndicatorVisible,
-                    builder: (context, indicatorVisible, child) => Column(
-                      children: [
-                        _buildPanelIndicator(
-                          context,
-                          filterPanelVisible,
-                          filterPanelIndicatorVisible,
-                          filterPanelLock,
-                          mergeGestures: true,
-                        ),
-                        const SizedBox(height: 10),
-                        Expanded(child: child!),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        const Expanded(
-                          flex: 8,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                  child: AttrFilterPanel(FilterType.actor,
-                                      Icons.account_circle_outlined)),
-                              Expanded(
-                                  child: AttrFilterPanel(FilterType.series,
-                                      Icons.camera_alt_outlined)),
-                              Expanded(
-                                  child: AttrFilterPanel(
-                                      FilterType.tag, Icons.tag_outlined)),
-                            ],
+                child: ClipRect(
+                    child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 25.0, sigmaY: 25.0),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          curve: Curves.bounceInOut,
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                            ),
+                            color: filterPanelVisible.value
+                                ? Theme.of(context).colorScheme.surfaceContainer.withOpacity(0.6)
+                                : Theme.of(context).colorScheme.surface,
                           ),
-                        ),
-                        Expanded(
-                          flex: 3,
-                          child: Column(
-                            children: [
-                              const TextFilterEdit(),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Expanded(
-                                  child: ScrollAnimator(
-                                scrollSpeed: 1,
-                                builder: (BuildContext context,
-                                    ScrollController controller,
-                                    ScrollPhysics? physics) {
-                                  return SingleChildScrollView(
-                                      controller: controller,
-                                      physics: physics,
-                                      child: const Column(
-                                        children: [
-                                          DurationFilterPanel(),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          SizeFilterPanel(),
-                                        ],
-                                      ));
-                                },
-                              ))
-                            ],
+                          child: ValueListenableBuilder<bool>(
+                            valueListenable: filterPanelIndicatorVisible,
+                            builder: (context, indicatorVisible, child) =>
+                                Column(
+                              children: [
+                                _buildPanelIndicator(
+                                  context,
+                                  filterPanelVisible,
+                                  filterPanelIndicatorVisible,
+                                  filterPanelLock,
+                                  mergeGestures: true,
+                                ),
+                                const SizedBox(height: 10),
+                                Expanded(child: child!),
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                const Expanded(
+                                  flex: 8,
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                          child: AttrFilterPanel(
+                                              FilterType.actor,
+                                              Icons.account_circle_outlined)),
+                                      Expanded(
+                                          child: AttrFilterPanel(
+                                              FilterType.series,
+                                              Icons.camera_alt_outlined)),
+                                      Expanded(
+                                          child: AttrFilterPanel(FilterType.tag,
+                                              Icons.tag_outlined)),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 3,
+                                  child: Column(
+                                    children: [
+                                      const TextFilterEdit(),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Expanded(
+                                          child: ScrollAnimator(
+                                        scrollSpeed: 1,
+                                        builder: (BuildContext context,
+                                            ScrollController controller,
+                                            ScrollPhysics? physics) {
+                                          return SingleChildScrollView(
+                                              controller: controller,
+                                              physics: physics,
+                                              child: const Column(
+                                                children: [
+                                                  DurationFilterPanel(),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  SizeFilterPanel(),
+                                                ],
+                                              ));
+                                        },
+                                      ))
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
+                        ))),
               );
             },
             selector: (context, homeController) =>
