@@ -3,9 +3,7 @@ use std::path::PathBuf;
 use flutter_rust_bridge::{frb, DartFnFuture};
 
 use crate::{
-    app::{self, get_cinarium_config, HttpConfig, TaskConfig},
-    log,
-    task::crawler::CrawlerTemplate,
+    app::{self, get_cinarium_config, HttpConfig, TaskConfig}, log, model::Source, task::crawler::CrawlerTemplate
 };
 
 use super::ListenerHandle;
@@ -104,6 +102,17 @@ pub async fn add_source_notify_path(path: String) -> anyhow::Result<()> {
     }
 
     crate::notify::watch_source(&folder).await?;
+
+    Ok(())
+}
+
+#[allow(dead_code)]
+pub async fn remove_source_notify_path(source: Source, delete_index: bool) -> anyhow::Result<()> {
+    // crate::notify::unwatch_source(s).await?;
+
+    if delete_index {
+        // crate::model::Metadata::delete_by_source_id(&source_id).await?;
+    }
 
     Ok(())
 }

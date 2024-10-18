@@ -282,11 +282,10 @@ impl SourceNotify {
         Ok(())
     }
 
-    pub async fn unwatch_source(&self, path: &PathBuf) -> anyhow::Result<()> {
-        let source = Source::query_by_path(path).await?;
+    pub async fn unwatch_source(&self, source: &Source) -> anyhow::Result<()> {
         source.delete().await?;
         self.0.lock().sources.retain(|s| s.id != source.id);
-        self.0.lock().watcher.unwatch(path)?;
+        self.0.lock().watcher.unwatch(&source.path)?;
         self.full_scale_retrieval().await?;
 
         Ok(())
@@ -310,11 +309,11 @@ pub async fn watch_source(path: &PathBuf) -> anyhow::Result<()> {
         .await
 }
 
-pub async fn unwatch_source(path: &PathBuf) -> anyhow::Result<()> {
+pub async fn unwatch_source(source: &Source) -> anyhow::Result<()> {
     crate::notify::SOURCE_NOTIFY
         .get()
         .ok_or_else(|| anyhow::anyhow!("SourceNotify not initialized"))?
-        .unwatch_source(path)
+        .unwatch_source(source)
         .await
 }
 

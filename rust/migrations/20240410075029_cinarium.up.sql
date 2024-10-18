@@ -16,6 +16,7 @@ create table video
     maker_id           integer,
     series_id          integer,
     director_id        integer,
+    source_id          integer,
     is_retrieve        boolean  default false,
     is_hidden          boolean  default false,
     embedded_subtitles boolean  default false,
@@ -29,7 +30,8 @@ create table video
     foreign key ( publisher_id ) references publisher ( id ) on delete no action,
     foreign key ( maker_id ) references maker ( id ) on delete no action,
     foreign key ( series_id ) references series ( id ) on delete no action,
-    foreign key ( director_id ) references director ( id ) on delete no action
+    foreign key ( director_id ) references director ( id ) on delete no action,
+    foreign key ( source_id ) references source ( id ) on delete no action,
     unique ( path, filename, extension, is_deleted)
 );
 

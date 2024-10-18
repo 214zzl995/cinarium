@@ -6,6 +6,7 @@
 import '../app.dart';
 import '../frb_generated.dart';
 import '../lib.dart';
+import '../model/source.dart';
 import '../native.dart';
 import '../task/crawler.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
@@ -48,6 +49,11 @@ Future<void> updateTaskTidyFolder({required String folder}) =>
 
 Future<void> addSourceNotifyPath({required String path}) =>
     RustLib.instance.api.crateNativeSystemApiAddSourceNotifyPath(path: path);
+
+Future<void> removeSourceNotifyPath(
+        {required Source source, required bool deleteIndex}) =>
+    RustLib.instance.api.crateNativeSystemApiRemoveSourceNotifyPath(
+        source: source, deleteIndex: deleteIndex);
 
 Future<void> openInExplorer({required PathBuf path}) =>
     RustLib.instance.api.crateNativeSystemApiOpenInExplorer(path: path);

@@ -1,5 +1,7 @@
 import 'package:bridge/call_rust/task/crawler.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import 'package:reorderables/reorderables.dart';
 
@@ -11,13 +13,48 @@ class SettingsCrawlerTemplatePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          Text('Crawler Templates'),
-          Expanded(child: _buildITemplatesList(context))
-        ],
-      ),
+    return Column(
+      children: [
+        SizedBox(
+          height: 150,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(
+                  left: 10,
+                ),
+                child: Lottie.asset(
+                  'assets/lottie/monitor_folder.json',
+                  width: 150,
+                  height: 150,
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(right: 20),
+                child: SizedBox(
+                  height: 50,
+                  child: ElevatedButton(
+                      onPressed: () {},
+                      child: Row(
+                        children: [
+                          Icon(
+                            Symbols.create_new_folder,
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
+                            weight: 400,
+                          ),
+                          const SizedBox(width: 10),
+                          const Text('Add Folder'),
+                        ],
+                      )),
+                ),
+              )
+            ],
+          ),
+        ),
+        Expanded(child: _buildITemplatesList(context))
+      ],
     );
   }
 
