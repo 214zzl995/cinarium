@@ -28,6 +28,7 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
+
       body: Stack(
         children: [
           Positioned.fill(

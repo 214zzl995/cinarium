@@ -1,6 +1,5 @@
 import 'package:bridge/call_rust/model/source.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 

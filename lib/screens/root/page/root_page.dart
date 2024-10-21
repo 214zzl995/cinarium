@@ -64,9 +64,22 @@ class RootPage extends StatelessWidget {
             children: [
               const Menu(),
               Expanded(
-                child: ClipRRect(
-                  borderRadius:
-                      const BorderRadius.only(topLeft: Radius.circular(8)),
+                child: Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(8),
+                    ),
+                    color: Theme.of(context).colorScheme.surface,
+                    border: Border(
+                      top: BorderSide(
+                          color: Theme.of(context).colorScheme.surfaceContainerHigh,
+                          width: 0.3),
+                      left: BorderSide(
+                          color: Theme.of(context).colorScheme.surfaceContainerHigh,
+                          width: 0.3),
+                    ),
+                  ),
                   child: child,
                 ),
               ),

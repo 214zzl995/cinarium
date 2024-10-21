@@ -18,25 +18,38 @@ class SettingsCrawlerTemplatePage extends StatelessWidget {
         SizedBox(
           height: 150,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              Expanded(
+                  child: Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(
+                      left: 10,
+                    ),
+                    child: Lottie.asset(
+                      'assets/lottie/monitor_folder.json',
+                      width: 200,
+                      height: 200,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(child: _buildDocument(context)),
+                ],
+              )),
               Container(
-                margin: const EdgeInsets.only(
-                  left: 10,
-                ),
-                child: Lottie.asset(
-                  'assets/lottie/monitor_folder.json',
-                  width: 150,
-                  height: 150,
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(right: 20),
+                margin: const EdgeInsets.only(right: 20, left: 20),
+                padding: const EdgeInsets.only(bottom: 100),
+                height: double.infinity,
                 child: SizedBox(
                   height: 50,
+                  width: 150,
                   child: TextButton(
                       onPressed: () {},
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
                             Symbols.download,
@@ -140,23 +153,83 @@ class SettingsCrawlerTemplatePage extends StatelessWidget {
             ));
   }
 
-  Widget _buildSearchUrl(String searchUrl, BuildContext context) {
-    List<UrlSpan> urlSpans = SearchUrlUtil.parseSearchUrl(searchUrl);
-    return Text.rich(
-      TextSpan(
-          children: urlSpans.map((urlSpan) {
-        return TextSpan(
-          text: urlSpan.text,
-          style: TextStyle(
-            color: urlSpan.isHyperlink
-                ? Theme.of(context).colorScheme.primary
-                : Theme.of(context).colorScheme.onSurface,
-            fontWeight:
-                urlSpan.isHyperlink ? FontWeight.bold : FontWeight.normal,
-          ),
-        );
-      }).toList()),
-      style: Theme.of(context).textTheme.labelSmall,
-    );
+  Widget _buildDocument(BuildContext context) {
+    return ScrollAnimator(
+        scrollSpeed: 0.5,
+        builder: (context, controller, physics) => ListView(
+              physics: physics,
+              controller: controller,
+              padding: const EdgeInsets.all(16.0),
+              children: [
+                Text(
+                  '1. Base Url:',
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+                Text(
+                  'A string replacement node used in templates, also serves as a display label.',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 16.0),
+                Text(
+                  '2. Search Url:',
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+                Text(
+                  'Fetch URL for the root page.',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 16.0),
+                Text(
+                  '3. Variable Explanation:',
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+                Text(
+                  '\${crawl_name}: The name used in the query.',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                Text(
+                  '\${###}: A child node can use content already fetched in the parent node; this string is used to get the ending part.',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 16.0),
+                Text(
+                  '4. Available Methods:',
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+                Text(
+                  'Includes: selector, parent, prev, next, replace, uppercase, lowercase, '
+                  'insert, prepend, append, delete, regex, equals, html, attr, val.',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 16.0),
+                Text(
+                  '5. Usable mark:',
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+                Text(
+                  'Includes: request = true (Request the string obtained in this segment)',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ],
+            ));
   }
+}
+
+Widget _buildSearchUrl(String searchUrl, BuildContext context) {
+  List<UrlSpan> urlSpans = SearchUrlUtil.parseSearchUrl(searchUrl);
+  return Text.rich(
+    TextSpan(
+        children: urlSpans.map((urlSpan) {
+      return TextSpan(
+        text: urlSpan.text,
+        style: TextStyle(
+          color: urlSpan.isHyperlink
+              ? Theme.of(context).colorScheme.primary
+              : Theme.of(context).colorScheme.onSurface,
+          fontWeight: urlSpan.isHyperlink ? FontWeight.bold : FontWeight.normal,
+        ),
+      );
+    }).toList()),
+    style: Theme.of(context).textTheme.labelSmall,
+  );
 }
