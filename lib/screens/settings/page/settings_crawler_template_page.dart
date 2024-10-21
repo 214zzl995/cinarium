@@ -47,7 +47,9 @@ class SettingsCrawlerTemplatePage extends StatelessWidget {
                   height: 50,
                   width: 150,
                   child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        _openImportDialog(context);
+                      },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -58,7 +60,7 @@ class SettingsCrawlerTemplatePage extends StatelessWidget {
                             weight: 400,
                           ),
                           const SizedBox(width: 10),
-                          const Text('Import'),
+                          const Text('Import1'),
                         ],
                       )),
                 ),
@@ -212,6 +214,45 @@ class SettingsCrawlerTemplatePage extends StatelessWidget {
                 ),
               ],
             ));
+  }
+
+  void _openImportDialog(BuildContext context) async {
+    context.read<SettingsController>().pickerTemplateFile().then((raw) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Import Crawler Template'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('raw'),
+                  const SizedBox(height: 10),
+                  TextField(
+                    decoration: const InputDecoration(
+                      hintText: 'JSON string',
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Import'),
+                ),
+              ],
+            );
+          });
+    });
+
   }
 }
 

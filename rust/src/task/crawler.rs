@@ -7,7 +7,11 @@ use std::{
     io::Cursor,
     path::{Path, PathBuf},
 };
-use tokio::{fs::File, io::{AsyncWriteExt, BufWriter}, sync::OnceCell};
+use tokio::{
+    fs::File,
+    io::{AsyncWriteExt, BufWriter},
+    sync::OnceCell,
+};
 use walkdir::WalkDir;
 
 use crate::{
@@ -64,7 +68,34 @@ pub async fn change_crawler_templates_priority(prioritys: Vec<(u32, u8)>) -> any
     Ok(())
 }
 
-pub async fn import_crawler_template() -> anyhow::Result<()> {
+pub async fn import_crawler_template(
+    raw: &str,
+    base_url: &str,
+    search_url: &str,
+) -> anyhow::Result<()> {
+    let template = Template::<VideoDataInterim>::from_json(raw)?;
+
+    let (id, priority) = CrawlerTemplate::insert(raw, base_url, search_url).await?;
+
+    CRAWLER_TEMPLATES
+        .get()
+        .unwrap()
+        .lock()
+        .push(CrawlerTemplate {
+            id,
+            base_url: base_url.to_string(),
+            search_url: search_url.to_string(),
+            json_raw: raw.to_string(),
+            template,
+            priority,
+            enabled: true,
+        });
+
+    Ok(())
+}
+
+pub fn check_crawler_template(raw: &str) -> anyhow::Result<()> {
+    Template::<VideoDataInterim>::from_json(raw)?;
     Ok(())
 }
 
@@ -214,7 +245,9 @@ impl VideoDataInterim {
             template.add_parameters("crawl_name", name);
             template.add_parameters("base_url", &base_url);
 
-            let url = search_url.replace("${base_url}", &base_url).replace("${crawl_name}", name);
+            let url = search_url
+                .replace("${base_url}", &base_url)
+                .replace("${crawl_name}", name);
 
             match template.crawler(&url).await {
                 Ok(data) => return Ok(data),
@@ -256,7 +289,6 @@ fn find_any_subtitles(path: &PathBuf, comparison_name: &str) -> Option<PathBuf> 
         None::<PathBuf>
     })
 }
-
 
 fn check_single_video_file(path: &PathBuf, video_file_name: &str) -> bool {
     let dir = WalkDir::new(path);

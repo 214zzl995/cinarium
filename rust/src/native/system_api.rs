@@ -157,6 +157,21 @@ pub fn get_crawler_templates() -> anyhow::Result<Vec<CrawlerTemplate>> {
 
 #[allow(dead_code)]
 #[frb(sync)]
+pub fn check_crawler_template(raw: String) -> anyhow::Result<()> {
+    crate::task::crawler::check_crawler_template(&raw)
+}
+
+#[allow(dead_code)]
+pub async fn import_crawler_template(
+    raw: String,
+    base_url: String,
+    search_url: String,
+) -> anyhow::Result<()> {
+    crate::task::crawler::import_crawler_template(&raw, &base_url, &search_url).await
+}
+
+#[allow(dead_code)]
+#[frb(sync)]
 pub fn get_source_notify_sources() -> anyhow::Result<Vec<Source>> {
     crate::notify::get_source_notify_sources()
 }

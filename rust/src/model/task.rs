@@ -130,7 +130,7 @@ impl CrawlerTemplate {
     }
 
     #[allow(dead_code)]
-    pub async fn insert(&self) -> anyhow::Result<()> {
+    pub async fn insert1(&self) -> anyhow::Result<()> {
         let pool = get_pool().await;
         sqlx::query!(
             r#"
@@ -145,6 +145,37 @@ impl CrawlerTemplate {
         .execute(pool)
         .await?;
         Ok(())
+    }
+
+    pub async fn insert(raw: &str, base_url: &str, search_url: &str) -> anyhow::Result<(u32, u8)> {
+        let pool = get_pool().await;
+        let priority = sqlx::query!(
+            r#"
+                select max(priority) as "priority!: u8"
+                from crawl_template
+            "#
+        )
+        .fetch_one(pool)
+        .await?
+        .priority
+            + 1;
+
+        let id = sqlx::query!(
+            r#"
+                insert into crawl_template (base_url, search_url, json_raw, priority, enabled)
+                values ($1, $2, $3, $4, true)
+                returning id as "id!: u32"
+            "#,
+            base_url,
+            search_url,
+            raw,
+            priority
+        )
+        .fetch_one(pool)
+        .await?
+        .id;
+
+        Ok((id, priority))
     }
 
     pub async fn update_priority(prioritys: &Vec<(u32, u8)>) -> anyhow::Result<()> {

@@ -65,6 +65,25 @@ class SettingsController with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<String?> pickerTemplateFile() async {
+    final path = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['json'],
+      lockParentWindow: true,
+    );
+
+    if (path != null) {
+      final file = path.files.single;
+
+      final raw = await file.xFile.readAsString();
+      checkCrawlerTemplate(raw: raw);
+
+      return raw;
+    } else {
+      return null;
+    }
+  }
+
   void modelDisableChange(bool? value, int index) {
     switchTemplateEnabled(_crawlerTemplates[index].id);
   }
