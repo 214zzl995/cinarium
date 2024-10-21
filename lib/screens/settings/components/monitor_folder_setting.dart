@@ -2,8 +2,6 @@ import 'package:cinarium/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:provider/provider.dart';
-import 'package:cinarium/screens/settings/controllers/settings_controller.dart';
 
 class MonitorFolderSetting extends StatelessWidget {
   const MonitorFolderSetting({super.key});
@@ -92,6 +90,4 @@ class MonitorFolderSetting extends StatelessWidget {
       ),
     );
   }
-
-
 }

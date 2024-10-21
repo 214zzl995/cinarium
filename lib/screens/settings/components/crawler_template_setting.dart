@@ -1,11 +1,6 @@
-import 'package:bridge/call_rust/task/crawler.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:provider/provider.dart';
-import 'package:reorderables/reorderables.dart';
-import 'package:cinarium/screens/settings/controllers/settings_controller.dart';
-
 import '../../../routes/app_pages.dart';
 
 class CrawlerTemplateSetting extends StatelessWidget {

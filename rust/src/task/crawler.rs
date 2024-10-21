@@ -64,6 +64,10 @@ pub async fn change_crawler_templates_priority(prioritys: Vec<(u32, u8)>) -> any
     Ok(())
 }
 
+pub async fn import_crawler_template() -> anyhow::Result<()> {
+    Ok(())
+}
+
 pub async fn switch_crawler_templates_enabled(id: u32) -> anyhow::Result<()> {
     {
         let mut templates = CRAWLER_TEMPLATES.get().unwrap().lock();
