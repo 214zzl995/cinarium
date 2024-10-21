@@ -69,12 +69,12 @@ class FileRow extends StatelessWidget {
                 ),
                 FileCol(
                   flex: 1,
-                  value: untreatedVideo.matedata.filename,
+                  value: untreatedVideo.metadata.filename,
                 ),
                 CrawlNameField(index),
                 FileCol(
                   width: 100,
-                  value: untreatedVideo.matedata.size,
+                  value: untreatedVideo.metadata.size,
                 ),
                 _buildAction(context),
               ],
@@ -143,14 +143,14 @@ class FileRow extends StatelessWidget {
                             ),
                             FileCol(
                               flex: 1,
-                              value: untreatedVideo.matedata.filename,
+                              value: untreatedVideo.metadata.filename,
                             ),
                           ],
                         ))),
                 CrawlNameField(index),
                 FileCol(
                   width: 100,
-                  value: untreatedVideo.matedata.size,
+                  value: untreatedVideo.metadata.size,
                 ),
                 _buildAction(context)
               ],

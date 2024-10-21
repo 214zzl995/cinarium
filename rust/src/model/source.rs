@@ -29,7 +29,8 @@ impl Source {
 
     #[allow(dead_code)]
     pub async fn delete(&self) -> anyhow::Result<()> {
-        sqlx::query!("delete from source where id = ?1", self.id)
+        let _ = super::SOURCE_LOCK.get().unwrap().lock().await;
+        sqlx::query!("delete from source where id = $1", self.id)
             .execute(get_pool().await)
             .await?;
         Ok(())

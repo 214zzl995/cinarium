@@ -1,3 +1,4 @@
+import 'package:bridge/call_rust/model/source.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -41,7 +42,7 @@ class SettingsMonitorFolderPage extends StatelessWidget {
   }
 
   Widget _buildSearchFolderList(BuildContext context) {
-    return Selector<SettingsController, List<String>>(
+    return Selector<SettingsController, List<Source>>(
       builder: (context, paths, child) => ScrollAnimator(
           scrollSpeed: 0.5,
           builder: (context, controller, physics) => ListView(
@@ -50,7 +51,7 @@ class SettingsMonitorFolderPage extends StatelessWidget {
                 controller: controller,
                 physics: physics,
                 children: [
-                  ...paths.map((path) => Container(
+                  ...paths.map((source) => Container(
                       padding: const EdgeInsets.all(15),
                       margin: const EdgeInsets.only(bottom: 5),
                       height: 65,
@@ -79,7 +80,7 @@ class SettingsMonitorFolderPage extends StatelessWidget {
                               weight: 300),
                           const SizedBox(width: 20),
                           Text(
-                            path,
+                            source.path,
                           )
                         ])),
                         TextButton.icon(
@@ -93,7 +94,7 @@ class SettingsMonitorFolderPage extends StatelessWidget {
                             showDialog(
                               context: context,
                               barrierDismissible: false,
-                              builder: (BuildContext context) {
+                              builder: (BuildContext dialogContext) {
                                 ValueNotifier<bool> syncDelete =
                                     ValueNotifier<bool>(false);
                                 return AlertDialog(
@@ -145,7 +146,7 @@ class SettingsMonitorFolderPage extends StatelessWidget {
                                               ),
                                               children: [
                                                 TextSpan(
-                                                  text: path,
+                                                  text: source.path,
                                                   style: TextStyle(
                                                     color: Theme.of(context)
                                                         .colorScheme
@@ -197,14 +198,17 @@ class SettingsMonitorFolderPage extends StatelessWidget {
                                       children: [
                                         TextButton(
                                           onPressed: () {
-                                            Navigator.of(context).pop();
+                                            Navigator.of(dialogContext).pop();
                                           },
                                           child: const Text('Cancel'),
                                         ),
                                         TextButton(
                                           onPressed: () {
-                                            // context.read<SettingsController>().removeSearchFolder(path);
-                                            Navigator.of(context).pop();
+                                            context
+                                                .read<SettingsController>()
+                                                .removeSourceNotifySourceF(
+                                                    source, syncDelete.value);
+                                            Navigator.of(dialogContext).pop();
                                           },
                                           child: const Text('Delete'),
                                         ),

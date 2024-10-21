@@ -286,7 +286,7 @@ impl SourceNotify {
         source.delete().await?;
         self.0.lock().sources.retain(|s| s.id != source.id);
         self.0.lock().watcher.unwatch(&source.path)?;
-        self.full_scale_retrieval().await?;
+        //self.full_scale_retrieval().await?;
 
         Ok(())
     }
@@ -294,11 +294,14 @@ impl SourceNotify {
 
 impl SourceNotifyInner {}
 
-pub fn get_source_notify_paths() -> anyhow::Result<Vec<PathBuf>> {
+pub fn get_source_notify_sources() -> anyhow::Result<Vec<Source>> {
     Ok(crate::notify::SOURCE_NOTIFY
         .get()
         .ok_or_else(|| anyhow::anyhow!("SourceNotify not initialized"))?
-        .paths())
+        .0
+        .lock()
+        .sources
+        .clone())
 }
 
 pub async fn watch_source(path: &PathBuf) -> anyhow::Result<()> {

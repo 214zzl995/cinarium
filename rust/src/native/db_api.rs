@@ -13,7 +13,7 @@ pub async fn get_home_videos() -> anyhow::Result<Vec<HomeVideo>> {
 }
 
 #[allow(dead_code)]
-pub async fn get_task_videos() -> anyhow::Result<Vec<UntreatedVideo>> {
+pub async fn get_untreated_videos() -> anyhow::Result<Vec<UntreatedVideo>> {
     UntreatedVideo::query_all().await
 }
 

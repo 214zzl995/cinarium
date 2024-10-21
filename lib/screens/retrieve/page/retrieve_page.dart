@@ -184,7 +184,15 @@ class RetrievePage extends StatelessWidget {
                                 : Container(key: const ValueKey(2)),
                           ),
                       selector: (context, controller) =>
-                          controller.scanStorageStatus)
+                          controller.scanStorageStatus),
+                  Selector<RetrieveController, bool>(
+                      builder: (context, status, child) => TextButton(
+                          onPressed: () {
+                            context.read<RetrieveController>().getUntreatedVideos();
+                          },
+                          child: const Text("reload")),
+                      selector: (context, controller) =>
+                          controller.untreatedFileHasChange)
                 ],
               ),
             ),

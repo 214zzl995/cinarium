@@ -31,7 +31,7 @@ pub struct UntreatedVideo {
     pub crawl_name: String,
     pub is_hidden: bool,
     #[sqlx(flatten)]
-    pub matedata: Metadata,
+    pub metadata: Metadata,
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone, sqlx::FromRow)]
@@ -40,7 +40,7 @@ pub struct DetailVideo {
     pub id: u32,
     pub name: String,
     #[sqlx(flatten)]
-    pub matedata: Metadata,
+    pub metadata: Metadata,
     #[sqlx(flatten)]
     pub data: VideoData,
 }
@@ -428,7 +428,7 @@ impl DetailVideo {
         let detail_video = Self {
             id: *id,
             name: video.name,
-            matedata: Metadata {
+            metadata: Metadata {
                 hash: video.hash,
                 filename: video.filename,
                 path: PathBuf::from(video.path),
@@ -513,11 +513,11 @@ impl Metadata {
 
     #[allow(dead_code)]
     pub async fn insert_replace_batch(videos: &Vec<Metadata>) -> anyhow::Result<()> {
-
-        let sources = super::source::Source::query_all().await?;
-
+        let _ = super::SOURCE_LOCK.get().unwrap().lock().await;
         let regex = regex::Regex::new(r"[^a-zA-Z0-9]").unwrap();
         let mut transaction = get_pool().await.begin().await?;
+
+        let sources = super::source::Source::query_all().await?;
         let mut query_builder: QueryBuilder<Sqlite> = QueryBuilder::new(
             r#"
                 insert or replace into video (hash, filename, path, size, extension, crawl_name, source_id, is_deleted)
@@ -526,15 +526,20 @@ impl Metadata {
 
         // Also update the is_deleted flag to prevent possible moves to other folders and back.
         query_builder.push_values(videos, |mut b, video| {
-            let source_id = sources.iter().find(|x| video.path.starts_with(&x.path)).map(|x| x.id);
-            b.push_bind(&video.hash)
-                .push_bind(&video.filename)
-                .push_bind(video.path.to_str())
-                .push_bind(video.size as i64)
-                .push_bind(&video.extension)
-                .push_bind(regex.replace_all(&video.filename, "").to_ascii_lowercase())
-                .push_bind(source_id)
-                .push_bind(false);
+            let source_id = sources
+                .iter()
+                .find(|x| video.path.starts_with(&x.path))
+                .map(|x| x.id);
+            if source_id.is_some() {
+                b.push_bind(&video.hash)
+                    .push_bind(&video.filename)
+                    .push_bind(video.path.to_str())
+                    .push_bind(video.size as i64)
+                    .push_bind(&video.extension)
+                    .push_bind(regex.replace_all(&video.filename, "").to_ascii_lowercase())
+                    .push_bind(source_id)
+                    .push_bind(false);
+            }
         });
 
         let query = query_builder.build();

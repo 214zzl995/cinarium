@@ -12,8 +12,8 @@ Future<void> initDb() => RustLib.instance.api.crateNativeDbApiInitDb();
 Future<List<HomeVideo>> getHomeVideos() =>
     RustLib.instance.api.crateNativeDbApiGetHomeVideos();
 
-Future<List<UntreatedVideo>> getTaskVideos() =>
-    RustLib.instance.api.crateNativeDbApiGetTaskVideos();
+Future<List<UntreatedVideo>> getUntreatedVideos() =>
+    RustLib.instance.api.crateNativeDbApiGetUntreatedVideos();
 
 Future<void> switchVideosHidden({required List<int> ids}) =>
     RustLib.instance.api.crateNativeDbApiSwitchVideosHidden(ids: ids);

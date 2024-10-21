@@ -30,7 +30,7 @@ class RetrieveController with ChangeNotifier {
   bool get scanStorageStatus => _scanStorageStatus;
 
   RetrieveController() {
-    getVideoFiles();
+    getUntreatedVideos();
 
     initListener();
   }
@@ -43,20 +43,18 @@ class RetrieveController with ChangeNotifier {
   }
 
   void untreatedFileHasChangeHandle() async {
-    debugPrint("untreatedFileHasChangeHandle");
     _untreatedFileHasChange = true;
     notifyListeners();
   }
 
   void scanStorageChangeHandle(bool val) async {
-    debugPrint("scanStorageChangeHandle: $val");
     _scanStorageStatus = val;
     notifyListeners();
   }
 
-  void getVideoFiles() async {
+  void getUntreatedVideos() async {
     _checkMap.clear();
-    _untreatedVideos = await db_api.getTaskVideos();
+    _untreatedVideos = await db_api.getUntreatedVideos();
     for (var element in _untreatedVideos) {
       _checkMap[element.id] = false;
     }
@@ -189,7 +187,7 @@ class RetrieveController with ChangeNotifier {
         return ((element.isHidden && _filterFlag == FileFilter.show) ||
                 _filterFlag == FileFilter.all ||
                 (element.isHidden && _filterFlag == FileFilter.hide)) &&
-            (element.matedata.filename
+            (element.metadata.filename
                     .toLowerCase()
                     .contains(_searchFlag.toLowerCase()) ||
                 element.crawlName
@@ -242,13 +240,13 @@ extension UntreatedVideoExt on UntreatedVideo {
     int? id,
     String? crawlName,
     bool? isHidden,
-    Metadata? matedata,
+    Metadata? metadata,
   }) {
     return UntreatedVideo(
       id: id ?? this.id,
       crawlName: crawlName ?? this.crawlName,
       isHidden: isHidden ?? this.isHidden,
-      matedata: matedata ?? this.matedata,
+      metadata: metadata ?? this.metadata,
     );
   }
 }

@@ -50,10 +50,10 @@ Future<void> updateTaskTidyFolder({required String folder}) =>
 Future<void> addSourceNotifyPath({required String path}) =>
     RustLib.instance.api.crateNativeSystemApiAddSourceNotifyPath(path: path);
 
-Future<void> removeSourceNotifyPath(
-        {required Source source, required bool deleteIndex}) =>
-    RustLib.instance.api.crateNativeSystemApiRemoveSourceNotifyPath(
-        source: source, deleteIndex: deleteIndex);
+Future<void> removeSourceNotifySource(
+        {required Source source, required bool syncDelete}) =>
+    RustLib.instance.api.crateNativeSystemApiRemoveSourceNotifySource(
+        source: source, syncDelete: syncDelete);
 
 Future<void> openInExplorer({required PathBuf path}) =>
     RustLib.instance.api.crateNativeSystemApiOpenInExplorer(path: path);
@@ -76,8 +76,8 @@ Future<void> switchCrawlerTemplateEnabled({required int id}) =>
 List<CrawlerTemplate> getCrawlerTemplates() =>
     RustLib.instance.api.crateNativeSystemApiGetCrawlerTemplates();
 
-List<String> getSourceNotifyPaths() =>
-    RustLib.instance.api.crateNativeSystemApiGetSourceNotifyPaths();
+List<Source> getSourceNotifySources() =>
+    RustLib.instance.api.crateNativeSystemApiGetSourceNotifySources();
 
 Future<ListenerHandle> listenerHttpStatus(
         {required FutureOr<void> Function(bool) dartCallback}) =>

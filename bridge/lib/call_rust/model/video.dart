@@ -85,18 +85,18 @@ class UntreatedVideo {
   final int id;
   final String crawlName;
   final bool isHidden;
-  final Metadata matedata;
+  final Metadata metadata;
 
   const UntreatedVideo({
     required this.id,
     required this.crawlName,
     required this.isHidden,
-    required this.matedata,
+    required this.metadata,
   });
 
   @override
   int get hashCode =>
-      id.hashCode ^ crawlName.hashCode ^ isHidden.hashCode ^ matedata.hashCode;
+      id.hashCode ^ crawlName.hashCode ^ isHidden.hashCode ^ metadata.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -106,5 +106,5 @@ class UntreatedVideo {
           id == other.id &&
           crawlName == other.crawlName &&
           isHidden == other.isHidden &&
-          matedata == other.matedata;
+          metadata == other.metadata;
 }

@@ -3,7 +3,10 @@ use std::path::PathBuf;
 use flutter_rust_bridge::{frb, DartFnFuture};
 
 use crate::{
-    app::{self, get_cinarium_config, HttpConfig, TaskConfig}, log, model::Source, task::crawler::CrawlerTemplate
+    app::{self, get_cinarium_config, HttpConfig, TaskConfig},
+    log,
+    model::Source,
+    task::crawler::CrawlerTemplate,
 };
 
 use super::ListenerHandle;
@@ -86,18 +89,18 @@ pub async fn update_task_tidy_folder(folder: String) -> anyhow::Result<()> {
 pub async fn add_source_notify_path(path: String) -> anyhow::Result<()> {
     let folder = PathBuf::from(&path);
 
-    let paths = crate::notify::get_source_notify_paths()?;
-    for path in paths {
-        if path.eq(&folder) {
+    let sources = crate::notify::get_source_notify_sources()?;
+    for source in sources {
+        if source.path.eq(&folder) {
             return Ok(());
         }
 
-        if folder.starts_with(&path) {
+        if folder.starts_with(&source.path) {
             return Ok(());
         }
 
-        if path.starts_with(&folder) {
-            crate::notify::unwatch_source(&path).await?;
+        if source.path.starts_with(&folder) {
+            crate::notify::unwatch_source(&source).await?;
         }
     }
 
@@ -107,11 +110,11 @@ pub async fn add_source_notify_path(path: String) -> anyhow::Result<()> {
 }
 
 #[allow(dead_code)]
-pub async fn remove_source_notify_path(source: Source, delete_index: bool) -> anyhow::Result<()> {
-    // crate::notify::unwatch_source(s).await?;
+pub async fn remove_source_notify_source(source: Source, sync_delete: bool) -> anyhow::Result<()> {
+    crate::notify::unwatch_source(&source).await?;
 
-    if delete_index {
-        // crate::model::Metadata::delete_by_source_id(&source_id).await?;
+    if sync_delete {
+        crate::model::Metadata::delete_by_source_id(&source.id).await?;
     }
 
     Ok(())
@@ -154,13 +157,8 @@ pub fn get_crawler_templates() -> anyhow::Result<Vec<CrawlerTemplate>> {
 
 #[allow(dead_code)]
 #[frb(sync)]
-pub fn get_source_notify_paths() -> anyhow::Result<Vec<String>> {
-    let paths = crate::notify::get_source_notify_paths()?
-        .into_iter()
-        .map(|s| s.to_string_lossy().to_string())
-        .collect();
-
-    Ok(paths)
+pub fn get_source_notify_sources() -> anyhow::Result<Vec<Source>> {
+    crate::notify::get_source_notify_sources()
 }
 
 #[allow(dead_code)]
@@ -201,5 +199,13 @@ impl TaskConfig {
     #[allow(dead_code)]
     pub fn thread(&self) -> u8 {
         self.thread
+    }
+}
+
+impl Source {
+    #[frb(sync, getter)]
+    #[allow(dead_code)]
+    pub fn path(&self) -> String {
+        self.path.to_string_lossy().to_string()
     }
 }

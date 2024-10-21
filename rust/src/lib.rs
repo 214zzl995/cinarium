@@ -8,8 +8,8 @@ pub use cinarium_runner::{PoolStatus, Task, TaskStatus};
 pub use model::video::VideoDataInterim;
 pub use std::path::PathBuf;
 pub use task::crawler::Template;
-pub use tokio::sync::oneshot::Sender;
 pub use task::TaskMetadata;
+pub use tokio::sync::oneshot::Sender;
 
 mod api;
 mod app;

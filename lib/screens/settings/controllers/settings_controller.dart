@@ -1,4 +1,5 @@
 import 'package:bridge/call_rust/app.dart';
+import 'package:bridge/call_rust/model/source.dart';
 import 'package:bridge/call_rust/native/system_api.dart';
 import 'package:bridge/call_rust/task/crawler.dart';
 import 'package:file_picker/file_picker.dart';
@@ -11,7 +12,7 @@ class SettingsController with ChangeNotifier {
 
   late List<CrawlerTemplate> _crawlerTemplates;
 
-  List<String> _searchFolders = getSourceNotifyPaths();
+  List<Source> _searchFolders = getSourceNotifySources();
 
   SettingsController() {
     init();
@@ -53,7 +54,6 @@ class SettingsController with ChangeNotifier {
       _taskConfig = await getTaskConf();
       notifyListeners();
     }
-
   }
 
   switchTemplateEnabled(int id) async {
@@ -89,9 +89,15 @@ class SettingsController with ChangeNotifier {
     );
     if (path != null) {
       await addSourceNotifyPath(path: path);
-      _searchFolders = getSourceNotifyPaths();
+      _searchFolders = getSourceNotifySources();
       notifyListeners();
     }
+  }
+
+  void removeSourceNotifySourceF(Source source, bool syncDelete) async {
+    await removeSourceNotifySource(source: source, syncDelete: syncDelete);
+    _searchFolders = getSourceNotifySources();
+    notifyListeners();
   }
 
   init() async {
@@ -107,7 +113,7 @@ class SettingsController with ChangeNotifier {
 
   List<CrawlerTemplate> get crawlerTemplates => _crawlerTemplates;
 
-  List<String> get searchFolders => _searchFolders;
+  List<Source> get searchFolders => _searchFolders;
 }
 
 extension HttpConfigsExt on HttpConfig {
