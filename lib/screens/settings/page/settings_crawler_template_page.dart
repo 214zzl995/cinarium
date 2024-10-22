@@ -60,7 +60,7 @@ class SettingsCrawlerTemplatePage extends StatelessWidget {
                             weight: 400,
                           ),
                           const SizedBox(width: 10),
-                          const Text('Import1'),
+                          const Text('Import'),
                         ],
                       )),
                 ),
@@ -217,42 +217,147 @@ class SettingsCrawlerTemplatePage extends StatelessWidget {
   }
 
   void _openImportDialog(BuildContext context) async {
-    context.read<SettingsController>().pickerTemplateFile().then((raw) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text('Import Crawler Template'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('raw'),
-                  const SizedBox(height: 10),
-                  TextField(
-                    decoration: const InputDecoration(
-                      hintText: 'JSON string',
-                    ),
-                  ),
-                ],
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Cancel'),
+    ValueNotifier<String> reBuild = ValueNotifier('');
+    showDialog(
+        context: context,
+        builder: (dialogContext) {
+          return AlertDialog(
+            title: Row(
+              children: [
+                Icon(
+                  Symbols.download,
+                  color: Theme.of(dialogContext).colorScheme.primary,
+                  weight: 400,
                 ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Import'),
+                const SizedBox(width: 10),
+                Text(
+                  'Import Crawler Template',
+                  style: Theme.of(dialogContext).textTheme.labelLarge,
                 ),
               ],
-            );
-          });
-    });
-
+            ),
+            content: SizedBox(
+              width: 500,
+              height: 200,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Symbols.file_open),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      SizedBox(
+                        height: 30,
+                        child: ValueListenableBuilder(
+                            valueListenable: reBuild,
+                            builder: (valueListenableContext, value, child) {
+                              return FutureBuilder<PickerTemplateFile?>(
+                                  key: key,
+                                  future: context
+                                      .read<SettingsController>()
+                                      .pickerTemplateFile(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return const SizedBox(
+                                        width: 30,
+                                        child: Padding(
+                                          padding: EdgeInsets.all(5),
+                                          child: CircularProgressIndicator(
+                                              strokeWidth: 3),
+                                        ),
+                                      );
+                                    }
+                                    if (snapshot.hasData) {
+                                      return TextButton(
+                                          onPressed: () {
+                                            reBuild.value =
+                                                UniqueKey().toString();
+                                          },
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Text(snapshot.data!.path),
+                                              const SizedBox(width: 5),
+                                              snapshot.data!.error
+                                                  ? Tooltip(
+                                                      message: snapshot
+                                                          .data!.errorText,
+                                                      child: Icon(
+                                                        Symbols.error,
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .error,
+                                                        size: 20,
+                                                        weight: 500,
+                                                      ),
+                                                    )
+                                                  : const Icon(
+                                                      Symbols.check_circle,
+                                                      size: 20,
+                                                      weight: 500,
+                                                    ),
+                                            ],
+                                          ));
+                                    } else {
+                                      return SizedBox(
+                                        height: 30,
+                                        child: TextButton(
+                                          onPressed: () {
+                                            reBuild.value =
+                                                UniqueKey().toString();
+                                          },
+                                          child: const Text('Select File'),
+                                        ),
+                                      );
+                                    }
+                                  });
+                            }),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  const Row(
+                    children: [
+                      Icon(Symbols.link),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      SizedBox(
+                        height: 30,
+                        width: 200,
+                        child: TextField(
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            contentPadding: EdgeInsets.only(left: 5),
+                          ),
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(dialogContext).pop();
+                },
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(dialogContext).pop();
+                },
+                child: const Text('Import'),
+              ),
+            ],
+          );
+        });
   }
 }
 

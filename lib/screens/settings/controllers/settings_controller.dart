@@ -65,7 +65,7 @@ class SettingsController with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<String?> pickerTemplateFile() async {
+  Future<PickerTemplateFile?> pickerTemplateFile() async {
     final path = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['json'],
@@ -74,11 +74,13 @@ class SettingsController with ChangeNotifier {
 
     if (path != null) {
       final file = path.files.single;
-
       final raw = await file.xFile.readAsString();
-      checkCrawlerTemplate(raw: raw);
-
-      return raw;
+      try {
+        checkCrawlerTemplate(raw: raw);
+      } catch (e) {
+        return PickerTemplateFile(path: file.path!, errorText: e.toString());
+      }
+      return PickerTemplateFile(path: file.path!, raw: raw);
     } else {
       return null;
     }
@@ -164,5 +166,18 @@ extension CrawlerTemplateExt on CrawlerTemplate {
       priority: priority ?? this.priority,
       enabled: enabled ?? this.enabled,
     );
+  }
+}
+
+class PickerTemplateFile {
+  final String? raw;
+  final String path;
+
+  final String? errorText;
+  late bool error;
+
+  PickerTemplateFile({required this.path, this.raw, this.errorText}) {
+      error = errorText != null;
+
   }
 }
