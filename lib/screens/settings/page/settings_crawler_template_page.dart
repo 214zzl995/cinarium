@@ -60,7 +60,7 @@ class SettingsCrawlerTemplatePage extends StatelessWidget {
                             weight: 400,
                           ),
                           const SizedBox(width: 10),
-                          const Text('Import1'),
+                          const Text('Import'),
                         ],
                       )),
                 ),
@@ -217,42 +217,216 @@ class SettingsCrawlerTemplatePage extends StatelessWidget {
   }
 
   void _openImportDialog(BuildContext context) async {
-    context.read<SettingsController>().pickerTemplateFile().then((raw) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text('Import Crawler Template'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('raw'),
-                  const SizedBox(height: 10),
-                  TextField(
-                    decoration: const InputDecoration(
-                      hintText: 'JSON string',
-                    ),
-                  ),
-                ],
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Cancel'),
+    showDialog(
+        context: context,
+        builder: (dialogContext) {
+          ValueNotifier<PickerTemplateFile?> selectTemplatePath =
+              ValueNotifier(null);
+
+          return AlertDialog(
+            title: Row(
+              children: [
+                Icon(
+                  Symbols.download,
+                  color: Theme.of(dialogContext).colorScheme.primary,
+                  weight: 400,
                 ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Import'),
+                const SizedBox(width: 10),
+                Text(
+                  'Import Crawler Template',
+                  style: Theme.of(dialogContext).textTheme.labelLarge,
                 ),
               ],
-            );
-          });
-    });
-
+            ),
+            content: SizedBox(
+              width: 400,
+              height: 300,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Row(children: [
+                        Icon(Symbols.file_open),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text('File Path'),
+                      ]),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      SizedBox(
+                        height: 35,
+                        width: double.infinity,
+                        child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                            onPressed: () {
+                              context
+                                  .read<SettingsController>()
+                                  .pickerTemplateFile()
+                                  .then((value) {
+                                selectTemplatePath.value = value;
+                              });
+                            },
+                            child: ValueListenableBuilder(
+                              valueListenable: selectTemplatePath,
+                              builder: (context, value, child) {
+                                if (value == null) {
+                                  return const Icon(
+                                    Symbols.mouse,
+                                    size: 20,
+                                    weight: 500,
+                                  );
+                                } else {
+                                  return Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(value.path),
+                                      const SizedBox(width: 5),
+                                      value.error
+                                          ? Tooltip(
+                                              message: value.errorText,
+                                              child: Icon(
+                                                Symbols.error,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .error,
+                                                size: 20,
+                                                weight: 500,
+                                              ),
+                                            )
+                                          : const Icon(
+                                              Symbols.check_circle,
+                                              size: 20,
+                                              weight: 500,
+                                            ),
+                                    ],
+                                  );
+                                }
+                              },
+                            )),
+                      )
+                      /*ValueListenableBuilder(
+                          valueListenable: reBuild,
+                          builder: (valueListenableContext, value, child) {
+                            return FutureBuilder<PickerTemplateFile?>(
+                                key: key,
+                                future: context
+                                    .read<SettingsController>()
+                                    .pickerTemplateFile(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const SizedBox(
+                                      width: 30,
+                                      child: Padding(
+                                        padding: EdgeInsets.all(5),
+                                        child: CircularProgressIndicator(
+                                            strokeWidth: 3),
+                                      ),
+                                    );
+                                  }
+                                  if (snapshot.hasData) {
+                                    return TextButton(
+                                        onPressed: () {
+                                          reBuild.value =
+                                              UniqueKey().toString();
+                                        },
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Text(snapshot.data!.path),
+                                            const SizedBox(width: 5),
+                                            snapshot.data!.error
+                                                ? Tooltip(
+                                                    message: snapshot
+                                                        .data!.errorText,
+                                                    child: Icon(
+                                                      Symbols.error,
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .error,
+                                                      size: 20,
+                                                      weight: 500,
+                                                    ),
+                                                  )
+                                                : const Icon(
+                                                    Symbols.check_circle,
+                                                    size: 20,
+                                                    weight: 500,
+                                                  ),
+                                          ],
+                                        ));
+                                  } else {
+                                    return SizedBox(
+                                      height: 30,
+                                      child: TextButton(
+                                        onPressed: () {
+                                          reBuild.value =
+                                              UniqueKey().toString();
+                                        },
+                                        child: const Text('Select File'),
+                                      ),
+                                    );
+                                  }
+                                });
+                          })*/
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Column(
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Symbols.link),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text('Base Url'),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      SizedBox(
+                        height: 35,
+                        child: TextField(
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            contentPadding: EdgeInsets.only(left: 5),
+                          ),
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(dialogContext).pop();
+                },
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(dialogContext).pop();
+                },
+                child: const Text('Import'),
+              ),
+            ],
+          );
+        });
   }
 }
 
