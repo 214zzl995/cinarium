@@ -217,10 +217,12 @@ class SettingsCrawlerTemplatePage extends StatelessWidget {
   }
 
   void _openImportDialog(BuildContext context) async {
-    ValueNotifier<String> reBuild = ValueNotifier('');
     showDialog(
         context: context,
         builder: (dialogContext) {
+          ValueNotifier<PickerTemplateFile?> selectTemplatePath =
+              ValueNotifier(null);
+
           return AlertDialog(
             title: Row(
               children: [
@@ -237,99 +239,166 @@ class SettingsCrawlerTemplatePage extends StatelessWidget {
               ],
             ),
             content: SizedBox(
-              width: 500,
-              height: 200,
+              width: 400,
+              height: 300,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Row(
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(Symbols.file_open),
+                      const Row(children: [
+                        Icon(Symbols.file_open),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text('File Path'),
+                      ]),
                       const SizedBox(
-                        width: 20,
+                        height: 10,
                       ),
                       SizedBox(
-                        height: 30,
-                        child: ValueListenableBuilder(
-                            valueListenable: reBuild,
-                            builder: (valueListenableContext, value, child) {
-                              return FutureBuilder<PickerTemplateFile?>(
-                                  key: key,
-                                  future: context
-                                      .read<SettingsController>()
-                                      .pickerTemplateFile(),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return const SizedBox(
-                                        width: 30,
-                                        child: Padding(
-                                          padding: EdgeInsets.all(5),
-                                          child: CircularProgressIndicator(
-                                              strokeWidth: 3),
-                                        ),
-                                      );
-                                    }
-                                    if (snapshot.hasData) {
-                                      return TextButton(
-                                          onPressed: () {
-                                            reBuild.value =
-                                                UniqueKey().toString();
-                                          },
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Text(snapshot.data!.path),
-                                              const SizedBox(width: 5),
-                                              snapshot.data!.error
-                                                  ? Tooltip(
-                                                      message: snapshot
-                                                          .data!.errorText,
-                                                      child: Icon(
-                                                        Symbols.error,
-                                                        color: Theme.of(context)
-                                                            .colorScheme
-                                                            .error,
-                                                        size: 20,
-                                                        weight: 500,
-                                                      ),
-                                                    )
-                                                  : const Icon(
-                                                      Symbols.check_circle,
+                        height: 35,
+                        width: double.infinity,
+                        child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                            onPressed: () {
+                              context
+                                  .read<SettingsController>()
+                                  .pickerTemplateFile()
+                                  .then((value) {
+                                selectTemplatePath.value = value;
+                              });
+                            },
+                            child: ValueListenableBuilder(
+                              valueListenable: selectTemplatePath,
+                              builder: (context, value, child) {
+                                if (value == null) {
+                                  return const Icon(
+                                    Symbols.mouse,
+                                    size: 20,
+                                    weight: 500,
+                                  );
+                                } else {
+                                  return Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(value.path),
+                                      const SizedBox(width: 5),
+                                      value.error
+                                          ? Tooltip(
+                                              message: value.errorText,
+                                              child: Icon(
+                                                Symbols.error,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .error,
+                                                size: 20,
+                                                weight: 500,
+                                              ),
+                                            )
+                                          : const Icon(
+                                              Symbols.check_circle,
+                                              size: 20,
+                                              weight: 500,
+                                            ),
+                                    ],
+                                  );
+                                }
+                              },
+                            )),
+                      )
+                      /*ValueListenableBuilder(
+                          valueListenable: reBuild,
+                          builder: (valueListenableContext, value, child) {
+                            return FutureBuilder<PickerTemplateFile?>(
+                                key: key,
+                                future: context
+                                    .read<SettingsController>()
+                                    .pickerTemplateFile(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const SizedBox(
+                                      width: 30,
+                                      child: Padding(
+                                        padding: EdgeInsets.all(5),
+                                        child: CircularProgressIndicator(
+                                            strokeWidth: 3),
+                                      ),
+                                    );
+                                  }
+                                  if (snapshot.hasData) {
+                                    return TextButton(
+                                        onPressed: () {
+                                          reBuild.value =
+                                              UniqueKey().toString();
+                                        },
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Text(snapshot.data!.path),
+                                            const SizedBox(width: 5),
+                                            snapshot.data!.error
+                                                ? Tooltip(
+                                                    message: snapshot
+                                                        .data!.errorText,
+                                                    child: Icon(
+                                                      Symbols.error,
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .error,
                                                       size: 20,
                                                       weight: 500,
                                                     ),
-                                            ],
-                                          ));
-                                    } else {
-                                      return SizedBox(
-                                        height: 30,
-                                        child: TextButton(
-                                          onPressed: () {
-                                            reBuild.value =
-                                                UniqueKey().toString();
-                                          },
-                                          child: const Text('Select File'),
-                                        ),
-                                      );
-                                    }
-                                  });
-                            }),
-                      ),
+                                                  )
+                                                : const Icon(
+                                                    Symbols.check_circle,
+                                                    size: 20,
+                                                    weight: 500,
+                                                  ),
+                                          ],
+                                        ));
+                                  } else {
+                                    return SizedBox(
+                                      height: 30,
+                                      child: TextButton(
+                                        onPressed: () {
+                                          reBuild.value =
+                                              UniqueKey().toString();
+                                        },
+                                        child: const Text('Select File'),
+                                      ),
+                                    );
+                                  }
+                                });
+                          })*/
                     ],
                   ),
-                  const SizedBox(height: 20),
-                  const Row(
+                  SizedBox(height: 20),
+                  Column(
                     children: [
-                      Icon(Symbols.link),
-                      SizedBox(
-                        width: 20,
+                      Row(
+                        children: [
+                          Icon(Symbols.link),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text('Base Url'),
+                        ],
                       ),
                       SizedBox(
-                        height: 30,
-                        width: 200,
+                        height: 10,
+                      ),
+                      SizedBox(
+                        height: 35,
                         child: TextField(
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
