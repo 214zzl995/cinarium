@@ -12,14 +12,12 @@ import './routes/app_pages.dart';
 import './util/theme_extension_util.dart';
 import './util/desktop_util.dart';
 import './util/hive_util.dart';
-import './util/path_util.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main(List<String> args) async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await PathUtil.init();
-  await HiveUtil.install();
   await RustLib.init();
+  WidgetsFlutterBinding.ensureInitialized();
+  await HiveUtil.install();
   await initAppLog();
   await initDb();
   await initCinariumConfig();

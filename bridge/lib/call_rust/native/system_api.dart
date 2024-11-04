@@ -89,6 +89,9 @@ Future<void> importCrawlerTemplate(
 List<Source> getSourceNotifySources() =>
     RustLib.instance.api.crateNativeSystemApiGetSourceNotifySources();
 
+String getRoamingPath() =>
+    RustLib.instance.api.crateNativeSystemApiGetRoamingPath();
+
 Future<ListenerHandle> listenerHttpStatus(
         {required FutureOr<void> Function(bool) dartCallback}) =>
     RustLib.instance.api

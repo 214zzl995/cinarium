@@ -1,5 +1,6 @@
 use std::path::PathBuf;
 
+use anyhow::Context;
 use flutter_rust_bridge::{frb, DartFnFuture};
 
 use crate::{
@@ -174,6 +175,12 @@ pub async fn import_crawler_template(
 #[frb(sync)]
 pub fn get_source_notify_sources() -> anyhow::Result<Vec<Source>> {
     crate::notify::get_source_notify_sources()
+}
+
+#[allow(dead_code)]
+#[frb(sync)]
+pub fn get_roaming_path() -> anyhow::Result<String> {
+    Ok(dirs::config_dir().unwrap().join("cinarium").to_string_lossy().to_string())
 }
 
 #[allow(dead_code)]

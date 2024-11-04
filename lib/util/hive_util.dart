@@ -1,4 +1,5 @@
-import '../util/path_util.dart';
+import 'package:bridge/call_rust/native/system_api.dart';
+
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../models/color.g.dart';
@@ -19,7 +20,7 @@ class HiveUtil {
   /// <https://docs.hivedb.dev/>
   static Future<void> install() async {
     /// 初始化Hive地址
-    final roaming = PathUtil.roaming;
+    final roaming = getRoamingPath();
     Hive.init(roaming);
 
     /// 注册自定义对象（实体）
@@ -39,7 +40,8 @@ class HiveUtil {
     if (instance == null) {
       instance = HiveUtil();
       await Hive.initFlutter();
-      instance?._themeBox = await Hive.openBox<CinariumTheme>('theme');
+      instance?._themeBox = await Hive.openBox<CinariumTheme>('theme',
+          path: "${getRoamingPath()}/hive");
     }
     return instance!;
   }
