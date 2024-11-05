@@ -15,8 +15,9 @@ class SettingsCrawlerTemplatePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
+        Container(
           height: 150,
+          margin: const EdgeInsets.only(bottom: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -34,7 +35,7 @@ class SettingsCrawlerTemplatePage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(
-                    width: 10,
+                    width: 20,
                   ),
                   Expanded(child: _buildDocument(context)),
                 ],
@@ -133,18 +134,71 @@ class SettingsCrawlerTemplatePage extends StatelessWidget {
                               )
                             ],
                           )),
-                          Selector<SettingsController, bool>(
-                              builder: (_, enabled, __) {
-                                return Checkbox(
-                                    value: enabled,
-                                    onChanged: (value) {
-                                      context
-                                          .read<SettingsController>()
-                                          .modelDisableChange(value, index);
+                          Row(
+                            children: [
+                              TextButton(
+                                  onPressed: () {
+                                    context
+                                        .read<SettingsController>()
+                                        .deleteTemplate(template.id)
+                                        .then((val) {
+                                      if (val != null) {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Icon(
+                                                      Symbols.error,
+                                                      size: 30,
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .error,
+                                                    ),
+                                                    const SizedBox(width: 10),
+                                                    const Text('Error')
+                                                  ],
+                                                ),
+                                                content: Text(val),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                    child: const Text('OK'),
+                                                  )
+                                                ],
+                                              );
+                                            });
+                                      }
                                     });
-                              },
-                              selector: (_, settings) =>
-                                  settings.crawlerTemplates[index].enabled),
+                                  },
+                                  child: const Icon(Symbols.delete, size: 20)),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              Transform.scale(
+                                scale: 0.9,
+                                child: Selector<SettingsController, bool>(
+                                    builder: (_, enabled, __) {
+                                      return Checkbox(
+                                          value: enabled,
+                                          onChanged: (value) {
+                                            context
+                                                .read<SettingsController>()
+                                                .modelDisableChange(
+                                                    value, index);
+                                          });
+                                    },
+                                    selector: (_, settings) => settings
+                                        .crawlerTemplates[index].enabled),
+                              )
+                            ],
+                          ),
                         ],
                       ),
                     );
@@ -218,215 +272,215 @@ class SettingsCrawlerTemplatePage extends StatelessWidget {
 
   void _openImportDialog(BuildContext context) async {
     showDialog(
-        context: context,
-        builder: (dialogContext) {
-          ValueNotifier<PickerTemplateFile?> selectTemplatePath =
-              ValueNotifier(null);
+      context: context,
+      builder: (dialogContext) {
+        ValueNotifier<PickerTemplateFile?> selectTemplatePath =
+            ValueNotifier(null);
+        TextEditingController baseUrlController = TextEditingController();
+        TextEditingController searchUrlController = TextEditingController();
 
-          return AlertDialog(
-            title: Row(
+        return AlertDialog(
+          title: _buildDialogTitle(dialogContext),
+          content: SizedBox(
+            width: 400,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  Symbols.download,
-                  color: Theme.of(dialogContext).colorScheme.primary,
-                  weight: 400,
-                ),
-                const SizedBox(width: 10),
-                Text(
-                  'Import Crawler Template',
-                  style: Theme.of(dialogContext).textTheme.labelLarge,
-                ),
+                const SizedBox(height: 20),
+                _buildFilePathSection(selectTemplatePath, context),
+                const SizedBox(height: 20),
+                _buildUrlInputSection('Base Url', baseUrlController, context),
+                const SizedBox(height: 20),
+                _buildUrlInputSection(
+                    'Search Url', searchUrlController, context),
+                const SizedBox(height: 20),
               ],
             ),
-            content: SizedBox(
-              width: 400,
-              height: 300,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Row(children: [
-                        Icon(Symbols.file_open),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text('File Path'),
-                      ]),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      SizedBox(
-                        height: 35,
-                        width: double.infinity,
-                        child: OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                            ),
-                            onPressed: () {
-                              context
-                                  .read<SettingsController>()
-                                  .pickerTemplateFile()
-                                  .then((value) {
-                                selectTemplatePath.value = value;
-                              });
-                            },
-                            child: ValueListenableBuilder(
-                              valueListenable: selectTemplatePath,
-                              builder: (context, value, child) {
-                                if (value == null) {
-                                  return const Icon(
-                                    Symbols.mouse,
-                                    size: 20,
-                                    weight: 500,
-                                  );
-                                } else {
-                                  return Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Text(value.path),
-                                      const SizedBox(width: 5),
-                                      value.error
-                                          ? Tooltip(
-                                              message: value.errorText,
-                                              child: Icon(
-                                                Symbols.error,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .error,
-                                                size: 20,
-                                                weight: 500,
-                                              ),
-                                            )
-                                          : const Icon(
-                                              Symbols.check_circle,
-                                              size: 20,
-                                              weight: 500,
-                                            ),
-                                    ],
-                                  );
-                                }
-                              },
-                            )),
-                      )
-                      /*ValueListenableBuilder(
-                          valueListenable: reBuild,
-                          builder: (valueListenableContext, value, child) {
-                            return FutureBuilder<PickerTemplateFile?>(
-                                key: key,
-                                future: context
-                                    .read<SettingsController>()
-                                    .pickerTemplateFile(),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return const SizedBox(
-                                      width: 30,
-                                      child: Padding(
-                                        padding: EdgeInsets.all(5),
-                                        child: CircularProgressIndicator(
-                                            strokeWidth: 3),
-                                      ),
-                                    );
-                                  }
-                                  if (snapshot.hasData) {
-                                    return TextButton(
-                                        onPressed: () {
-                                          reBuild.value =
-                                              UniqueKey().toString();
-                                        },
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Text(snapshot.data!.path),
-                                            const SizedBox(width: 5),
-                                            snapshot.data!.error
-                                                ? Tooltip(
-                                                    message: snapshot
-                                                        .data!.errorText,
-                                                    child: Icon(
-                                                      Symbols.error,
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .error,
-                                                      size: 20,
-                                                      weight: 500,
-                                                    ),
-                                                  )
-                                                : const Icon(
-                                                    Symbols.check_circle,
-                                                    size: 20,
-                                                    weight: 500,
-                                                  ),
-                                          ],
-                                        ));
-                                  } else {
-                                    return SizedBox(
-                                      height: 30,
-                                      child: TextButton(
-                                        onPressed: () {
-                                          reBuild.value =
-                                              UniqueKey().toString();
-                                        },
-                                        child: const Text('Select File'),
-                                      ),
-                                    );
-                                  }
-                                });
-                          })*/
-                    ],
+          ),
+          actions: _buildDialogActions(dialogContext, selectTemplatePath,
+              baseUrlController, searchUrlController, context),
+        );
+      },
+    );
+  }
+
+  Widget _buildDialogTitle(BuildContext context) {
+    return Row(
+      children: [
+        Icon(
+          Symbols.download,
+          color: Theme.of(context).colorScheme.primary,
+          weight: 400,
+        ),
+        const SizedBox(width: 10),
+        Text(
+          'Import Crawler Template',
+          style: Theme.of(context).textTheme.labelLarge,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFilePathSection(
+      ValueNotifier<PickerTemplateFile?> selectTemplatePath,
+      BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Row(children: [
+          Icon(Symbols.file_open),
+          SizedBox(width: 10),
+          Text('File Path'),
+        ]),
+        const SizedBox(height: 10),
+        Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          constraints: const BoxConstraints(minHeight: 48),
+          width: double.infinity,
+          child: ValueListenableBuilder(
+            valueListenable: selectTemplatePath,
+            builder: (valueListenableContext, value, child) {
+              return TextButton(
+                style: TextButton.styleFrom(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                  backgroundColor: value != null && value.error
+                      ? Theme.of(context).colorScheme.errorContainer
+                      : Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  SizedBox(height: 20),
-                  Column(
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Symbols.link),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text('Base Url'),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      SizedBox(
-                        height: 35,
-                        child: TextField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            contentPadding: EdgeInsets.only(left: 5),
-                          ),
-                        ),
-                      )
-                    ],
-                  )
-                ],
-              ),
+                ),
+                onPressed: () {
+                  context
+                      .read<SettingsController>()
+                      .pickerTemplateFile()
+                      .then((value) {
+                    selectTemplatePath.value = value;
+                  });
+                },
+                child: value == null
+                    ? const Icon(Symbols.mouse, size: 20, weight: 500)
+                    : _buildSelectedFileRow(value, context),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSelectedFileRow(PickerTemplateFile value, BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
+          flex: 8,
+          child: Text(value.path, textAlign: TextAlign.left),
+        ),
+        const SizedBox(width: 5),
+        Expanded(
+          child: value.error
+              ? Tooltip(
+                  message: value.errorText,
+                  child: Icon(
+                    Symbols.error,
+                    color: Theme.of(context).colorScheme.error,
+                    size: 20,
+                    weight: 500,
+                  ),
+                )
+              : const Icon(Symbols.check_circle, size: 20, weight: 500),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildUrlInputSection(
+      String label, TextEditingController controller, BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(Symbols.link),
+            const SizedBox(width: 10),
+            Text(label),
+          ],
+        ),
+        const SizedBox(height: 10),
+        TextField(
+          controller: controller,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            filled: true,
+            fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide.none,
+              borderRadius: BorderRadius.circular(10),
             ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(dialogContext).pop();
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide.none,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            contentPadding: const EdgeInsets.only(left: 10, top: 2, bottom: 2),
+          ),
+        ),
+      ],
+    );
+  }
+
+  List<Widget> _buildDialogActions(
+      BuildContext dialogContext,
+      ValueNotifier<PickerTemplateFile?> selectTemplatePath,
+      TextEditingController baseUrlController,
+      TextEditingController searchUrlController,
+      BuildContext context) {
+    return [
+      TextButton(
+        onPressed: () {
+          Navigator.of(dialogContext).pop();
+        },
+        child: const Text('Cancel'),
+      ),
+      ValueListenableBuilder(
+        valueListenable: baseUrlController,
+        builder: (_, baseUrl, child) {
+          return ValueListenableBuilder(
+            valueListenable: searchUrlController,
+            builder: (_, searchUrl, child) {
+              return ValueListenableBuilder(
+                valueListenable: selectTemplatePath,
+                builder: (_, selectTemplate, child) {
+                  bool canImport = baseUrl.text.isNotEmpty &&
+                      searchUrl.text.isNotEmpty &&
+                      selectTemplate != null &&
+                      !selectTemplate.error;
+                  return TextButton(
+                    onPressed: canImport
+                        ? () {
+                            context
+                                .read<SettingsController>()
+                                .importTemplateFile(selectTemplate.raw!,
+                                    baseUrl.text, searchUrl.text)
+                                .then((_) {
+                              Navigator.of(dialogContext).pop();
+                            });
+                          }
+                        : null,
+                    child: const Text('Import'),
+                  );
                 },
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(dialogContext).pop();
-                },
-                child: const Text('Import'),
-              ),
-            ],
+              );
+            },
           );
-        });
+        },
+      ),
+    ];
   }
 }
 

@@ -44,7 +44,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.5.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 644046935;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1019330332;
 
 // Section: executor
 
@@ -3663,12 +3663,50 @@ fn wire__crate__native__system_api__check_crawler_template_impl(
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_raw = <String>::sse_decode(&mut deserializer);
             deserializer.end();
-            transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
-                (move || {
-                    let output_ok = crate::native::system_api::check_crawler_template(api_raw)?;
-                    Ok(output_ok)
-                })(),
-            )
+            transform_result_sse::<_, ()>((move || {
+                let output_ok = Result::<_, ()>::Ok(
+                    crate::native::system_api::check_crawler_template(api_raw),
+                )?;
+                Ok(output_ok)
+            })())
+        },
+    )
+}
+fn wire__crate__native__system_api__delete_crawler_template_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "delete_crawler_template",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_id = <u32>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, ()>(
+                    (move || async move {
+                        let output_ok = Result::<_, ()>::Ok(
+                            crate::native::system_api::delete_crawler_template(api_id).await,
+                        )?;
+                        Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
         },
     )
 }
@@ -5543,6 +5581,17 @@ impl SseDecode for Vec<crate::model::video::UntreatedVideo> {
     }
 }
 
+impl SseDecode for Option<String> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(<String>::sse_decode(deserializer));
+        } else {
+            return None;
+        }
+    }
+}
+
 impl SseDecode for Option<u32> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -5787,130 +5836,136 @@ fn pde_ffi_dispatcher_primary_impl(
             rust_vec_len,
             data_len,
         ),
-        78 => {
+        77 => wire__crate__native__system_api__delete_crawler_template_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        79 => {
             wire__crate__native__system_api__get_http_conf_impl(port, ptr, rust_vec_len, data_len)
         }
-        84 => {
+        85 => {
             wire__crate__native__system_api__get_task_conf_impl(port, ptr, rust_vec_len, data_len)
         }
-        85 => wire__crate__native__system_api__import_crawler_template_impl(
+        86 => wire__crate__native__system_api__import_crawler_template_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        86 => wire__crate__native__system_api__init_app_log_impl(port, ptr, rust_vec_len, data_len),
-        87 => wire__crate__native__system_api__init_cinarium_config_impl(
+        87 => wire__crate__native__system_api__init_app_log_impl(port, ptr, rust_vec_len, data_len),
+        88 => wire__crate__native__system_api__init_cinarium_config_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        88 => wire__crate__native__system_api__init_source_notify_impl(
+        89 => wire__crate__native__system_api__init_source_notify_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        89 => wire__crate__native__system_api__listener_http_status_impl(
+        90 => wire__crate__native__system_api__listener_http_status_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        90 => wire__crate__native__system_api__listener_scan_storage_impl(
+        91 => wire__crate__native__system_api__listener_scan_storage_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        91 => wire__crate__native__system_api__listener_untreated_file_impl(
+        92 => wire__crate__native__system_api__listener_untreated_file_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        92 => wire__crate__native__system_api__open_in_default_software_impl(
+        93 => wire__crate__native__system_api__open_in_default_software_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        93 => wire__crate__native__system_api__open_in_explorer_impl(
+        94 => wire__crate__native__system_api__open_in_explorer_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        94 => wire__crate__native__system_api__open_in_explorer_by_string_impl(
+        95 => wire__crate__native__system_api__open_in_explorer_by_string_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        95 => wire__crate__native__system_api__remove_source_notify_source_impl(
+        96 => wire__crate__native__system_api__remove_source_notify_source_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        96 => wire__crate__native__system_api__run_web_api_impl(port, ptr, rust_vec_len, data_len),
-        97 => wire__crate__native__system_api__stop_web_api_impl(port, ptr, rust_vec_len, data_len),
-        98 => wire__crate__native__system_api__switch_crawler_template_enabled_impl(
+        97 => wire__crate__native__system_api__run_web_api_impl(port, ptr, rust_vec_len, data_len),
+        98 => wire__crate__native__system_api__stop_web_api_impl(port, ptr, rust_vec_len, data_len),
+        99 => wire__crate__native__system_api__switch_crawler_template_enabled_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        99 => wire__crate__native__system_api__update_http_port_impl(
+        100 => wire__crate__native__system_api__update_http_port_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        100 => wire__crate__native__system_api__update_task_thread_impl(
+        101 => wire__crate__native__system_api__update_task_thread_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        101 => wire__crate__native__system_api__update_task_tidy_folder_impl(
+        102 => wire__crate__native__system_api__update_task_tidy_folder_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        102 => wire__crate__native__task_api__change_task_status_impl(
+        103 => wire__crate__native__task_api__change_task_status_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        103 => wire__crate__native__task_api__delete_task_impl(port, ptr, rust_vec_len, data_len),
-        104 => {
+        104 => wire__crate__native__task_api__delete_task_impl(port, ptr, rust_vec_len, data_len),
+        105 => {
             wire__crate__native__task_api__force_pause_pool_impl(port, ptr, rust_vec_len, data_len)
         }
-        106 => wire__crate__native__task_api__init_pool_impl(port, ptr, rust_vec_len, data_len),
-        107 => wire__crate__native__task_api__insertion_of_tasks_impl(
+        107 => wire__crate__native__task_api__init_pool_impl(port, ptr, rust_vec_len, data_len),
+        108 => wire__crate__native__task_api__insertion_of_tasks_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        108 => wire__crate__native__task_api__listener_pool_status_change_impl(
+        109 => wire__crate__native__task_api__listener_pool_status_change_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        109 => wire__crate__native__task_api__listener_task_status_change_impl(
+        110 => wire__crate__native__task_api__listener_task_status_change_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        110 => wire__crate__native__task_api__pause_pool_impl(port, ptr, rust_vec_len, data_len),
-        111 => wire__crate__native__task_api__resume_pool_impl(port, ptr, rust_vec_len, data_len),
+        111 => wire__crate__native__task_api__pause_pool_impl(port, ptr, rust_vec_len, data_len),
+        112 => wire__crate__native__task_api__resume_pool_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -6229,23 +6284,23 @@ fn pde_ffi_dispatcher_sync_impl(
             rust_vec_len,
             data_len,
         ),
-        77 => {
+        78 => {
             wire__crate__native__system_api__get_crawler_templates_impl(ptr, rust_vec_len, data_len)
         }
-        79 => wire__crate__native__system_api__get_http_status_impl(ptr, rust_vec_len, data_len),
-        80 => wire__crate__native__system_api__get_local_ip_impl(ptr, rust_vec_len, data_len),
-        81 => wire__crate__native__system_api__get_roaming_path_impl(ptr, rust_vec_len, data_len),
-        82 => wire__crate__native__system_api__get_scan_storage_status_impl(
+        80 => wire__crate__native__system_api__get_http_status_impl(ptr, rust_vec_len, data_len),
+        81 => wire__crate__native__system_api__get_local_ip_impl(ptr, rust_vec_len, data_len),
+        82 => wire__crate__native__system_api__get_roaming_path_impl(ptr, rust_vec_len, data_len),
+        83 => wire__crate__native__system_api__get_scan_storage_status_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        83 => wire__crate__native__system_api__get_source_notify_sources_impl(
+        84 => wire__crate__native__system_api__get_source_notify_sources_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        105 => wire__crate__native__task_api__get_pool_data_impl(ptr, rust_vec_len, data_len),
+        106 => wire__crate__native__task_api__get_pool_data_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -6944,6 +6999,16 @@ impl SseEncode for Vec<crate::model::video::UntreatedVideo> {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
             <crate::model::video::UntreatedVideo>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Option<String> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <String>::sse_encode(value, serializer);
         }
     }
 }

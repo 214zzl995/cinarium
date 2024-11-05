@@ -75,15 +75,34 @@ class SettingsController with ChangeNotifier {
     if (path != null) {
       final file = path.files.single;
       final raw = await file.xFile.readAsString();
-      try {
-        checkCrawlerTemplate(raw: raw);
-      } catch (e) {
-        return PickerTemplateFile(path: file.path!, errorText: e.toString());
+      String? errorText = checkCrawlerTemplate(raw: raw);
+      if (errorText != null) {
+        return PickerTemplateFile(
+            path: file.path!, raw: raw, errorText: errorText);
       }
       return PickerTemplateFile(path: file.path!, raw: raw);
     } else {
       return null;
     }
+  }
+
+  Future<void> importTemplateFile(
+      String raw, String baseUrl, String searchUrl) async {
+    await importCrawlerTemplate(
+        raw: raw, baseUrl: baseUrl, searchUrl: searchUrl);
+    _crawlerTemplates = getCrawlerTemplates();
+    notifyListeners();
+  }
+
+  Future<String?> deleteTemplate(int id) async {
+    String? error = await deleteCrawlerTemplate(id: id);
+    if (error == null) {
+      _crawlerTemplates = getCrawlerTemplates();
+      notifyListeners();
+    } else {
+      return error;
+    }
+    return null;
   }
 
   void modelDisableChange(bool? value, int index) {
@@ -177,7 +196,6 @@ class PickerTemplateFile {
   late bool error;
 
   PickerTemplateFile({required this.path, this.raw, this.errorText}) {
-      error = errorText != null;
-
+    error = errorText != null;
   }
 }

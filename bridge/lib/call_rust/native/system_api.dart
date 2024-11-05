@@ -76,7 +76,7 @@ Future<void> switchCrawlerTemplateEnabled({required int id}) =>
 List<CrawlerTemplate> getCrawlerTemplates() =>
     RustLib.instance.api.crateNativeSystemApiGetCrawlerTemplates();
 
-void checkCrawlerTemplate({required String raw}) =>
+String? checkCrawlerTemplate({required String raw}) =>
     RustLib.instance.api.crateNativeSystemApiCheckCrawlerTemplate(raw: raw);
 
 Future<void> importCrawlerTemplate(
@@ -85,6 +85,9 @@ Future<void> importCrawlerTemplate(
         required String searchUrl}) =>
     RustLib.instance.api.crateNativeSystemApiImportCrawlerTemplate(
         raw: raw, baseUrl: baseUrl, searchUrl: searchUrl);
+
+Future<String?> deleteCrawlerTemplate({required int id}) =>
+    RustLib.instance.api.crateNativeSystemApiDeleteCrawlerTemplate(id: id);
 
 List<Source> getSourceNotifySources() =>
     RustLib.instance.api.crateNativeSystemApiGetSourceNotifySources();

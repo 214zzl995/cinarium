@@ -111,6 +111,23 @@ pub async fn switch_crawler_templates_enabled(id: u32) -> anyhow::Result<()> {
     Ok(())
 }
 
+pub async fn delete_crawler_template(id: &u32) -> anyhow::Result<()> {
+    {
+        let mut templates = CRAWLER_TEMPLATES.get().unwrap().lock();
+
+        if templates.len() == 1 {
+            return Err(anyhow::anyhow!("At least one template must be retained"));
+        }
+
+        if let Some(index) = templates.iter().position(|t| t.id.eq(id)) {
+            templates.remove(index);
+        }
+    }
+    CrawlerTemplate::delete(&id).await?;
+
+    Ok(())
+}
+
 impl Metadata {
     pub(super) async fn migration(
         &self,

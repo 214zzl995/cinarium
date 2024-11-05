@@ -1,6 +1,5 @@
 use std::path::PathBuf;
 
-use anyhow::Context;
 use flutter_rust_bridge::{frb, DartFnFuture};
 
 use crate::{
@@ -158,8 +157,11 @@ pub fn get_crawler_templates() -> anyhow::Result<Vec<CrawlerTemplate>> {
 
 #[allow(dead_code)]
 #[frb(sync)]
-pub fn check_crawler_template(raw: String) -> anyhow::Result<()> {
-    crate::task::crawler::check_crawler_template(&raw)
+pub fn check_crawler_template(raw: String) -> Option<String> {
+    match crate::task::crawler::check_crawler_template(&raw) {
+        Ok(_) => None,
+        Err(e) => Some(e.to_string()),
+    }
 }
 
 #[allow(dead_code)]
@@ -172,6 +174,14 @@ pub async fn import_crawler_template(
 }
 
 #[allow(dead_code)]
+pub async fn delete_crawler_template(id: u32) -> Option<String> {
+    match crate::task::crawler::delete_crawler_template(&id).await {
+        Ok(_) => None,
+        Err(e) => Some(e.to_string()),
+    }
+}
+
+#[allow(dead_code)]
 #[frb(sync)]
 pub fn get_source_notify_sources() -> anyhow::Result<Vec<Source>> {
     crate::notify::get_source_notify_sources()
@@ -180,7 +190,11 @@ pub fn get_source_notify_sources() -> anyhow::Result<Vec<Source>> {
 #[allow(dead_code)]
 #[frb(sync)]
 pub fn get_roaming_path() -> anyhow::Result<String> {
-    Ok(dirs::config_dir().unwrap().join("cinarium").to_string_lossy().to_string())
+    Ok(dirs::config_dir()
+        .unwrap()
+        .join("cinarium")
+        .to_string_lossy()
+        .to_string())
 }
 
 #[allow(dead_code)]
