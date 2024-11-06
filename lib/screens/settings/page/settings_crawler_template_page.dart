@@ -82,6 +82,7 @@ class SettingsCrawlerTemplatePage extends StatelessWidget {
               selector: (_, settings) => settings.crawlerTemplates,
               builder: (BuildContext context,
                   List<CrawlerTemplate> crawlerTemplates, Widget? child) {
+                // 可以使用 CustomScrollView 和 SliverToBoxAdapter 包裹 Stack 可以通过AnimalPositioned实现动画效果 但是没必要喽
                 return ListView.builder(
                   physics: physics,
                   controller: controller,
@@ -137,45 +138,135 @@ class SettingsCrawlerTemplatePage extends StatelessWidget {
                           Row(
                             children: [
                               TextButton(
+                                  onPressed:
+                                      index == crawlerTemplates.length - 1
+                                          ? null
+                                          : () {
+                                              context
+                                                  .read<SettingsController>()
+                                                  .onTemplatesReorder(
+                                                      index, index + 1);
+                                            },
+                                  child: const Icon(
+                                    Symbols.arrow_downward,
+                                    size: 20,
+                                  )),
+                              TextButton(
+                                  onPressed: index == 0
+                                      ? null
+                                      : () {
+                                          context
+                                              .read<SettingsController>()
+                                              .onTemplatesReorder(
+                                                  index, index - 1);
+                                        },
+                                  child: const Icon(
+                                    Symbols.arrow_upward,
+                                    size: 20,
+                                  )),
+                              TextButton(
                                   onPressed: () {
-                                    context
-                                        .read<SettingsController>()
-                                        .deleteTemplate(template.id)
-                                        .then((val) {
-                                      if (val != null) {
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                title: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: [
-                                                    Icon(
-                                                      Symbols.error,
-                                                      size: 30,
+                                    showDialog(
+                                        context: context,
+                                        builder: (confirmContext) {
+                                          return AlertDialog(
+                                            title: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Icon(
+                                                  Symbols.warning,
+                                                  size: 30,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .tertiary,
+                                                ),
+                                                const SizedBox(width: 20),
+                                                Text(
+                                                  'Warning',
+                                                  style: TextStyle(
                                                       color: Theme.of(context)
                                                           .colorScheme
-                                                          .error,
-                                                    ),
-                                                    const SizedBox(width: 10),
-                                                    const Text('Error')
-                                                  ],
+                                                          .tertiary),
                                                 ),
-                                                content: Text(val),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                    child: const Text('OK'),
-                                                  )
-                                                ],
-                                              );
-                                            });
-                                      }
-                                    });
+                                              ],
+                                            ),
+                                            content: const Text(
+                                                'Are you sure you want to delete this template?'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(confirmContext)
+                                                      .pop();
+                                                },
+                                                child: const Text('Cancel'),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(confirmContext)
+                                                      .pop();
+                                                  context
+                                                      .read<
+                                                          SettingsController>()
+                                                      .deleteTemplate(
+                                                          template.id)
+                                                      .then((val) {
+                                                    if (val != null) {
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return AlertDialog(
+                                                              title: Row(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Icon(
+                                                                    Symbols
+                                                                        .error,
+                                                                    size: 30,
+                                                                    color: Theme.of(
+                                                                            context)
+                                                                        .colorScheme
+                                                                        .error,
+                                                                  ),
+                                                                  const SizedBox(
+                                                                      width:
+                                                                          20),
+                                                                  Text(
+                                                                    'Error',
+                                                                    style: TextStyle(
+                                                                        color: Theme.of(context)
+                                                                            .colorScheme
+                                                                            .error),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              content:
+                                                                  Text(val),
+                                                              actions: [
+                                                                TextButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop();
+                                                                  },
+                                                                  child:
+                                                                      const Text(
+                                                                          'OK'),
+                                                                )
+                                                              ],
+                                                            );
+                                                          });
+                                                    }
+                                                  });
+                                                },
+                                                child: const Text('Delete'),
+                                              )
+                                            ],
+                                          );
+                                        });
                                   },
                                   child: const Icon(Symbols.delete, size: 20)),
                               const SizedBox(

@@ -1,8 +1,10 @@
+import 'package:cinarium/screens/settings/controllers/settings_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import 'package:cinarium/screens/retrieve/components/file_col.dart';
+import 'package:super_context_menu/super_context_menu.dart';
 import '../components/file_row.dart';
 import '../../../components/scroll_animator.dart';
 import '../components/search_field.dart';
@@ -34,10 +36,39 @@ class RetrievePage extends StatelessWidget {
                           final file = context
                               .read<RetrieveController>()
                               .showFiles[index];
-                          return FileRow(
-                            index: index,
-                            untreatedVideo: file,
-                            doubleTap: false,
+                          return ContextMenuWidget(
+                            iconTheme:
+                                const IconThemeData(fill: 1, opticalSize: 20),
+                            menuProvider: (_) {
+                              List<MenuAction> actions = [];
+                              final showAction = MenuAction(
+                                  title: 'Show',
+                                  image: MenuImage.icon(
+                                    Symbols.visibility,
+                                  ),
+                                  callback: () {});
+                              final hideAction = MenuAction(
+                                  title: 'Hide',
+                                  image: MenuImage.icon(
+                                    Symbols.visibility_off,
+                                  ),
+                                  callback: () {});
+
+                              return Menu(children: [
+                                file.isHidden ? showAction : hideAction,
+                                MenuAction(
+                                    title: 'Add to task',
+                                    image: MenuImage.icon(
+                                      Symbols.travel_explore,
+                                    ),
+                                    callback: () {}),
+                              ]);
+                            },
+                            child: FileRow(
+                              index: index,
+                              untreatedVideo: file,
+                              doubleTap: false,
+                            ),
                           );
                         },
                         childCount: context.select<RetrieveController, int>(
@@ -188,7 +219,9 @@ class RetrievePage extends StatelessWidget {
                   Selector<RetrieveController, bool>(
                       builder: (context, status, child) => TextButton(
                           onPressed: () {
-                            context.read<RetrieveController>().getUntreatedVideos();
+                            context
+                                .read<RetrieveController>()
+                                .getUntreatedVideos();
                           },
                           child: const Text("reload")),
                       selector: (context, controller) =>

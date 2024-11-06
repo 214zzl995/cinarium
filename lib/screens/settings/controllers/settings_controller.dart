@@ -112,6 +112,7 @@ class SettingsController with ChangeNotifier {
   void onTemplatesReorder(int oldIndex, int newIndex) {
     _crawlerTemplates = [...List.from(_crawlerTemplates)..removeAt(oldIndex)]
       ..insert(newIndex, _crawlerTemplates[oldIndex]);
+
     List.generate(
         _crawlerTemplates.length,
         (index) => _crawlerTemplates[index] =
