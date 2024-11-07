@@ -14,6 +14,7 @@ import './util/desktop_util.dart';
 import './util/hive_util.dart';
 import 'package:window_manager/window_manager.dart';
 
+
 void main(List<String> args) async {
   await RustLib.init();
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,8 +33,6 @@ void main(List<String> args) async {
     if (defaultTargetPlatform == TargetPlatform.windows) {
       await flutter_acrylic.Window.hideWindowControls();
     }
-
-
 
     windowManager.waitUntilReadyToShow().then((_) async {
       await windowManager.setTitleBarStyle(
@@ -110,3 +109,4 @@ Future<CinariumTheme> buildTheme() async {
 
   return cinariumTheme;
 }
+

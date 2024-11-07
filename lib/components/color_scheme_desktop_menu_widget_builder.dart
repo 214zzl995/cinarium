@@ -1,25 +1,10 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart'
-    show CircularProgressIndicator, ColorScheme, Colors, Icons, Theme;
-import 'package:pixel_snap/widgets.dart';
-import 'package:super_context_menu/src/default_builder/group_intrinsic_width.dart';
-
-import '../menu_model.dart';
-import '../scaffold/desktop/menu_widget_builder.dart';
-
-class DesktopMenuItemInfo {
-  final bool disabled;
-  final bool selected;
-  final bool destructive;
-  final bool menuFocused;
-
-  DesktopMenuItemInfo({
-    required this.disabled,
-    required this.destructive,
-    required this.selected,
-    required this.menuFocused,
-  });
-}
+import 'package:flutter/material.dart';
+import 'package:super_context_menu/super_context_menu.dart';
+import 'color_scheme_desktop_menu_widget_builder.dart';
+export 'package:super_context_menu/src/default_builder/desktop_menu_widget_builder.dart';
+export 'package:super_context_menu/src/default_builder/group_intrinsic_width.dart';
+export 'package:super_context_menu/src/scaffold/desktop/menu_widget_builder.dart';
 
 extension on SingleActivator {
   String stringRepresentation() {
@@ -51,131 +36,10 @@ class DefaultDesktopMenuTheme {
     required this.decorationForItem,
   });
 
-  static DefaultDesktopMenuTheme themeForBrightness(Brightness brightness) {
-    switch (brightness) {
-      case Brightness.dark:
-        return DefaultDesktopMenuTheme(
-          decorationOuter: BoxDecoration(
-            color: Colors.grey.shade900,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.5),
-                blurRadius: 10,
-                spreadRadius: 0,
-                offset: const Offset(0, 0),
-              ),
-            ],
-          ),
-          decorationInner: BoxDecoration(
-            border: Border.all(
-              color: Colors.grey.shade700,
-              width: 1,
-            ),
-            borderRadius: BorderRadius.circular(6),
-            color: Colors.grey.shade800,
-          ),
-          separatorColor: Colors.grey.shade600,
-          textStyleForItem: (info) {
-            Color color;
-            if (info.selected && info.menuFocused) {
-              color = Colors.white;
-            } else if (info.destructive) {
-              color = const Color(0xFFFF4500);
-            } else if (info.disabled) {
-              color = Colors.grey;
-            } else {
-              color = Colors.white;
-            }
-            return TextStyle(
-              color: color,
-              fontSize: 14.0,
-              decoration: TextDecoration.none,
-            );
-          },
-          textStyleForItemActivator: (info, textStyle) {
-            return textStyle.copyWith(
-              fontSize: 12.5,
-              color: textStyle.color!.withOpacity(0.5),
-            );
-          },
-          decorationForItem: (info) {
-            Color color;
-            if (info.selected && info.menuFocused) {
-              color = Colors.red.shade600;
-            } else if (info.selected) {
-              color = Colors.red.withOpacity(0.3);
-            } else {
-              color = Colors.transparent;
-            }
-            return BoxDecoration(
-              color: color,
-              borderRadius: BorderRadius.circular(4.0),
-            );
-          },
-        );
-      case Brightness.light:
-        return DefaultDesktopMenuTheme(
-          decorationOuter: BoxDecoration(
-            color: Colors.black.withOpacity(0.2),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.25),
-                blurRadius: 12,
-                spreadRadius: 0,
-                offset: const Offset(0, 0),
-              ),
-            ],
-          ),
-          decorationInner: BoxDecoration(
-            borderRadius: BorderRadius.circular(6.0),
-            color: Colors.white,
-          ),
-          separatorColor: Colors.grey.shade300,
-          textStyleForItem: (info) {
-            Color color;
-            if (info.selected && info.menuFocused) {
-              color = Colors.white;
-            } else if (info.destructive) {
-              color = Colors.red;
-            } else if (info.disabled) {
-              color = Colors.grey;
-            } else {
-              color = Colors.black;
-            }
-            return TextStyle(
-              color: color,
-              fontSize: 14.0,
-              decoration: TextDecoration.none,
-            );
-          },
-          textStyleForItemActivator: (info, textStyle) {
-            return textStyle.copyWith(
-              fontSize: 12.5,
-              color: textStyle.color!.withOpacity(0.5),
-            );
-          },
-          decorationForItem: (info) {
-            Color color;
-            if (info.selected && info.menuFocused) {
-              color = Colors.red;
-            } else if (info.selected) {
-              color = Colors.red.withOpacity(0.3);
-            } else {
-              color = Colors.transparent;
-            }
-            return BoxDecoration(
-              color: color,
-              borderRadius: BorderRadius.circular(4.0),
-            );
-          },
-        );
-    }
-  }
-
   static DefaultDesktopMenuTheme themeForColorScheme(ColorScheme colorScheme) {
     return DefaultDesktopMenuTheme(
       decorationOuter: BoxDecoration(
-        color: colorScheme.surfaceContainerHighest,
+        color: colorScheme.surfaceContainerLowest,
         boxShadow: [
           BoxShadow(
             color: colorScheme.shadow.withOpacity(0.4),
@@ -187,11 +51,11 @@ class DefaultDesktopMenuTheme {
       ),
       decorationInner: BoxDecoration(
         border: Border.all(
-          color: colorScheme.surfaceContainerHigh,
+          color: colorScheme.surfaceContainerLowest,
           width: 1,
         ),
         borderRadius: BorderRadius.circular(6),
-        color: colorScheme.surfaceContainerHigh,
+        color: colorScheme.surfaceContainerLowest,
       ),
       separatorColor: Colors.grey.shade600,
       textStyleForItem: (info) {
@@ -235,8 +99,8 @@ class DefaultDesktopMenuTheme {
   }
 }
 
-class DefaultDesktopMenuWidgetBuilder extends DesktopMenuWidgetBuilder {
-  DefaultDesktopMenuWidgetBuilder({
+class ColorSchemeDesktopMenuWidgetBuilder extends DesktopMenuWidgetBuilder {
+  ColorSchemeDesktopMenuWidgetBuilder({
     this.maxWidth = 450,
   });
 

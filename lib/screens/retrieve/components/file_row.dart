@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import 'package:cinarium/screens/retrieve/components/crawl_name_field.dart';
+import 'package:super_context_menu/super_context_menu.dart';
 
+import '../../../components/color_scheme_desktop_menu_widget_builder.dart';
 import '../controllers/retrieve_controller.dart';
 import 'file_col.dart';
 
@@ -31,68 +33,111 @@ class FileRow extends StatelessWidget {
 
   Widget _buildOneTapRow(BuildContext context) {
     final ValueNotifier<bool> isHovering = ValueNotifier<bool>(false);
+    final ValueNotifier<bool> isMenuShow = ValueNotifier<bool>(false);
     return GestureDetector(
       onTap: () {
         context.read<RetrieveController>().checkFile(untreatedVideo.id);
       },
       child: MouseRegion(
-        cursor: SystemMouseCursors.click,
-        onEnter: (event) {
-          isHovering.value = true;
-        },
-        onExit: (event) {
-          isHovering.value = false;
-        },
-        child: ValueListenableBuilder(
-            valueListenable: isHovering,
-            child: Row(
-              children: [
-                FileCol(
-                    width: 50,
-                    value: Selector<RetrieveController, bool>(
-                      selector: (context, controller) =>
-                          controller.checkMap[untreatedVideo.id] ?? false,
-                      builder: (context, value, child) {
-                        return Checkbox(
-                          value: value,
-                          onChanged: (value) {
-                            context
-                                .read<RetrieveController>()
-                                .checkFile(untreatedVideo.id, value!);
-                          },
-                        );
-                      },
-                    )),
-                FileCol(
-                  width: 50,
-                  value: untreatedVideo.id,
-                ),
-                FileCol(
-                  flex: 1,
-                  value: untreatedVideo.metadata.filename,
-                ),
-                CrawlNameField(index),
-                FileCol(
-                  width: 100,
-                  value: untreatedVideo.metadata.size,
-                ),
-                _buildAction(context),
-              ],
-            ),
-            builder: (BuildContext context, bool value, Widget? child) {
-              return Container(
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: value
-                        ? Theme.of(context).colorScheme.surfaceContainerHigh
-                        : Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(5),
+          cursor: SystemMouseCursors.click,
+          onEnter: (event) {
+            isHovering.value = true;
+          },
+          onExit: (event) {
+            isHovering.value = false;
+          },
+          child: ContextMenuWidget(
+            iconTheme: const IconThemeData(fill: 1, opticalSize: 20),
+            desktopMenuWidgetBuilder: ColorSchemeDesktopMenuWidgetBuilder(),
+            menuProvider: (menuRequest) {
+              menuRequest.onShowMenu.addListener(() {
+                isMenuShow.value = true;
+              });
+              menuRequest.onHideMenu.addListener(() {
+                isMenuShow.value = false;
+              });
+              final showAction = MenuAction(
+                  title: 'Show',
+                  image: MenuImage.icon(
+                    Symbols.visibility,
                   ),
-                  margin: const EdgeInsets.symmetric(horizontal: 15),
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: child);
-            }),
-      ),
+                  callback: () {});
+              final hideAction = MenuAction(
+                  title: 'Hide',
+                  image: MenuImage.icon(
+                    Symbols.visibility_off,
+                  ),
+                  callback: () {});
+
+              return Menu(children: [
+                untreatedVideo.isHidden ? showAction : hideAction,
+                MenuAction(
+                    title: 'Add to task',
+                    image: MenuImage.icon(
+                      Symbols.travel_explore,
+                    ),
+                    callback: () {}),
+              ]);
+            },
+            child: ValueListenableBuilder(
+              valueListenable: isHovering,
+              builder: (BuildContext context, bool hovering, Widget? child) {
+                return ValueListenableBuilder(
+                  valueListenable: isMenuShow,
+                  builder:
+                      (BuildContext context, bool menuShow, Widget? child) {
+                    return Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: hovering || menuShow
+                              ? Theme.of(context)
+                                  .colorScheme
+                                  .surfaceContainerHigh
+                              : Theme.of(context).colorScheme.surface,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        margin: const EdgeInsets.symmetric(horizontal: 15),
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: child);
+                  },
+                  child: Row(
+                    children: [
+                      FileCol(
+                          width: 50,
+                          value: Selector<RetrieveController, bool>(
+                            selector: (context, controller) =>
+                                controller.checkMap[untreatedVideo.id] ?? false,
+                            builder: (context, value, child) {
+                              return Checkbox(
+                                value: value,
+                                onChanged: (value) {
+                                  context
+                                      .read<RetrieveController>()
+                                      .checkFile(untreatedVideo.id, value!);
+                                },
+                              );
+                            },
+                          )),
+                      FileCol(
+                        width: 50,
+                        value: untreatedVideo.id,
+                      ),
+                      FileCol(
+                        flex: 1,
+                        value: untreatedVideo.metadata.filename,
+                      ),
+                      CrawlNameField(index),
+                      FileCol(
+                        width: 100,
+                        value: untreatedVideo.metadata.size,
+                      ),
+                      _buildAction(context),
+                    ],
+                  ),
+                );
+              },
+            ),
+          )),
     );
   }
 
@@ -215,3 +260,5 @@ class FileRow extends StatelessWidget {
         ));
   }
 }
+
+

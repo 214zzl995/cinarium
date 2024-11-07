@@ -37,8 +37,7 @@ dependencies:
     path: ./bridge
   cinarium_core:
     path: rust_builder
-  super_context_menu:
-    path: ./super_context_menu
+  super_context_menu: ^0.8.19
   animated_toggle_switch: ^0.8.3
   flutter_svg: ^2.0.10+1
   file_picker: ^8.0.7

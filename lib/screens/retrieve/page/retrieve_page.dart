@@ -36,39 +36,11 @@ class RetrievePage extends StatelessWidget {
                           final file = context
                               .read<RetrieveController>()
                               .showFiles[index];
-                          return ContextMenuWidget(
-                            iconTheme:
-                                const IconThemeData(fill: 1, opticalSize: 20),
-                            menuProvider: (_) {
-                              List<MenuAction> actions = [];
-                              final showAction = MenuAction(
-                                  title: 'Show',
-                                  image: MenuImage.icon(
-                                    Symbols.visibility,
-                                  ),
-                                  callback: () {});
-                              final hideAction = MenuAction(
-                                  title: 'Hide',
-                                  image: MenuImage.icon(
-                                    Symbols.visibility_off,
-                                  ),
-                                  callback: () {});
-
-                              return Menu(children: [
-                                file.isHidden ? showAction : hideAction,
-                                MenuAction(
-                                    title: 'Add to task',
-                                    image: MenuImage.icon(
-                                      Symbols.travel_explore,
-                                    ),
-                                    callback: () {}),
-                              ]);
-                            },
-                            child: FileRow(
+                          return  FileRow(
                               index: index,
                               untreatedVideo: file,
                               doubleTap: false,
-                            ),
+
                           );
                         },
                         childCount: context.select<RetrieveController, int>(

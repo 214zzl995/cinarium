@@ -962,9 +962,10 @@ packages:
   super_context_menu:
     dependency: "direct main"
     description:
-      path: super_context_menu
-      relative: true
-    source: path
+      name: super_context_menu
+      sha256: c21e8a2d5a2f304c5acf56b78c8fd21a36f83ea9aded513529de022dc0a077f3
+      url: "https://pub.dev"
+    source: hosted
     version: "0.8.19"
   super_native_extensions:
     dependency: transitive
