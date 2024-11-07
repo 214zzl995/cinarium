@@ -1,10 +1,8 @@
-import 'package:cinarium/screens/settings/controllers/settings_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import 'package:cinarium/screens/retrieve/components/file_col.dart';
-import 'package:super_context_menu/super_context_menu.dart';
 import '../components/file_row.dart';
 import '../../../components/scroll_animator.dart';
 import '../components/search_field.dart';
@@ -36,11 +34,11 @@ class RetrievePage extends StatelessWidget {
                           final file = context
                               .read<RetrieveController>()
                               .showFiles[index];
-                          return  FileRow(
-                              index: index,
-                              untreatedVideo: file,
-                              doubleTap: false,
-
+                          return FileRow(
+                            index: index,
+                            untreatedVideo: file,
+                            doubleTap: false,
+                            scrollController: controller,
                           );
                         },
                         childCount: context.select<RetrieveController, int>(

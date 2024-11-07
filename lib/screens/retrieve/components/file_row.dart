@@ -4,6 +4,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import 'package:cinarium/screens/retrieve/components/crawl_name_field.dart';
 import 'package:super_context_menu/super_context_menu.dart';
+import 'package:super_native_extensions/raw_menu.dart' as raw;
 
 import '../../../components/color_scheme_desktop_menu_widget_builder.dart';
 import '../controllers/retrieve_controller.dart';
@@ -14,12 +15,14 @@ class FileRow extends StatelessWidget {
       {super.key,
       required this.untreatedVideo,
       required this.index,
+      required this.scrollController,
       this.doubleTap});
 
   final UntreatedVideo untreatedVideo;
   final int index;
 
   final bool? doubleTap;
+  final ScrollController scrollController;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +37,10 @@ class FileRow extends StatelessWidget {
   Widget _buildOneTapRow(BuildContext context) {
     final ValueNotifier<bool> isHovering = ValueNotifier<bool>(false);
     final ValueNotifier<bool> isMenuShow = ValueNotifier<bool>(false);
+    scrollController.addListener(() {
+      isHovering.value = false;
+      isMenuShow.value = false;
+    });
     return GestureDetector(
       onTap: () {
         context.read<RetrieveController>().checkFile(untreatedVideo.id);
@@ -50,12 +57,20 @@ class FileRow extends StatelessWidget {
             iconTheme: const IconThemeData(fill: 1, opticalSize: 20),
             desktopMenuWidgetBuilder: ColorSchemeDesktopMenuWidgetBuilder(),
             menuProvider: (menuRequest) {
+              scrollControllerListener() {
+                debugPrint('scrollControllerListener');
+
+              }
+
               menuRequest.onShowMenu.addListener(() {
                 isMenuShow.value = true;
+                scrollController.addListener(scrollControllerListener);
               });
               menuRequest.onHideMenu.addListener(() {
                 isMenuShow.value = false;
+                scrollController.removeListener(scrollControllerListener);
               });
+
               final showAction = MenuAction(
                   title: 'Show',
                   image: MenuImage.icon(
@@ -260,5 +275,3 @@ class FileRow extends StatelessWidget {
         ));
   }
 }
-
-

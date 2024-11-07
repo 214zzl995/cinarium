@@ -51,11 +51,11 @@ class DefaultDesktopMenuTheme {
       ),
       decorationInner: BoxDecoration(
         border: Border.all(
-          color: colorScheme.surfaceContainerLowest,
+          color: colorScheme.surfaceContainerLow.withOpacity(0.3),
           width: 1,
         ),
         borderRadius: BorderRadius.circular(6),
-        color: colorScheme.surfaceContainerLowest,
+        color: colorScheme.surfaceContainerLow.withOpacity(0.3),
       ),
       separatorColor: Colors.grey.shade600,
       textStyleForItem: (info) {
@@ -92,6 +92,7 @@ class DefaultDesktopMenuTheme {
         }
         return BoxDecoration(
           color: color,
+
           borderRadius: BorderRadius.circular(4.0),
         );
       },
@@ -102,9 +103,11 @@ class DefaultDesktopMenuTheme {
 class ColorSchemeDesktopMenuWidgetBuilder extends DesktopMenuWidgetBuilder {
   ColorSchemeDesktopMenuWidgetBuilder({
     this.maxWidth = 450,
+    this.minWidth = 200,
   });
 
   final double maxWidth;
+  final double minWidth;
 
   static DefaultDesktopMenuTheme _themeForContext(BuildContext context) {
     return DefaultDesktopMenuTheme.themeForColorScheme(
@@ -136,7 +139,8 @@ class ColorSchemeDesktopMenuWidgetBuilder extends DesktopMenuWidgetBuilder {
                 decoration: TextDecoration.none,
               ),
               child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: maxWidth),
+                constraints:
+                    BoxConstraints(maxWidth: maxWidth, minWidth: minWidth),
                 child: GroupIntrinsicWidthContainer(child: child),
               ),
             ),
@@ -265,24 +269,27 @@ class ColorSchemeDesktopMenuWidgetBuilder extends DesktopMenuWidgetBuilder {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 6.0),
-      child: Container(
-        key: innerKey,
-        padding: const EdgeInsets.all(5),
-        decoration: theme.decorationForItem(itemInfo),
-        child: Row(
-          children: [
-            if (prefix != null) prefix,
-            if (prefix != null) const SizedBox(width: 6.0),
-            if (image != null) image,
-            if (image != null) const SizedBox(width: 4.0),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                child: child,
+      child: MouseRegion(
+        cursor: element is MenuAction && element.attributes.disabled
+            ? SystemMouseCursors.forbidden
+            : SystemMouseCursors.click,
+        child: Container(
+          key: innerKey,
+          padding: const EdgeInsets.all(8),
+          decoration: theme.decorationForItem(itemInfo),
+          child: Row(
+            children: [
+              if (prefix != null) prefix,
+              if (prefix != null) const SizedBox(width: 6.0),
+              if (image != null) image,
+              if (image != null) const SizedBox(width: 4.0),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                  child: child,
+                ),
               ),
-            ),
-            GroupIntrinsicWidth(
-              child: Container(
+              GroupIntrinsicWidth(
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -292,10 +299,10 @@ class ColorSchemeDesktopMenuWidgetBuilder extends DesktopMenuWidgetBuilder {
                   ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
+      ) ,
     );
   }
 }
