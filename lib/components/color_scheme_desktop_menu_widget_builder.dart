@@ -5,6 +5,7 @@ import 'color_scheme_desktop_menu_widget_builder.dart';
 export 'package:super_context_menu/src/default_builder/desktop_menu_widget_builder.dart';
 export 'package:super_context_menu/src/default_builder/group_intrinsic_width.dart';
 export 'package:super_context_menu/src/scaffold/desktop/menu_widget_builder.dart';
+export 'package:super_context_menu/src/scaffold/desktop/menu_widget.dart';
 
 extension on SingleActivator {
   String stringRepresentation() {
@@ -92,7 +93,6 @@ class DefaultDesktopMenuTheme {
         }
         return BoxDecoration(
           color: color,
-
           borderRadius: BorderRadius.circular(4.0),
         );
       },
@@ -109,6 +109,8 @@ class ColorSchemeDesktopMenuWidgetBuilder extends DesktopMenuWidgetBuilder {
   final double maxWidth;
   final double minWidth;
 
+  late BuildContext _context;
+
   static DefaultDesktopMenuTheme _themeForContext(BuildContext context) {
     return DefaultDesktopMenuTheme.themeForColorScheme(
         Theme.of(context).colorScheme);
@@ -120,6 +122,7 @@ class ColorSchemeDesktopMenuWidgetBuilder extends DesktopMenuWidgetBuilder {
     DesktopMenuInfo menuInfo,
     Widget child,
   ) {
+    _context = context;
     final pixelRatio = MediaQuery.of(context).devicePixelRatio;
     final theme = _themeForContext(context);
     return Container(
@@ -156,6 +159,7 @@ class ColorSchemeDesktopMenuWidgetBuilder extends DesktopMenuWidgetBuilder {
     DesktopMenuInfo menuInfo,
     MenuSeparator separator,
   ) {
+    _context = context;
     final theme = _themeForContext(context);
     final paddingLeft = 10.0 + (menuInfo.hasAnyCheckedItems ? (16 + 6) : 0);
     const paddingRight = 10.0;
@@ -302,8 +306,14 @@ class ColorSchemeDesktopMenuWidgetBuilder extends DesktopMenuWidgetBuilder {
             ],
           ),
         ),
-      ) ,
+      ),
     );
+  }
+
+  /// 不想改源代码 只能用这种抽象的办法关闭了
+  void hideMenu() {
+    final MenuWidget menuWidget = _context.widget as MenuWidget;
+    menuWidget.delegate.hide(itemSelected: false);
   }
 }
 

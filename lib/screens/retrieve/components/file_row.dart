@@ -4,7 +4,6 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import 'package:cinarium/screens/retrieve/components/crawl_name_field.dart';
 import 'package:super_context_menu/super_context_menu.dart';
-import 'package:super_native_extensions/raw_menu.dart' as raw;
 
 import '../../../components/color_scheme_desktop_menu_widget_builder.dart';
 import '../controllers/retrieve_controller.dart';
@@ -41,6 +40,8 @@ class FileRow extends StatelessWidget {
       isHovering.value = false;
       isMenuShow.value = false;
     });
+    final colorSchemeDesktopMenuWidgetBuilder =
+        ColorSchemeDesktopMenuWidgetBuilder();
     return GestureDetector(
       onTap: () {
         context.read<RetrieveController>().checkFile(untreatedVideo.id);
@@ -55,19 +56,20 @@ class FileRow extends StatelessWidget {
           },
           child: ContextMenuWidget(
             iconTheme: const IconThemeData(fill: 1, opticalSize: 20),
-            desktopMenuWidgetBuilder: ColorSchemeDesktopMenuWidgetBuilder(),
+            desktopMenuWidgetBuilder: colorSchemeDesktopMenuWidgetBuilder,
             menuProvider: (menuRequest) {
-              scrollControllerListener() {
-                debugPrint('scrollControllerListener');
-
+              scrollControllerListener() async {
+                colorSchemeDesktopMenuWidgetBuilder.hideMenu();
               }
 
               menuRequest.onShowMenu.addListener(() {
                 isMenuShow.value = true;
+                debugPrint('show menu');
                 scrollController.addListener(scrollControllerListener);
               });
               menuRequest.onHideMenu.addListener(() {
                 isMenuShow.value = false;
+                debugPrint('hide menu');
                 scrollController.removeListener(scrollControllerListener);
               });
 
