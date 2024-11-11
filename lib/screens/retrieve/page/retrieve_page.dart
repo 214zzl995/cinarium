@@ -14,49 +14,52 @@ class RetrievePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      body: Padding(
-        padding: const EdgeInsets.only(top: 5, bottom: 10),
-        child: Column(
-          children: [
-            _buildToolBar(context),
-            Expanded(
-              child: ScrollAnimator(
-                builder: (context, controller, physics) => CustomScrollView(
-                  physics: physics,
-                  controller: controller,
-                  slivers: [
-                    _buildTableHeader(context),
-                    SliverFixedExtentList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          final file = context
-                              .read<RetrieveController>()
-                              .showFiles[index];
-                          return FileRow(
-                            index: index,
-                            untreatedVideo: file,
-                            doubleTap: false,
-                            scrollController: controller,
-                          );
-                        },
-                        childCount: context.select<RetrieveController, int>(
-                            (value) => value.fileCount),
+    return ChangeNotifierProvider(
+      create: (_) => RetrieveController(),
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        body: Padding(
+          padding: const EdgeInsets.only(top: 5, bottom: 10),
+          child: Column(
+            children: [
+              _buildToolBar(context),
+              Expanded(
+                child: ScrollAnimator(
+                  builder: (context, controller, physics) => CustomScrollView(
+                    physics: physics,
+                    controller: controller,
+                    slivers: [
+                      _buildTableHeader(context),
+                      SliverFixedExtentList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            final file = context
+                                .read<RetrieveController>()
+                                .showFiles[index];
+                            return FileRow(
+                              index: index,
+                              untreatedVideo: file,
+                              doubleTap: false,
+                              scrollController: controller,
+                            );
+                          },
+                          childCount: context.select<RetrieveController, int>(
+                              (value) => value.fileCount),
+                        ),
+                        itemExtent: 55.0,
                       ),
-                      itemExtent: 55.0,
-                    ),
-                    const SliverToBoxAdapter(
-                      child: SizedBox(height: 80),
-                    ),
-                  ],
+                      const SliverToBoxAdapter(
+                        child: SizedBox(height: 80),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
+        floatingActionButton: _buildFloatingActionButton(context),
       ),
-      floatingActionButton: _buildFloatingActionButton(context),
     );
   }
 
@@ -187,13 +190,15 @@ class RetrievePage extends StatelessWidget {
                       selector: (context, controller) =>
                           controller.scanStorageStatus),
                   Selector<RetrieveController, bool>(
-                      builder: (context, status, child) => TextButton(
-                          onPressed: () {
-                            context
-                                .read<RetrieveController>()
-                                .getUntreatedVideos();
-                          },
-                          child: const Text("reload")),
+                      builder: (context, status, child) => status
+                          ? TextButton(
+                              onPressed: () {
+                                context
+                                    .read<RetrieveController>()
+                                    .getUntreatedVideos();
+                              },
+                              child: const Text("reload"))
+                          : Container(),
                       selector: (context, controller) =>
                           controller.untreatedFileHasChange)
                 ],

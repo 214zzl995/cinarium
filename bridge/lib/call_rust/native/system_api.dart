@@ -47,7 +47,7 @@ Future<void> updateTaskTidyFolder({required String folder}) =>
     RustLib.instance.api
         .crateNativeSystemApiUpdateTaskTidyFolder(folder: folder);
 
-Future<void> addSourceNotifyPath({required String path}) =>
+Future<String?> addSourceNotifyPath({required String path}) =>
     RustLib.instance.api.crateNativeSystemApiAddSourceNotifyPath(path: path);
 
 Future<void> removeSourceNotifySource(

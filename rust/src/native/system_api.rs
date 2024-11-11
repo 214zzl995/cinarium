@@ -86,27 +86,30 @@ pub async fn update_task_tidy_folder(folder: String) -> anyhow::Result<()> {
 }
 
 #[allow(dead_code)]
-pub async fn add_source_notify_path(path: String) -> anyhow::Result<()> {
+pub async fn add_source_notify_path(path: String) -> Option<String> {
     let folder = PathBuf::from(&path);
 
-    let sources = crate::notify::get_source_notify_sources()?;
+    let sources = crate::notify::get_source_notify_sources().unwrap();
     for source in sources {
         if source.path.eq(&folder) {
-            return Ok(());
+            return Some("The directory already exists".to_string());
         }
 
         if folder.starts_with(&source.path) {
-            return Ok(());
+            return Some("The parent directory already exists".to_string());
         }
 
         if source.path.starts_with(&folder) {
-            crate::notify::unwatch_source(&source).await?;
+            if let Err(err) = crate::notify::unwatch_source(&source).await {
+                return Some(err.to_string());
+            }
         }
     }
 
-    crate::notify::watch_source(&folder).await?;
-
-    Ok(())
+    match crate::notify::watch_source(&folder).await {
+        Ok(_) => None,
+        Err(err) => Some(err.to_string()),
+    }
 }
 
 #[allow(dead_code)]

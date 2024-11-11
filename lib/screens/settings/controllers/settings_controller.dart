@@ -124,14 +124,21 @@ class SettingsController with ChangeNotifier {
         prioritys: crawlerTemplates.map((e) => (e.id, e.priority)).toList());
   }
 
-  void addSearchFolder() async {
+  Future<String?> addSearchFolder() async {
     final path = await FilePicker.platform.getDirectoryPath(
       lockParentWindow: true,
     );
     if (path != null) {
-      await addSourceNotifyPath(path: path);
-      _searchFolders = getSourceNotifySources();
-      notifyListeners();
+      String? err = await addSourceNotifyPath(path: path);
+      if (err != null) {
+        return err;
+      } else {
+        _searchFolders = getSourceNotifySources();
+        notifyListeners();
+        return null;
+      }
+    } else {
+      return null;
     }
   }
 

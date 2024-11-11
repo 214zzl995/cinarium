@@ -54,11 +54,15 @@ class RetrieveController with ChangeNotifier {
 
   void getUntreatedVideos() async {
     _checkMap.clear();
+    final begin = DateTime.now().millisecondsSinceEpoch;
     _untreatedVideos = await db_api.getUntreatedVideos();
+    final end = DateTime.now().millisecondsSinceEpoch;
+    debugPrint("getUntreatedVideos cost time: ${end - begin}");
     for (var element in _untreatedVideos) {
       _checkMap[element.id] = false;
     }
     _getVideoLoading = false;
+    _untreatedFileHasChange = false;
     notifyListeners();
   }
 

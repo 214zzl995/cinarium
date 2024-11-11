@@ -295,7 +295,8 @@ abstract class RustLibApi extends BaseApi {
 
   Future<HomeVideoData> crateNativeHomeApiHomeVideoDataNew();
 
-  Future<void> crateNativeSystemApiAddSourceNotifyPath({required String path});
+  Future<String?> crateNativeSystemApiAddSourceNotifyPath(
+      {required String path});
 
   Future<void> crateNativeSystemApiChangeCrawlerTemplatesPriority(
       {required List<(int, int)> prioritys});
@@ -2438,7 +2439,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<void> crateNativeSystemApiAddSourceNotifyPath({required String path}) {
+  Future<String?> crateNativeSystemApiAddSourceNotifyPath(
+      {required String path}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
@@ -2447,8 +2449,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             funcId: 74, port: port_);
       },
       codec: SseCodec(
-        decodeSuccessData: sse_decode_unit,
-        decodeErrorData: sse_decode_AnyhowException,
+        decodeSuccessData: sse_decode_opt_String,
+        decodeErrorData: null,
       ),
       constMeta: kCrateNativeSystemApiAddSourceNotifyPathConstMeta,
       argValues: [path],

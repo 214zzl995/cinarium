@@ -20,7 +20,35 @@ class SettingsMonitorFolderPage extends StatelessWidget {
           width: 150,
           child: FloatingActionButton(
               onPressed: () {
-                context.read<SettingsController>().addSearchFolder();
+                context.read<SettingsController>().addSearchFolder().then(
+                  (value) {
+                    if (value != null) {
+                      showAboutDialog(
+                          context: context,
+                          applicationIcon: Icon(
+                            Symbols.error,
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
+                            weight: 400,
+                          ),
+                          applicationName: 'Add Folder Failed',
+                          applicationVersion: value,
+                          children: [
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Text(
+                              'The folder you are trying to add is already in the list.',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ]);
+                    }
+                  },
+                );
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

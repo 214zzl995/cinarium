@@ -3588,10 +3588,11 @@ fn wire__crate__native__system_api__add_source_notify_path_impl(
             let api_path = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| async move {
-                transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
+                transform_result_sse::<_, ()>(
                     (move || async move {
-                        let output_ok =
-                            crate::native::system_api::add_source_notify_path(api_path).await?;
+                        let output_ok = Result::<_, ()>::Ok(
+                            crate::native::system_api::add_source_notify_path(api_path).await,
+                        )?;
                         Ok(output_ok)
                     })()
                     .await,

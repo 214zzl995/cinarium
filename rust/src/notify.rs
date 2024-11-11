@@ -23,7 +23,7 @@ use crate::{
 };
 
 static SOURCE_NOTIFY: OnceLock<SourceNotify> = OnceLock::new();
-static LISTENER: OnceLock<broadcast::Sender<()>> = OnceLock::new();
+static UNTREATED_FILE_LISTENER: OnceLock<broadcast::Sender<()>> = OnceLock::new();
 static SCAN_STORAGE_LISTENER: OnceLock<watch::Sender<bool>> = OnceLock::new();
 
 pub struct SourceNotify(Mutex<SourceNotifyInner>);
@@ -166,7 +166,7 @@ impl SourceNotify {
 
                 if !modifys.is_empty() {
                     Metadata::insert_replace_batch(&modifys).await.unwrap();
-                    if let Err(err) = LISTENER
+                    if let Err(err) = UNTREATED_FILE_LISTENER
                         .get_or_init(|| {
                             let (tx, _) = broadcast::channel(1);
                             tx
@@ -219,7 +219,7 @@ impl SourceNotify {
         }
 
         if !new_videos.is_empty() || !deleted_videos.is_empty() {
-            let _ = LISTENER
+            let _ = UNTREATED_FILE_LISTENER
                 .get_or_init(|| {
                     let (tx, _) = broadcast::channel(1);
                     tx
@@ -265,6 +265,12 @@ impl SourceNotify {
 
             if !new_videos.is_empty() {
                 Metadata::insert_replace_batch(&new_videos).await.unwrap();
+                let _ = UNTREATED_FILE_LISTENER
+                    .get_or_init(|| {
+                        let (tx, _) = broadcast::channel(1);
+                        tx
+                    })
+                    .send(());
             }
 
             tx.send_replace(false);
@@ -405,7 +411,7 @@ pub fn listener_untreated_file(
 ) -> ListenerHandle {
     let (handle_tx, handle_rx) = oneshot::channel::<()>();
     tokio::spawn(async move {
-        let mut rx = LISTENER
+        let mut rx = UNTREATED_FILE_LISTENER
             .get_or_init(|| {
                 let (tx, _) = broadcast::channel(1);
                 tx
