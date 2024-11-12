@@ -25,7 +25,7 @@ pub async fn init_cinarium_config() -> anyhow::Result<()> {
 
 #[allow(dead_code)]
 pub async fn init_source_notify() -> anyhow::Result<()> {
-    crate::notify::init_source_notify().await?;
+    crate::file::init_source_notify().await?;
     Ok(())
 }
 
@@ -89,7 +89,7 @@ pub async fn update_task_tidy_folder(folder: String) -> anyhow::Result<()> {
 pub async fn add_source_notify_path(path: String) -> Option<String> {
     let folder = PathBuf::from(&path);
 
-    let sources = crate::notify::get_source_notify_sources().unwrap();
+    let sources = crate::file::get_source_notify_sources().unwrap();
     for source in sources {
         if source.path.eq(&folder) {
             return Some("The directory already exists".to_string());
@@ -100,13 +100,13 @@ pub async fn add_source_notify_path(path: String) -> Option<String> {
         }
 
         if source.path.starts_with(&folder) {
-            if let Err(err) = crate::notify::unwatch_source(&source).await {
+            if let Err(err) = crate::file::unwatch_source(&source).await {
                 return Some(err.to_string());
             }
         }
     }
 
-    match crate::notify::watch_source(&folder).await {
+    match crate::file::watch_source(&folder).await {
         Ok(_) => None,
         Err(err) => Some(err.to_string()),
     }
@@ -114,7 +114,7 @@ pub async fn add_source_notify_path(path: String) -> Option<String> {
 
 #[allow(dead_code)]
 pub async fn remove_source_notify_source(source: Source, sync_delete: bool) -> anyhow::Result<()> {
-    crate::notify::unwatch_source(&source).await?;
+    crate::file::unwatch_source(&source).await?;
 
     if sync_delete {
         crate::model::Metadata::delete_by_source_id(&source.id).await?;
@@ -187,7 +187,7 @@ pub async fn delete_crawler_template(id: u32) -> Option<String> {
 #[allow(dead_code)]
 #[frb(sync)]
 pub fn get_source_notify_sources() -> anyhow::Result<Vec<Source>> {
-    crate::notify::get_source_notify_sources()
+    crate::file::get_source_notify_sources()
 }
 
 #[allow(dead_code)]
@@ -211,20 +211,20 @@ pub async fn listener_http_status(
 pub async fn listener_untreated_file(
     dart_callback: impl Fn() -> DartFnFuture<()> + Send + Sync + 'static,
 ) -> ListenerHandle {
-    crate::notify::listener_untreated_file(dart_callback)
+    crate::file::listener_untreated_file(dart_callback)
 }
 
 #[allow(dead_code)]
 pub async fn listener_scan_storage(
     dart_callback: impl Fn(bool) -> DartFnFuture<()> + Send + Sync + 'static,
 ) -> ListenerHandle {
-    crate::notify::listener_scan_storage(dart_callback)
+    crate::file::listener_scan_storage(dart_callback)
 }
 
 #[allow(dead_code)]
 #[frb(sync)]
 pub fn get_scan_storage_status() -> bool {
-    crate::notify::get_scan_storage_status()
+    crate::file::get_scan_storage_status()
 }
 
 impl TaskConfig {

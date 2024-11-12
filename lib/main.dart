@@ -23,7 +23,9 @@ void main(List<String> args) async {
   await initDb();
   await initCinariumConfig();
   await initPool();
-  await initSourceNotify();
+
+  // Non-asynchronous methods prevent blocking
+  initSourceNotify();
 
   if (DesktopUtil().isDesktop) {
     await flutter_acrylic.Window.initialize();

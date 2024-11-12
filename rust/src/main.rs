@@ -5,8 +5,8 @@ mod app;
 mod log;
 mod model;
 mod native;
-mod notify;
 mod task;
+mod file;
 
 use std::{net::TcpListener, path::PathBuf};
 
@@ -65,7 +65,6 @@ async fn main() {
     let opt = Opt::from_args();
     log::register_log().unwrap();
     app::init_cinarium_config().await.unwrap();
-    notify::init_source_notify().await.unwrap();
     task::crawler::init_crawler_templates().await.unwrap();
 
     let res = match opt {

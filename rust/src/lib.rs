@@ -16,7 +16,7 @@ mod app;
 mod log;
 mod model;
 mod native;
-mod notify;
+mod file;
 mod task;
 
 impl Default for HttpConfig {

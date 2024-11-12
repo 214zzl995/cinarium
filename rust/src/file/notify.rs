@@ -12,7 +12,6 @@ use notify::{
 };
 use parking_lot::Mutex;
 use tokio::sync::{
-    broadcast,
     mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender},
     oneshot, watch,
 };
@@ -23,7 +22,7 @@ use crate::{
 };
 
 static SOURCE_NOTIFY: OnceLock<SourceNotify> = OnceLock::new();
-static UNTREATED_FILE_LISTENER: OnceLock<broadcast::Sender<()>> = OnceLock::new();
+
 static SCAN_STORAGE_LISTENER: OnceLock<watch::Sender<bool>> = OnceLock::new();
 
 pub struct SourceNotify(Mutex<SourceNotifyInner>);
@@ -80,56 +79,59 @@ impl SourceNotify {
     fn listen(&self, mut rx: UnboundedReceiver<Result<Event, Error>>) {
         tokio::spawn(async move {
             while let Some(Ok(event)) = rx.recv().await {
-                match event.kind {
-                    notify::EventKind::Create(_) => {
-                        let path = event.paths.first().unwrap().clone();
-                        if !path.is_file() {
-                            continue;
-                        }
-                        #[cfg(target_os = "windows")]
-                        if is_recycle_bin(&path) {
-                            continue;
-                        }
-                        if is_mov_type(path.extension().unwrap().to_str().unwrap()) {}
-                    }
-                    notify::EventKind::Remove(_) => {
-                        let path = event.paths.first().unwrap().clone();
-                        // Files that have been deleted will get a non-file judgment because of the lack of metadata
-                        if path.extension().is_none() {
-                            continue;
-                        }
-                        #[cfg(target_os = "windows")]
-                        if is_recycle_bin(&path) {
-                            continue;
-                        }
-
-                        if is_mov_type(path.extension().unwrap().to_str().unwrap()) {
-                            tokio::spawn(async move {
-                                let _ = Metadata::marking_delete_with_path(&path).await;
-                            });
-                        }
-                    }
-                    notify::EventKind::Modify(modify_kind) => {
-                        if modify_kind == ModifyKind::Any
-                            || modify_kind == ModifyKind::Name(RenameMode::To)
-                        {
+                tokio::spawn(async move {
+                    match event.kind {
+                        notify::EventKind::Create(_) => {
                             let path = event.paths.first().unwrap().clone();
-
                             if !path.is_file() {
-                                continue;
+                                return;
                             }
                             #[cfg(target_os = "windows")]
                             if is_recycle_bin(&path) {
-                                continue;
+                                return;
+                            }
+                            if is_mov_type(path.extension().unwrap().to_str().unwrap()) {}
+                        }
+                        notify::EventKind::Remove(_) => {
+                            let path = event.paths.first().unwrap().clone();
+                            // Files that have been deleted will get a non-file judgment because of the lack of metadata
+                            if path.extension().is_none() {
+                                return;
+                            }
+                            #[cfg(target_os = "windows")]
+                            if is_recycle_bin(&path) {
+                                return;
                             }
 
                             if is_mov_type(path.extension().unwrap().to_str().unwrap()) {
-                                SOURCE_NOTIFY.get().unwrap().add_modify_path(path);
+                                tokio::spawn(async move {
+                                    
+                                    let _ = Metadata::marking_delete_with_path(&path).await;
+                                });
                             }
                         }
+                        notify::EventKind::Modify(modify_kind) => {
+                            if modify_kind == ModifyKind::Any
+                                || modify_kind == ModifyKind::Name(RenameMode::To)
+                            {
+                                let path = event.paths.first().unwrap().clone();
+
+                                if !path.is_file() {
+                                    return;
+                                }
+                                #[cfg(target_os = "windows")]
+                                if is_recycle_bin(&path) {
+                                    return;
+                                }
+
+                                if is_mov_type(path.extension().unwrap().to_str().unwrap()) {
+                                    SOURCE_NOTIFY.get().unwrap().add_modify_path(path);
+                                }
+                            }
+                        }
+                        _ => {}
                     }
-                    _ => {}
-                }
+                });
             }
         });
 
@@ -166,15 +168,6 @@ impl SourceNotify {
 
                 if !modifys.is_empty() {
                     Metadata::insert_replace_batch(&modifys).await.unwrap();
-                    if let Err(err) = UNTREATED_FILE_LISTENER
-                        .get_or_init(|| {
-                            let (tx, _) = broadcast::channel(1);
-                            tx
-                        })
-                        .send(())
-                    {
-                        tracing::error!("Failed to send event: {:?}", err);
-                    };
                 }
             }
         });
@@ -218,14 +211,7 @@ impl SourceNotify {
             Metadata::marking_delete_batch_with_hash(&deleted_videos).await?;
         }
 
-        if !new_videos.is_empty() || !deleted_videos.is_empty() {
-            let _ = UNTREATED_FILE_LISTENER
-                .get_or_init(|| {
-                    let (tx, _) = broadcast::channel(1);
-                    tx
-                })
-                .send(());
-        }
+        if !new_videos.is_empty() || !deleted_videos.is_empty() {}
 
         tx.send_replace(false);
 
@@ -265,12 +251,6 @@ impl SourceNotify {
 
             if !new_videos.is_empty() {
                 Metadata::insert_replace_batch(&new_videos).await.unwrap();
-                let _ = UNTREATED_FILE_LISTENER
-                    .get_or_init(|| {
-                        let (tx, _) = broadcast::channel(1);
-                        tx
-                    })
-                    .send(());
             }
 
             tx.send_replace(false);
@@ -301,7 +281,7 @@ impl SourceNotify {
 impl SourceNotifyInner {}
 
 pub fn get_source_notify_sources() -> anyhow::Result<Vec<Source>> {
-    Ok(crate::notify::SOURCE_NOTIFY
+    Ok(SOURCE_NOTIFY
         .get()
         .ok_or_else(|| anyhow::anyhow!("SourceNotify not initialized"))?
         .0
@@ -311,7 +291,7 @@ pub fn get_source_notify_sources() -> anyhow::Result<Vec<Source>> {
 }
 
 pub async fn watch_source(path: &PathBuf) -> anyhow::Result<()> {
-    crate::notify::SOURCE_NOTIFY
+    SOURCE_NOTIFY
         .get()
         .ok_or_else(|| anyhow::anyhow!("SourceNotify not initialized"))?
         .watch_source(path)
@@ -319,7 +299,7 @@ pub async fn watch_source(path: &PathBuf) -> anyhow::Result<()> {
 }
 
 pub async fn unwatch_source(source: &Source) -> anyhow::Result<()> {
-    crate::notify::SOURCE_NOTIFY
+    SOURCE_NOTIFY
         .get()
         .ok_or_else(|| anyhow::anyhow!("SourceNotify not initialized"))?
         .unwatch_source(source)
@@ -404,32 +384,6 @@ fn get_file_id_hash(path: &impl AsRef<Path>) -> anyhow::Result<String> {
     let mut hasher = std::hash::DefaultHasher::new();
     file_id.hash(&mut hasher);
     Ok(format!("{:x}", hasher.finish()))
-}
-
-pub fn listener_untreated_file(
-    dart_callback: impl Fn() -> DartFnFuture<()> + Send + Sync + 'static,
-) -> ListenerHandle {
-    let (handle_tx, handle_rx) = oneshot::channel::<()>();
-    tokio::spawn(async move {
-        let mut rx = UNTREATED_FILE_LISTENER
-            .get_or_init(|| {
-                let (tx, _) = broadcast::channel(1);
-                tx
-            })
-            .subscribe();
-
-        let linstener = async {
-            while rx.recv().await.is_ok() {
-                dart_callback().await;
-            }
-        };
-
-        tokio::select! {
-            _ = handle_rx => {},
-            _ = linstener => {},
-        };
-    });
-    ListenerHandle::new(handle_tx)
 }
 
 pub fn listener_scan_storage(
