@@ -2,7 +2,7 @@ use std::{
     collections::HashSet,
     hash::{Hash, Hasher},
     path::{Path, PathBuf},
-    sync::OnceLock,
+    sync::{Arc, OnceLock},
 };
 
 use flutter_rust_bridge::DartFnFuture;
@@ -11,74 +11,66 @@ use notify::{
     Config, Error, Event, RecommendedWatcher, Watcher,
 };
 use parking_lot::Mutex;
-use tokio::sync::{
-    mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender},
-    oneshot, watch,
-};
+use tokio::sync::{broadcast, mpsc, oneshot, watch};
 
 use crate::{
     model::{Metadata, Source},
     native::ListenerHandle,
 };
 
-static SOURCE_NOTIFY: OnceLock<SourceNotify> = OnceLock::new();
+use super::UntreatedVideoEvent;
 
 static SCAN_STORAGE_LISTENER: OnceLock<watch::Sender<bool>> = OnceLock::new();
 
-pub struct SourceNotify(Mutex<SourceNotifyInner>);
+#[derive(Clone)]
+pub struct SourceNotify(Arc<Mutex<SourceNotifyInner>>);
 
 pub struct SourceNotifyInner {
     watcher: RecommendedWatcher,
     sources: Vec<Source>,
+    //Doing anti-shake for inserts and deletes sqlite databases can't afford fast processing of single entries
     modifys: HashSet<PathBuf>,
-}
-
-pub async fn init_source_notify() -> anyhow::Result<()> {
-    if SOURCE_NOTIFY.get().is_some() {
-        return Ok(());
-    }
-
-    let sources = Source::query_all().await?;
-
-    let (tx, rx) = unbounded_channel();
-
-    SOURCE_NOTIFY
-        .set(SourceNotify::new(&sources, tx)?)
-        .map_err(|_| anyhow::anyhow!("Failed to set source notify"))?;
-
-    let source_notify = SOURCE_NOTIFY.get().unwrap();
-    source_notify.full_scale_retrieval().await?;
-    source_notify.listen(rx);
-
-    Ok(())
+    deleted: HashSet<PathBuf>,
 }
 
 impl SourceNotify {
-    fn new(
+    pub(super) fn new(
         sources: &[Source],
-        tx: UnboundedSender<std::result::Result<Event, Error>>,
+        tx: mpsc::UnboundedSender<std::result::Result<Event, Error>>,
     ) -> anyhow::Result<Self> {
         let watcher = RecommendedWatcher::new(
             move |result: std::result::Result<Event, Error>| {
-                tx.send(result).expect("Failed to send event");
+                tx.send(result).unwrap();
             },
             Config::default(),
         )?;
 
-        Ok(SourceNotify(Mutex::new(SourceNotifyInner {
+        Ok(SourceNotify(Arc::new(Mutex::new(SourceNotifyInner {
             watcher,
             sources: sources.to_owned(),
             modifys: HashSet::new(),
-        })))
+            deleted: HashSet::new(),
+        }))))
     }
 
     fn add_modify_path(&self, path: PathBuf) {
         self.0.lock().modifys.insert(path);
     }
 
-    fn listen(&self, mut rx: UnboundedReceiver<Result<Event, Error>>) {
-        tokio::spawn(async move {
+    fn add_deleted_path(&self, path: PathBuf) {
+        self.0.lock().deleted.insert(path);
+    }
+
+    pub(super) fn listen(
+        &self,
+        return_tx: mpsc::Sender<UntreatedVideoEvent>,
+        mut rx: mpsc::UnboundedReceiver<Result<Event, Error>>,
+        dispose_tx: broadcast::Sender<()>,
+    ) {
+        let source_notify = self.clone();
+        let listen_handle = async move {
             while let Some(Ok(event)) = rx.recv().await {
+                let source_notify = source_notify.clone();
                 tokio::spawn(async move {
                     match event.kind {
                         notify::EventKind::Create(_) => {
@@ -104,10 +96,7 @@ impl SourceNotify {
                             }
 
                             if is_mov_type(path.extension().unwrap().to_str().unwrap()) {
-                                tokio::spawn(async move {
-                                    
-                                    let _ = Metadata::marking_delete_with_path(&path).await;
-                                });
+                                source_notify.add_deleted_path(path);
                             }
                         }
                         notify::EventKind::Modify(modify_kind) => {
@@ -125,7 +114,7 @@ impl SourceNotify {
                                 }
 
                                 if is_mov_type(path.extension().unwrap().to_str().unwrap()) {
-                                    SOURCE_NOTIFY.get().unwrap().add_modify_path(path);
+                                    source_notify.add_modify_path(path);
                                 }
                             }
                         }
@@ -133,47 +122,89 @@ impl SourceNotify {
                     }
                 });
             }
+        };
+
+        let mut dispose_rx = dispose_tx.subscribe();
+
+        tokio::spawn(async move {
+            tokio::select! {
+                _ = listen_handle => {},
+                _ = dispose_rx.recv() => {},
+            };
         });
 
-        let mut source_notify = self.0.lock();
+        {
+            let mut source_notify = self.0.lock();
 
-        let sources = source_notify.sources.clone();
+            let sources = source_notify.sources.clone();
 
-        for source in sources {
-            source_notify
-                .watcher
-                .watch(
-                    std::path::Path::new(&source.path),
-                    ::notify::RecursiveMode::Recursive,
-                )
-                .unwrap();
+            for source in sources {
+                source_notify
+                    .watcher
+                    .watch(
+                        std::path::Path::new(&source.path),
+                        ::notify::RecursiveMode::Recursive,
+                    )
+                    .unwrap();
+            }
         }
 
-        // n seconds to assemble an update statement Prevents transactions from being too frequent
-        tokio::spawn(async move {
-            loop {
-                tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
+        let source_notify = self.clone();
 
-                let modifys = {
-                    let mut source_notify = SOURCE_NOTIFY.get().unwrap().0.lock();
-                    source_notify.modifys.drain().collect::<Vec<PathBuf>>()
-                }
-                .into_iter()
-                .filter_map(|path| match Metadata::try_from(&path) {
-                    Ok(metadata) => Some(metadata),
-                    // Possible scenario: File busy
-                    Err(_) => None,
-                })
-                .collect::<Vec<Metadata>>();
+        let return_handle = async move {
+            // n seconds to assemble an update statement Prevents transactions from being too frequent
+            loop {
+                tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
+
+                let (modifys, deleted) = {
+                    let mut source_notify = source_notify.0.lock();
+
+                    // Modifying a file may fail to fetch metadata, and will be put into the next process.
+                    let mut modifys = Vec::new();
+                    for path in source_notify.modifys.clone().iter() {
+                        match Metadata::try_from(path) {
+                            Ok(metadata) => {
+                                modifys.push(metadata);
+                                source_notify.modifys.remove(path);
+                            }
+                            // Possible scenario: File busy
+                            Err(_) => {}
+                        }
+                    }
+                    let deleted = source_notify.deleted.drain().collect::<Vec<PathBuf>>();
+
+                    source_notify.deleted.clear();
+
+                    (modifys, deleted)
+                };
 
                 if !modifys.is_empty() {
-                    Metadata::insert_replace_batch(&modifys).await.unwrap();
+                    return_tx
+                        .send(UntreatedVideoEvent::InsertOrUpdate(modifys))
+                        .await
+                        .unwrap();
+                }
+
+                if !deleted.is_empty() {
+                    return_tx
+                        .send(UntreatedVideoEvent::Remove(deleted))
+                        .await
+                        .unwrap();
                 }
             }
+        };
+
+        let mut dispose_rx = dispose_tx.subscribe();
+
+        tokio::spawn(async move {
+            tokio::select! {
+                _ = return_handle => {},
+                _ = dispose_rx.recv() => {},
+            };
         });
     }
 
-    async fn full_scale_retrieval(&self) -> anyhow::Result<()> {
+    pub(super) async fn full_scale_retrieval(&self) -> anyhow::Result<()> {
         let tx = SCAN_STORAGE_LISTENER.get_or_init(|| {
             let (tx, _) = watch::channel(false);
             tx
@@ -218,7 +249,7 @@ impl SourceNotify {
         Ok(())
     }
 
-    pub fn paths(&self) -> Vec<PathBuf> {
+    pub(super) fn paths(&self) -> Vec<PathBuf> {
         let mut sources = self
             .0
             .lock()
@@ -232,11 +263,13 @@ impl SourceNotify {
         sources.into_iter().map(|s| s.path).collect()
     }
 
-    pub async fn watch_source(&self, path: &PathBuf) -> anyhow::Result<()> {
+    pub(super) async fn watch_source(&self, path: &PathBuf) -> anyhow::Result<()> {
         let source = Source::insert(path).await?;
         self.0.lock().sources.push(source);
 
         let path = path.clone();
+
+        let source_notify = self.clone();
 
         tokio::spawn(async move {
             let tx = SCAN_STORAGE_LISTENER.get().unwrap();
@@ -255,9 +288,7 @@ impl SourceNotify {
 
             tx.send_replace(false);
 
-            SOURCE_NOTIFY
-                .get()
-                .unwrap()
+            source_notify
                 .0
                 .lock()
                 .watcher
@@ -268,7 +299,7 @@ impl SourceNotify {
         Ok(())
     }
 
-    pub async fn unwatch_source(&self, source: &Source) -> anyhow::Result<()> {
+    pub(super) async fn unwatch_source(&self, source: &Source) -> anyhow::Result<()> {
         source.delete().await?;
         self.0.lock().sources.retain(|s| s.id != source.id);
         self.0.lock().watcher.unwatch(&source.path)?;
@@ -280,31 +311,31 @@ impl SourceNotify {
 
 impl SourceNotifyInner {}
 
-pub fn get_source_notify_sources() -> anyhow::Result<Vec<Source>> {
-    Ok(SOURCE_NOTIFY
-        .get()
-        .ok_or_else(|| anyhow::anyhow!("SourceNotify not initialized"))?
-        .0
-        .lock()
-        .sources
-        .clone())
-}
+// pub fn get_source_notify_sources() -> anyhow::Result<Vec<Source>> {
+//     Ok(SOURCE_NOTIFY
+//         .get()
+//         .ok_or_else(|| anyhow::anyhow!("SourceNotify not initialized"))?
+//         .0
+//         .lock()
+//         .sources
+//         .clone())
+// }
 
-pub async fn watch_source(path: &PathBuf) -> anyhow::Result<()> {
-    SOURCE_NOTIFY
-        .get()
-        .ok_or_else(|| anyhow::anyhow!("SourceNotify not initialized"))?
-        .watch_source(path)
-        .await
-}
+// pub async fn watch_source(path: &PathBuf) -> anyhow::Result<()> {
+//     SOURCE_NOTIFY
+//         .get()
+//         .ok_or_else(|| anyhow::anyhow!("SourceNotify not initialized"))?
+//         .watch_source(path)
+//         .await
+// }
 
-pub async fn unwatch_source(source: &Source) -> anyhow::Result<()> {
-    SOURCE_NOTIFY
-        .get()
-        .ok_or_else(|| anyhow::anyhow!("SourceNotify not initialized"))?
-        .unwatch_source(source)
-        .await
-}
+// pub async fn unwatch_source(source: &Source) -> anyhow::Result<()> {
+//     SOURCE_NOTIFY
+//         .get()
+//         .ok_or_else(|| anyhow::anyhow!("SourceNotify not initialized"))?
+//         .unwatch_source(source)
+//         .await
+// }
 
 #[cfg(target_os = "windows")]
 fn is_recycle_bin(path: &Path) -> bool {

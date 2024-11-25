@@ -6,7 +6,6 @@
 import '../app.dart';
 import '../frb_generated.dart';
 import '../lib.dart';
-import '../model/source.dart';
 import '../native.dart';
 import '../task/crawler.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
@@ -16,9 +15,6 @@ Future<void> initAppLog() =>
 
 Future<void> initCinariumConfig() =>
     RustLib.instance.api.crateNativeSystemApiInitCinariumConfig();
-
-Future<void> initSourceNotify() =>
-    RustLib.instance.api.crateNativeSystemApiInitSourceNotify();
 
 Future<void> runWebApi() =>
     RustLib.instance.api.crateNativeSystemApiRunWebApi();
@@ -46,14 +42,6 @@ Future<void> updateTaskThread({required int thread}) =>
 Future<void> updateTaskTidyFolder({required String folder}) =>
     RustLib.instance.api
         .crateNativeSystemApiUpdateTaskTidyFolder(folder: folder);
-
-Future<String?> addSourceNotifyPath({required String path}) =>
-    RustLib.instance.api.crateNativeSystemApiAddSourceNotifyPath(path: path);
-
-Future<void> removeSourceNotifySource(
-        {required Source source, required bool syncDelete}) =>
-    RustLib.instance.api.crateNativeSystemApiRemoveSourceNotifySource(
-        source: source, syncDelete: syncDelete);
 
 Future<void> openInExplorer({required PathBuf path}) =>
     RustLib.instance.api.crateNativeSystemApiOpenInExplorer(path: path);
@@ -88,9 +76,6 @@ Future<void> importCrawlerTemplate(
 
 Future<String?> deleteCrawlerTemplate({required int id}) =>
     RustLib.instance.api.crateNativeSystemApiDeleteCrawlerTemplate(id: id);
-
-List<Source> getSourceNotifySources() =>
-    RustLib.instance.api.crateNativeSystemApiGetSourceNotifySources();
 
 String getRoamingPath() =>
     RustLib.instance.api.crateNativeSystemApiGetRoamingPath();

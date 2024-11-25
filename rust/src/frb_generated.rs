@@ -44,7 +44,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.5.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1019330332;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1216715509;
 
 // Section: executor
 
@@ -3563,44 +3563,6 @@ fn wire__crate__native__home_api__HomeVideoData_new_impl(
         },
     )
 }
-fn wire__crate__native__system_api__add_source_notify_path_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "add_source_notify_path",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_path = <String>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| async move {
-                transform_result_sse::<_, ()>(
-                    (move || async move {
-                        let output_ok = Result::<_, ()>::Ok(
-                            crate::native::system_api::add_source_notify_path(api_path).await,
-                        )?;
-                        Ok(output_ok)
-                    })()
-                    .await,
-                )
-            }
-        },
-    )
-}
 fn wire__crate__native__system_api__change_crawler_templates_priority_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -3898,37 +3860,6 @@ fn wire__crate__native__system_api__get_scan_storage_status_impl(
         },
     )
 }
-fn wire__crate__native__system_api__get_source_notify_sources_impl(
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "get_source_notify_sources",
-            port: None,
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            deserializer.end();
-            transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
-                (move || {
-                    let output_ok = crate::native::system_api::get_source_notify_sources()?;
-                    Ok(output_ok)
-                })(),
-            )
-        },
-    )
-}
 fn wire__crate__native__system_api__get_task_conf_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -4066,41 +3997,6 @@ fn wire__crate__native__system_api__init_cinarium_config_impl(
                 transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
                     (move || async move {
                         let output_ok = crate::native::system_api::init_cinarium_config().await?;
-                        Ok(output_ok)
-                    })()
-                    .await,
-                )
-            }
-        },
-    )
-}
-fn wire__crate__native__system_api__init_source_notify_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "init_source_notify",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            deserializer.end();
-            move |context| async move {
-                transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
-                    (move || async move {
-                        let output_ok = crate::native::system_api::init_source_notify().await?;
                         Ok(output_ok)
                     })()
                     .await,
@@ -4334,47 +4230,6 @@ fn wire__crate__native__system_api__open_in_explorer_by_string_impl(
                             crate::native::system_api::open_in_explorer_by_string(api_path)?;
                         Ok(output_ok)
                     })(),
-                )
-            }
-        },
-    )
-}
-fn wire__crate__native__system_api__remove_source_notify_source_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "remove_source_notify_source",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_source = <Source>::sse_decode(&mut deserializer);
-            let api_sync_delete = <bool>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| async move {
-                transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
-                    (move || async move {
-                        let output_ok = crate::native::system_api::remove_source_notify_source(
-                            api_source,
-                            api_sync_delete,
-                        )
-                        .await?;
-                        Ok(output_ok)
-                    })()
-                    .await,
                 )
             }
         },
@@ -5420,18 +5275,6 @@ impl SseDecode for isize {
     }
 }
 
-impl SseDecode for Vec<Source> {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut len_ = <i32>::sse_decode(deserializer);
-        let mut ans_ = vec![];
-        for idx_ in 0..len_ {
-            ans_.push(<Source>::sse_decode(deserializer));
-        }
-        return ans_;
-    }
-}
-
 impl SseDecode for Vec<String> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -5825,148 +5668,130 @@ fn pde_ffi_dispatcher_primary_impl(
         73 => {
             wire__crate__native__home_api__HomeVideoData_new_impl(port, ptr, rust_vec_len, data_len)
         }
-        74 => wire__crate__native__system_api__add_source_notify_path_impl(
+        74 => wire__crate__native__system_api__change_crawler_templates_priority_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        75 => wire__crate__native__system_api__change_crawler_templates_priority_impl(
+        76 => wire__crate__native__system_api__delete_crawler_template_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        77 => wire__crate__native__system_api__delete_crawler_template_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        79 => {
+        78 => {
             wire__crate__native__system_api__get_http_conf_impl(port, ptr, rust_vec_len, data_len)
         }
-        85 => {
+        83 => {
             wire__crate__native__system_api__get_task_conf_impl(port, ptr, rust_vec_len, data_len)
         }
-        86 => wire__crate__native__system_api__import_crawler_template_impl(
+        84 => wire__crate__native__system_api__import_crawler_template_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        87 => wire__crate__native__system_api__init_app_log_impl(port, ptr, rust_vec_len, data_len),
-        88 => wire__crate__native__system_api__init_cinarium_config_impl(
+        85 => wire__crate__native__system_api__init_app_log_impl(port, ptr, rust_vec_len, data_len),
+        86 => wire__crate__native__system_api__init_cinarium_config_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        89 => wire__crate__native__system_api__init_source_notify_impl(
+        87 => wire__crate__native__system_api__listener_http_status_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        90 => wire__crate__native__system_api__listener_http_status_impl(
+        88 => wire__crate__native__system_api__listener_scan_storage_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        91 => wire__crate__native__system_api__listener_scan_storage_impl(
+        89 => wire__crate__native__system_api__listener_untreated_file_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        92 => wire__crate__native__system_api__listener_untreated_file_impl(
+        90 => wire__crate__native__system_api__open_in_default_software_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        93 => wire__crate__native__system_api__open_in_default_software_impl(
+        91 => wire__crate__native__system_api__open_in_explorer_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        94 => wire__crate__native__system_api__open_in_explorer_impl(
+        92 => wire__crate__native__system_api__open_in_explorer_by_string_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        95 => wire__crate__native__system_api__open_in_explorer_by_string_impl(
+        93 => wire__crate__native__system_api__run_web_api_impl(port, ptr, rust_vec_len, data_len),
+        94 => wire__crate__native__system_api__stop_web_api_impl(port, ptr, rust_vec_len, data_len),
+        95 => wire__crate__native__system_api__switch_crawler_template_enabled_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        96 => wire__crate__native__system_api__remove_source_notify_source_impl(
+        96 => wire__crate__native__system_api__update_http_port_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        97 => wire__crate__native__system_api__run_web_api_impl(port, ptr, rust_vec_len, data_len),
-        98 => wire__crate__native__system_api__stop_web_api_impl(port, ptr, rust_vec_len, data_len),
-        99 => wire__crate__native__system_api__switch_crawler_template_enabled_impl(
+        97 => wire__crate__native__system_api__update_task_thread_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        100 => wire__crate__native__system_api__update_http_port_impl(
+        98 => wire__crate__native__system_api__update_task_tidy_folder_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        101 => wire__crate__native__system_api__update_task_thread_impl(
+        99 => wire__crate__native__task_api__change_task_status_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        102 => wire__crate__native__system_api__update_task_tidy_folder_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        103 => wire__crate__native__task_api__change_task_status_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        104 => wire__crate__native__task_api__delete_task_impl(port, ptr, rust_vec_len, data_len),
-        105 => {
+        100 => wire__crate__native__task_api__delete_task_impl(port, ptr, rust_vec_len, data_len),
+        101 => {
             wire__crate__native__task_api__force_pause_pool_impl(port, ptr, rust_vec_len, data_len)
         }
-        107 => wire__crate__native__task_api__init_pool_impl(port, ptr, rust_vec_len, data_len),
-        108 => wire__crate__native__task_api__insertion_of_tasks_impl(
+        103 => wire__crate__native__task_api__init_pool_impl(port, ptr, rust_vec_len, data_len),
+        104 => wire__crate__native__task_api__insertion_of_tasks_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        109 => wire__crate__native__task_api__listener_pool_status_change_impl(
+        105 => wire__crate__native__task_api__listener_pool_status_change_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        110 => wire__crate__native__task_api__listener_task_status_change_impl(
+        106 => wire__crate__native__task_api__listener_task_status_change_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        111 => wire__crate__native__task_api__pause_pool_impl(port, ptr, rust_vec_len, data_len),
-        112 => wire__crate__native__task_api__resume_pool_impl(port, ptr, rust_vec_len, data_len),
+        107 => wire__crate__native__task_api__pause_pool_impl(port, ptr, rust_vec_len, data_len),
+        108 => wire__crate__native__task_api__resume_pool_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -6280,28 +6105,23 @@ fn pde_ffi_dispatcher_sync_impl(
             rust_vec_len,
             data_len,
         ),
-        76 => wire__crate__native__system_api__check_crawler_template_impl(
+        75 => wire__crate__native__system_api__check_crawler_template_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        78 => {
+        77 => {
             wire__crate__native__system_api__get_crawler_templates_impl(ptr, rust_vec_len, data_len)
         }
-        80 => wire__crate__native__system_api__get_http_status_impl(ptr, rust_vec_len, data_len),
-        81 => wire__crate__native__system_api__get_local_ip_impl(ptr, rust_vec_len, data_len),
-        82 => wire__crate__native__system_api__get_roaming_path_impl(ptr, rust_vec_len, data_len),
-        83 => wire__crate__native__system_api__get_scan_storage_status_impl(
+        79 => wire__crate__native__system_api__get_http_status_impl(ptr, rust_vec_len, data_len),
+        80 => wire__crate__native__system_api__get_local_ip_impl(ptr, rust_vec_len, data_len),
+        81 => wire__crate__native__system_api__get_roaming_path_impl(ptr, rust_vec_len, data_len),
+        82 => wire__crate__native__system_api__get_scan_storage_status_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        84 => wire__crate__native__system_api__get_source_notify_sources_impl(
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        106 => wire__crate__native__task_api__get_pool_data_impl(ptr, rust_vec_len, data_len),
+        102 => wire__crate__native__task_api__get_pool_data_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -6871,16 +6691,6 @@ impl SseEncode for isize {
             .cursor
             .write_i64::<NativeEndian>(self as _)
             .unwrap();
-    }
-}
-
-impl SseEncode for Vec<Source> {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <i32>::sse_encode(self.len() as _, serializer);
-        for item in self {
-            <Source>::sse_encode(item, serializer);
-        }
     }
 }
 
