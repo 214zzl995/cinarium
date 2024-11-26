@@ -781,6 +781,7 @@ dependencies = [
  "file-id",
  "flutter_rust_bridge",
  "flutter_rust_bridge_codegen",
+ "futures-util",
  "image",
  "linked-hash-map",
  "local_ipaddress",

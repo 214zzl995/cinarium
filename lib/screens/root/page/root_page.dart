@@ -32,6 +32,7 @@ class RootPage extends StatelessWidget {
         //初始化 SettingsController
         context.read<SettingsController>();
         context.read<PoolController>();
+
         return Scaffold(
           backgroundColor:
               Theme.of(context).extension<EffectMenuColors>()!.danger,

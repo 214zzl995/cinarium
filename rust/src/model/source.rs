@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use super::get_pool;
 
@@ -11,7 +11,7 @@ pub struct Source {
 
 impl Source {
     #[allow(dead_code)]
-    pub async fn insert(path: &PathBuf) -> anyhow::Result<Self> {
+    pub async fn insert(path: &Path) -> anyhow::Result<Self> {
         let path_str = path.to_str().unwrap();
         let id = sqlx::query!(
             r#"insert into source (path) values (?1) returning id as "id!:u32""#,
@@ -23,7 +23,7 @@ impl Source {
 
         Ok(Self {
             id,
-            path: path.clone(),
+            path: path.to_path_buf(),
         })
     }
 
@@ -58,5 +58,16 @@ impl Source {
         .await?;
 
         Ok(source)
+    }
+
+    pub async fn change_source_id(&self, new_id: u32) -> anyhow::Result<()> {
+        sqlx::query!(
+            r#"update video set source_id = $1 where source_id = $2"#,
+            new_id,
+            self.id
+        )
+        .execute(get_pool().await)
+        .await?;
+        Ok(())
     }
 }

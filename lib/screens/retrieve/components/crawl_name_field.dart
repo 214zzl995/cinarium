@@ -6,9 +6,9 @@ import '../controllers/retrieve_controller.dart';
 import 'file_col.dart';
 
 class CrawlNameField extends StatefulWidget {
-  const CrawlNameField(this.index, {super.key});
+  const CrawlNameField(this.crawlName, {super.key});
 
-  final int index;
+  final String crawlName;
 
   @override
   CrawlNameFieldState createState() => CrawlNameFieldState();
@@ -30,9 +30,11 @@ class CrawlNameFieldState extends State<CrawlNameField> {
   @override
   void initState() {
     super.initState();
-    final crawlName =
-        context.read<RetrieveController>().showFiles[widget.index].crawlName;
-    _textEditingController.text = crawlName;
+    // final crawlName = context
+    //     .read<RetrieveController>()
+    //     .untreatedVideos[widget.index]
+    //     .crawlName;
+    // _textEditingController.text = crawlName;
 
     _focusNode.addListener(_handleFocusChange);
   }
@@ -40,9 +42,9 @@ class CrawlNameFieldState extends State<CrawlNameField> {
   @override
   void didUpdateWidget(covariant CrawlNameField oldWidget) {
     super.didUpdateWidget(oldWidget);
-    final crawlName =
-        context.read<RetrieveController>().showFiles[widget.index].crawlName;
-    _textEditingController.text = crawlName;
+    // final crawlName =
+    //     context.read<RetrieveController>().untreatedVideos[widget.index].crawlName;
+    // _textEditingController.text = crawlName;
   }
 
   void _handleFocusChange() {
@@ -65,16 +67,16 @@ class CrawlNameFieldState extends State<CrawlNameField> {
   }
 
   void _onTextChanged(String value) {
-    if (value !=
-        context.read<RetrieveController>().showFiles[widget.index].crawlName) {
-      setState(() {
-        _showConfirmButton = true;
-      });
-    } else {
-      setState(() {
-        _showConfirmButton = false;
-      });
-    }
+    // if (value !=
+    //     context.read<RetrieveController>().showFiles[widget.index].crawlName) {
+    //   setState(() {
+    //     _showConfirmButton = true;
+    //   });
+    // } else {
+    //   setState(() {
+    //     _showConfirmButton = false;
+    //   });
+    // }
   }
 
   @override
@@ -154,9 +156,9 @@ class CrawlNameFieldState extends State<CrawlNameField> {
   }
 
   void checkCrawlName(BuildContext context) {
-    context.read<RetrieveController>().changeCrawlName(
-        context.read<RetrieveController>().showFiles[widget.index].id,
-        _textEditingController.text);
+    // context.read<RetrieveController>().changeCrawlName(
+    //     context.read<RetrieveController>().showFiles[widget.index].id,
+    //     _textEditingController.text);
     setState(() {
       _showConfirmButton = false;
       _focusNode.unfocus();
@@ -164,8 +166,8 @@ class CrawlNameFieldState extends State<CrawlNameField> {
   }
 
   void closeCrawlName(BuildContext context) {
-    _textEditingController.text =
-        context.read<RetrieveController>().showFiles[widget.index].crawlName;
+    // _textEditingController.text =
+    //     context.read<RetrieveController>().showFiles[widget.index].crawlName;
     setState(() {
       _showConfirmButton = false;
       _focusNode.unfocus();

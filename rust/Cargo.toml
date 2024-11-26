@@ -113,6 +113,8 @@ file-id = "0.2.1"
 prettytable-rs = "0.10.0"
 rand = { workspace = true }
 winit = "0.30.5"
+futures-util = { workspace = true }
+
 
 [dev-dependencies]
 dotenvy = { workspace = true }

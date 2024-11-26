@@ -4,8 +4,9 @@ use flutter_rust_bridge::{frb, DartFnFuture};
 
 use crate::{
     app::{self, get_cinarium_config, HttpConfig, TaskConfig},
+    file::UntreatedVideoData,
     log,
-    model::Source,
+    model::{Source, UntreatedVideo},
     task::crawler::CrawlerTemplate,
 };
 
@@ -22,12 +23,6 @@ pub async fn init_cinarium_config() -> anyhow::Result<()> {
     app::init_cinarium_config().await?;
     Ok(())
 }
-
-// #[allow(dead_code)]
-// pub async fn init_source_notify() -> anyhow::Result<()> {
-//     crate::file::init_source_notify().await?;
-//     Ok(())
-// }
 
 #[allow(dead_code)]
 pub async fn run_web_api() -> anyhow::Result<()> {
@@ -84,50 +79,6 @@ pub async fn update_task_tidy_folder(folder: String) -> anyhow::Result<()> {
     task_conf.tidy_folder = folder;
     app::update_task_config(&task_conf).await
 }
-
-// #[allow(dead_code)]
-// pub async fn add_source_notify_path(path: String) -> Option<String> {
-//     let folder = PathBuf::from(&path);
-
-//     let sources = crate::file::get_source_notify_sources().unwrap();
-//     for source in sources {
-//         if source.path.eq(&folder) {
-//             return Some("The directory already exists".to_string());
-//         }
-
-//         if folder.starts_with(&source.path) {
-//             return Some("The parent directory already exists".to_string());
-//         }
-
-//         if source.path.starts_with(&folder) {
-//             if let Err(err) = crate::file::unwatch_source(&source).await {
-//                 return Some(err.to_string());
-//             }
-//         }
-//     }
-
-//     match crate::file::watch_source(&folder).await {
-//         Ok(_) => None,
-//         Err(err) => Some(err.to_string()),
-//     }
-// }
-
-// #[allow(dead_code)]
-// pub async fn remove_source_notify_source(source: Source, sync_delete: bool) -> anyhow::Result<()> {
-//     crate::file::unwatch_source(&source).await?;
-
-//     if sync_delete {
-//         crate::model::Metadata::delete_by_source_id(&source.id).await?;
-//     }
-
-//     Ok(())
-// }
-
-// #[allow(dead_code)]
-// #[frb(sync)]
-// pub fn get_source_notify_sources() -> anyhow::Result<Vec<Source>> {
-//     crate::file::get_source_notify_sources()
-// }
 
 #[allow(dead_code)]
 pub fn open_in_explorer(path: PathBuf) -> anyhow::Result<()> {
@@ -246,5 +197,59 @@ impl Source {
     #[allow(dead_code)]
     pub fn path(&self) -> String {
         self.path.to_string_lossy().to_string()
+    }
+}
+
+impl UntreatedVideoData {
+    #[allow(dead_code)]
+    pub async fn new_instance() -> anyhow::Result<Self> {
+        UntreatedVideoData::new().await
+    }
+
+    #[allow(dead_code)]
+    pub async fn watch_source_path_string_f(&self, path: String) -> Option<String> {
+        let folder = PathBuf::from(&path);
+        match self.watch_source(&folder).await {
+            Ok(_) => None,
+            Err(err) => Some(err.to_string()),
+        }
+    }
+
+    #[allow(dead_code)]
+    pub async fn unwatch_source_f(&self, source: Source, sync_delete: bool) -> Option<String> {
+        self.unwatch_source(&source, &sync_delete)
+            .await
+            .err()
+            .map(|e| e.to_string())
+    }
+
+    #[frb(sync, getter)]
+    pub fn videos(&self) -> Vec<UntreatedVideo> {
+        let inner = self.inner.read();
+        if inner.text_filter != "" {
+            inner
+                .videos
+                .clone()
+                .into_iter()
+                .filter(|v| {
+                    v.metadata
+                        .filename
+                        .to_lowercase()
+                        .contains(&inner.text_filter.to_ascii_lowercase())
+                })
+                .collect()
+        } else {
+            inner.videos.clone()
+        }
+    }
+
+    #[frb(sync, getter)]
+    pub fn sources(&self) -> anyhow::Result<Vec<Source>> {
+        self.get_sources()
+    }
+
+    #[frb(sync, setter)]
+    pub fn set_text_filter(&self, text: String) {
+        self.inner.write().text_filter = text;
     }
 }

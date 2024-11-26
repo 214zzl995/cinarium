@@ -13,12 +13,10 @@ class FileRow extends StatelessWidget {
   const FileRow(
       {super.key,
       required this.untreatedVideo,
-      required this.index,
       required this.scrollController,
       this.doubleTap});
 
   final UntreatedVideo untreatedVideo;
-  final int index;
 
   final bool? doubleTap;
   final ScrollController scrollController;
@@ -143,7 +141,7 @@ class FileRow extends StatelessWidget {
                         flex: 1,
                         value: untreatedVideo.metadata.filename,
                       ),
-                      CrawlNameField(index),
+                      // CrawlNameField(index),
                       FileCol(
                         width: 100,
                         value: untreatedVideo.metadata.size,
@@ -209,7 +207,7 @@ class FileRow extends StatelessWidget {
                             ),
                           ],
                         ))),
-                CrawlNameField(index),
+                // CrawlNameField(index),
                 FileCol(
                   width: 100,
                   value: untreatedVideo.metadata.size,
@@ -241,24 +239,24 @@ class FileRow extends StatelessWidget {
         value: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Selector<RetrieveController, bool>(
+            /*Selector<RetrieveController, bool>(
                 selector: (context, controller) =>
-                    controller.showFiles[index].isHidden,
+                    controller.untreatedVideos[index].isHidden,
                 builder: (context, value, child) {
                   return IconButton(
                     style: TextButton.styleFrom(
                         iconColor: Theme.of(context).colorScheme.primary),
                     onPressed: () {
-                      context
-                          .read<RetrieveController>()
-                          .switchVideosHidden([untreatedVideo.id]);
+                      // context
+                      //     .read<RetrieveController>()
+                      //     .switchVideosHidden([untreatedVideo.id]);
                     },
                     icon: Icon(
                         value ? Symbols.visibility : Symbols.visibility_off,
                         size: 20,
                         weight: 600),
                   );
-                }),
+                }),*/
             IconButton(
               style: TextButton.styleFrom(
                   iconColor: Theme.of(context).colorScheme.primary),

@@ -8,8 +8,9 @@ use crate::anyhow::Context;
 use crate::model::get_pool;
 use cinarium_crawler_derive::Crawler;
 use flutter_rust_bridge::frb;
+use futures_util::TryStreamExt;
 use serde::{Deserialize, Serialize};
-use sqlx::{QueryBuilder, Sqlite, Transaction};
+use sqlx::{QueryBuilder, Row, Sqlite, Transaction};
 
 #[derive(Debug, Deserialize, Serialize, Clone, sqlx::FromRow)]
 #[frb(non_opaque)]
@@ -512,42 +513,70 @@ impl Metadata {
     }
 
     #[allow(dead_code)]
-    pub async fn insert_replace_batch(videos: &Vec<Metadata>) -> anyhow::Result<()> {
+    pub async fn insert_replace_batch(
+        videos: &Vec<Metadata>,
+    ) -> anyhow::Result<Vec<UntreatedVideo>> {
         let _ = super::SOURCE_LOCK.get().unwrap().lock().await;
-        let regex = regex::Regex::new(r"[^a-zA-Z0-9]").unwrap();
-        let mut transaction = get_pool().await.begin().await?;
+        let regex = regex::Regex::new(r"[^a-zA0-9]").unwrap();
 
         let sources = super::source::Source::query_all().await?;
-        let mut query_builder: QueryBuilder<Sqlite> = QueryBuilder::new(
-            r#"
-                insert or replace into video (hash, filename, path, size, extension, crawl_name, source_id, is_deleted)
+        let mut untreated_videos = vec![];
+
+        let batch_size = 999; // 每批次最多处理 999 条记录
+        let mut batches = videos.chunks(batch_size); // 分批次处理
+
+        while let Some(batch) = batches.next() {
+            let mut query_builder: QueryBuilder<Sqlite> = QueryBuilder::new(
+                r#"
+                insert into video (hash, filename, path, size, extension, crawl_name, source_id, is_deleted)
             "#,
-        );
+            );
 
-        // Also update the is_deleted flag to prevent possible moves to other folders and back.
-        query_builder.push_values(videos, |mut b, video| {
-            let source_id = sources
-                .iter()
-                .find(|x| video.path.starts_with(&x.path))
-                .map(|x| x.id);
-            if source_id.is_some() {
-                b.push_bind(&video.hash)
-                    .push_bind(&video.filename)
-                    .push_bind(video.path.to_str())
-                    .push_bind(video.size as i64)
-                    .push_bind(&video.extension)
-                    .push_bind(regex.replace_all(&video.filename, "").to_ascii_lowercase())
-                    .push_bind(source_id)
-                    .push_bind(false);
+            query_builder.push_values(batch, |mut b, video| {
+                let source_id = sources
+                    .iter()
+                    .find(|x| video.path.starts_with(&x.path))
+                    .map(|x| x.id);
+
+                if source_id.is_some() {
+                    b.push_bind(&video.hash)
+                        .push_bind(&video.filename)
+                        .push_bind(video.path.to_str())
+                        .push_bind(video.size as i64)
+                        .push_bind(&video.extension)
+                        .push_bind(regex.replace_all(&video.filename, "").to_ascii_lowercase())
+                        .push_bind(source_id)
+                        .push_bind(false);
+                }
+            });
+
+            query_builder.push(
+                r#"on conflict (hash) do update set filename  = EXCLUDED.filename,
+                                                     path      = EXCLUDED.path,
+                                                     extension = EXCLUDED.extension
+                    RETURNING id, crawl_name, is_hidden, hash, filename, path, size, extension"#,
+            );
+
+            let query = query_builder.build();
+            let mut rows = query.fetch(get_pool().await);
+
+            while let Some(row) = rows.try_next().await? {
+                untreated_videos.push(UntreatedVideo {
+                    id: row.get(0),
+                    crawl_name: row.get(1),
+                    is_hidden: row.get(2),
+                    metadata: Metadata {
+                        hash: row.get(3),
+                        filename: row.get(4),
+                        path: PathBuf::from(row.get::<String, _>(5)),
+                        size: row.get(6),
+                        extension: row.get(7),
+                    },
+                });
             }
-        });
+        }
 
-        let query = query_builder.build();
-
-        query.execute(&mut *transaction).await?;
-
-        transaction.commit().await?;
-        Ok(())
+        Ok(untreated_videos)
     }
 
     #[allow(dead_code)]
@@ -569,34 +598,48 @@ impl Metadata {
     }
 
     #[allow(dead_code)]
-    pub async fn marking_delete_with_path(path: &Path) -> anyhow::Result<()> {
-        let filename = path
-            .file_stem()
-            .context("Unable to get file name")?
-            .to_str()
-            .unwrap();
+    pub async fn marking_delete_with_paths(path: &Vec<PathBuf>) -> anyhow::Result<Vec<u32>> {
+        let mut transaction = get_pool().await.begin().await?;
 
-        let extension = path
-            .extension()
-            .context("Unable to get file extension")?
-            .to_str()
-            .unwrap();
-        let path = path.parent().unwrap().to_string_lossy().to_string();
+        let mut ids = vec![];
 
-        sqlx::query!(
-            r#"
-                update video
-                set is_deleted = true
-                where path = $1 and filename = $2 and extension = $3
-            "#,
-            path,
-            filename,
-            extension
-        )
-        .execute(get_pool().await)
-        .await?;
+        for path in path {
+            let filename = path
+                .file_stem()
+                .context("Unable to get file name")?
+                .to_str()
+                .unwrap();
 
-        Ok(())
+            let extension = path
+                .extension()
+                .context("Unable to get file extension")?
+                .to_str()
+                .unwrap();
+            let path = path.parent().unwrap().to_string_lossy().to_string();
+
+            let id = sqlx::query!(
+                r#"
+                    update video
+                    set is_deleted = true
+                    where path = $1 and filename = $2 and extension = $3
+                    returning id as "id!:u32"
+                "#,
+                path,
+                filename,
+                extension
+            )
+            .fetch_optional(&mut *transaction)
+            .await
+            .map(|x| x.map(|x| x.id));
+
+            if let Some(id) = id? {
+                ids.push(id);
+            }
+        }
+
+        transaction.commit().await?;
+
+        Ok(ids)
     }
 
     pub async fn query_one(id: &u32) -> anyhow::Result<Self> {
@@ -731,18 +774,17 @@ impl Metadata {
         Ok(id)
     }
 
-    pub async fn delete_by_source_id(source_id: &u32) -> anyhow::Result<()> {
-        sqlx::query!(
-            r#"
-                delete from video
-                where source_id = $1
-            "#,
-            source_id
-        )
-        .execute(get_pool().await)
-        .await?;
+    pub async fn delete_by_source_id(source_id: &u32) -> anyhow::Result<Vec<u32>> {
+        let ids: Vec<u32> =
+            sqlx::query_as::<_, (u32,)>("delete from video where source_id = ? returning id")
+                .bind(source_id)
+                .fetch_all(get_pool().await)
+                .await?
+                .into_iter()
+                .map(|(id,)| id)
+                .collect();
 
-        Ok(())
+        Ok(ids)
     }
 }
 

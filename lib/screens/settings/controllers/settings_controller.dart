@@ -12,8 +12,6 @@ class SettingsController with ChangeNotifier {
 
   late List<CrawlerTemplate> _crawlerTemplates;
 
-  List<Source> _searchFolders = getSourceNotifySources();
-
   SettingsController() {
     init();
   }
@@ -124,29 +122,7 @@ class SettingsController with ChangeNotifier {
         prioritys: crawlerTemplates.map((e) => (e.id, e.priority)).toList());
   }
 
-  Future<String?> addSearchFolder() async {
-    final path = await FilePicker.platform.getDirectoryPath(
-      lockParentWindow: true,
-    );
-    if (path != null) {
-      String? err = await addSourceNotifyPath(path: path);
-      if (err != null) {
-        return err;
-      } else {
-        _searchFolders = getSourceNotifySources();
-        notifyListeners();
-        return null;
-      }
-    } else {
-      return null;
-    }
-  }
 
-  void removeSourceNotifySourceF(Source source, bool syncDelete) async {
-    await removeSourceNotifySource(source: source, syncDelete: syncDelete);
-    _searchFolders = getSourceNotifySources();
-    notifyListeners();
-  }
 
   init() async {
     _httpConfig = await getHttpConf();
@@ -160,8 +136,6 @@ class SettingsController with ChangeNotifier {
   TaskConfig get taskConfig => _taskConfig;
 
   List<CrawlerTemplate> get crawlerTemplates => _crawlerTemplates;
-
-  List<Source> get searchFolders => _searchFolders;
 }
 
 extension HttpConfigsExt on HttpConfig {

@@ -14,52 +14,54 @@ class RetrievePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => RetrieveController(),
-      child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        body: Padding(
-          padding: const EdgeInsets.only(top: 5, bottom: 10),
-          child: Column(
-            children: [
-              _buildToolBar(context),
-              Expanded(
-                child: ScrollAnimator(
-                  builder: (context, controller, physics) => CustomScrollView(
-                    physics: physics,
-                    controller: controller,
-                    slivers: [
-                      _buildTableHeader(context),
-                      SliverFixedExtentList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            final file = context
-                                .read<RetrieveController>()
-                                .showFiles[index];
-                            return FileRow(
-                              index: index,
-                              untreatedVideo: file,
-                              doubleTap: false,
-                              scrollController: controller,
-                            );
-                          },
-                          childCount: context.select<RetrieveController, int>(
-                              (value) => value.fileCount),
-                        ),
-                        itemExtent: 55.0,
-                      ),
-                      const SliverToBoxAdapter(
-                        child: SizedBox(height: 80),
-                      ),
-                    ],
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      body: Padding(
+        padding: const EdgeInsets.only(top: 5, bottom: 10),
+        child: Column(
+          children: [
+            _buildToolBar(context),
+            Selector<RetrieveController, bool>(
+              selector: (_, controller) => controller.untreatedVideoDataLoading,
+              builder: (context, untreatedVideoDataLoading, child) {
+                final untreatedVideos =
+                    context.read<RetrieveController>().untreatedVideos;
+                return Expanded(
+                  child: ScrollAnimator(
+                    builder: (context, controller, physics) {
+                      return CustomScrollView(
+                        physics: physics,
+                        controller: controller,
+                        slivers: [
+                          _buildTableHeader(context),
+                          SliverFixedExtentList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                final file = untreatedVideos[index];
+                                return FileRow(
+                                  untreatedVideo: file,
+                                  doubleTap: false,
+                                  scrollController: controller,
+                                );
+                              },
+                              childCount: untreatedVideos.length,
+                            ),
+                            itemExtent: 55.0,
+                          ),
+                          const SliverToBoxAdapter(
+                            child: SizedBox(height: 80),
+                          ),
+                        ],
+                      );
+                    },
                   ),
-                ),
-              )
-            ],
-          ),
+                );
+              },
+            ),
+          ],
         ),
-        floatingActionButton: _buildFloatingActionButton(context),
       ),
+      floatingActionButton: _buildFloatingActionButton(context),
     );
   }
 
@@ -152,7 +154,8 @@ class RetrievePage extends StatelessWidget {
               child: Row(
                 children: [
                   Selector<RetrieveController, int>(
-                    selector: (_, controller) => controller.fileCount,
+                    selector: (_, controller) =>
+                        controller.untreatedVideos.length,
                     builder: (context, fileCount, child) {
                       return Text(
                         "Total: $fileCount Files",
@@ -193,9 +196,9 @@ class RetrievePage extends StatelessWidget {
                       builder: (context, status, child) => status
                           ? TextButton(
                               onPressed: () {
-                                context
-                                    .read<RetrieveController>()
-                                    .getUntreatedVideos();
+                                // context
+                                //     .read<RetrieveController>()
+                                //     .getUntreatedVideos();
                               },
                               child: const Text("reload"))
                           : Container(),
@@ -208,32 +211,32 @@ class RetrievePage extends StatelessWidget {
             const SizedBox(
               width: 20,
             ),
-            Selector<RetrieveController, List<bool>>(
-              selector: (_, controller) => List.of(FileFilter.values)
-                  .map((e) => e == controller.filterFlag)
-                  .toList(),
-              builder: (context, isSelected, child) {
-                return ToggleButtons(
-                  direction: Axis.horizontal,
-                  onPressed: (int index) {
-                    context
-                        .read<RetrieveController>()
-                        .changeFilterFiles(FileFilter.values[index], true);
-                  },
-                  fillColor: Theme.of(context).colorScheme.primary,
-                  borderRadius: const BorderRadius.all(Radius.circular(5)),
-                  selectedColor: Theme.of(context).colorScheme.onPrimary,
-                  constraints:
-                      const BoxConstraints(minWidth: 50, minHeight: 35),
-                  isSelected: [...isSelected],
-                  children: [
-                    ...List.of(FileFilter.values)
-                        .map((e) => Text(e.name))
-                        .toList()
-                  ],
-                );
-              },
-            ),
+            // Selector<RetrieveController, List<bool>>(
+            //   selector: (_, controller) => List.of(FileFilter.values)
+            //       .map((e) => e == controller.filterFlag)
+            //       .toList(),
+            //   builder: (context, isSelected, child) {
+            //     return ToggleButtons(
+            //       direction: Axis.horizontal,
+            //       onPressed: (int index) {
+            //         context
+            //             .read<RetrieveController>()
+            //             .changeFilterFiles(FileFilter.values[index], true);
+            //       },
+            //       fillColor: Theme.of(context).colorScheme.primary,
+            //       borderRadius: const BorderRadius.all(Radius.circular(5)),
+            //       selectedColor: Theme.of(context).colorScheme.onPrimary,
+            //       constraints:
+            //           const BoxConstraints(minWidth: 50, minHeight: 35),
+            //       isSelected: [...isSelected],
+            //       children: [
+            //         ...List.of(FileFilter.values)
+            //             .map((e) => Text(e.name))
+            //             .toList()
+            //       ],
+            //     );
+            //   },
+            // ),
           ],
         ),
       ),
