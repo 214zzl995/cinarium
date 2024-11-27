@@ -24,7 +24,7 @@ class SearchFieldState extends State<SearchField> {
   @override
   void initState() {
     super.initState();
-    final searchText = context.read<RetrieveController>().searchFlag;
+    final searchText = context.read<RetrieveController>().textFilter;
     _textEditingController.text = searchText;
     if (searchText.isNotEmpty) {
       _showClearButton = true;
@@ -46,13 +46,13 @@ class SearchFieldState extends State<SearchField> {
         controller: _textEditingController,
         cursorHeight: 22,
         cursorWidth: 2,
-        autofocus: context.read<RetrieveController>().searchFlag != "",
+        autofocus: context.read<RetrieveController>().textFilter != "",
         cursorOpacityAnimates: true,
         style: const TextStyle(
           fontSize: 14,
         ),
         onChanged: (value) {
-          context.read<RetrieveController>().changeSearchFiles(value);
+          context.read<RetrieveController>().textFilter = value;
           _onTextChanged();
         },
         textAlignVertical: TextAlignVertical.center,
@@ -85,9 +85,7 @@ class SearchFieldState extends State<SearchField> {
                           setState(() {
                             _textEditingController.clear();
                             _onTextChanged();
-                            context
-                                .read<RetrieveController>()
-                                .changeSearchFiles('');
+                            context.read<RetrieveController>().textFilter = '';
                           });
                         },
                         child: const Icon(Symbols.clear),

@@ -40,7 +40,9 @@ class FileRow extends StatelessWidget {
     });
     final colorSchemeDesktopMenuWidgetBuilder =
         ColorSchemeDesktopMenuWidgetBuilder();
-    return GestureDetector(
+    return
+
+      GestureDetector(
       onTap: () {
         context.read<RetrieveController>().checkFile(untreatedVideo.id);
       },

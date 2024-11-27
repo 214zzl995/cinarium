@@ -63,11 +63,17 @@ impl UntreatedVideoData {
                 dispose_tx: dispose_tx.clone(),
             })),
         };
-
-        self_.full_scale_retrieval(&sources).await?;
         self_.inner.write().videos = UntreatedVideo::query_all().await?;
+
+        // let self__ = self_.clone();
+
+        self_.full_scale_retrieval(&sources).await.unwrap();
         self_.event_start(return_rx);
-        notify.listen(return_tx, event_rx, dispose_tx.clone());
+        self_
+            .inner
+            .read()
+            .notify
+            .listen(return_tx, event_rx, dispose_tx.clone());
 
         Ok(self_)
     }
@@ -153,7 +159,11 @@ impl UntreatedVideoData {
         self.inner.read().notify.watch_source(&source)
     }
 
-    pub(crate) async fn unwatch_source(&self, source: &Source, sync_delete: &bool) -> anyhow::Result<()> {
+    pub(crate) async fn unwatch_source(
+        &self,
+        source: &Source,
+        sync_delete: &bool,
+    ) -> anyhow::Result<()> {
         source.delete().await?;
         if *sync_delete {
             let delete_ids = Metadata::delete_by_source_id(&source.id).await?;
@@ -361,10 +371,10 @@ pub(in crate::file) fn get_file_id_hash(path: &impl AsRef<Path>) -> anyhow::Resu
 }
 
 pub fn get_scan_storage_status() -> bool {
-    *STORAGE_SCAN_LISTENER.get_or_init(
-        || {
+    *STORAGE_SCAN_LISTENER
+        .get_or_init(|| {
             let (tx, _) = watch::channel(false);
             tx
-        },
-    ).borrow()
+        })
+        .borrow()
 }

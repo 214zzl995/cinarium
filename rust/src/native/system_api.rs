@@ -223,11 +223,12 @@ impl UntreatedVideoData {
             .map(|e| e.to_string())
     }
 
-    #[frb(sync, getter)]
-    pub fn videos(&self) -> Vec<UntreatedVideo> {
+    #[allow(dead_code)]
+    pub async fn get_videos(&self) -> Vec<UntreatedVideo> {
+        let begin = std::time::Instant::now();
         let inner = self.inner.read();
         if inner.text_filter != "" {
-            inner
+            let videos = inner
                 .videos
                 .clone()
                 .into_iter()
@@ -237,10 +238,18 @@ impl UntreatedVideoData {
                         .to_lowercase()
                         .contains(&inner.text_filter.to_ascii_lowercase())
                 })
-                .collect()
+                .collect();
+            tracing::info!("get_videos cost: {:?}", begin.elapsed());
+            videos
         } else {
+            tracing::info!("get_videos cost: {:?}", begin.elapsed());
             inner.videos.clone()
         }
+    }
+
+    #[allow(dead_code)]
+    pub async fn get_videos_size(&self) -> usize {
+        self.get_videos().await.len()
     }
 
     #[frb(sync, getter)]
@@ -251,5 +260,10 @@ impl UntreatedVideoData {
     #[frb(sync, setter)]
     pub fn set_text_filter(&self, text: String) {
         self.inner.write().text_filter = text;
+    }
+
+    #[frb(sync, getter)]
+    pub fn text_filter(&self) -> String {
+        self.inner.read().text_filter.clone()
     }
 }

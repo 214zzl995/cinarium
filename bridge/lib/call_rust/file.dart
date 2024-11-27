@@ -10,6 +10,10 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<UntreatedVideoData>>
 abstract class UntreatedVideoData implements RustOpaqueInterface {
+  Future<List<UntreatedVideo>> getVideos();
+
+  Future<BigInt> getVideosSize();
+
   static Future<UntreatedVideoData> newInstance() =>
       RustLib.instance.api.crateFileUntreatedVideoDataNewInstance();
 
@@ -17,10 +21,10 @@ abstract class UntreatedVideoData implements RustOpaqueInterface {
 
   List<Source> get sources;
 
+  String get textFilter;
+
   Future<String?> unwatchSourceF(
       {required Source source, required bool syncDelete});
-
-  List<UntreatedVideo> get videos;
 
   Future<String?> watchSourcePathStringF({required String path});
 }

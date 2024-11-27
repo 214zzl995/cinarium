@@ -3,15 +3,10 @@ import 'package:bridge/call_rust/model/source.dart';
 import 'package:bridge/call_rust/model/video.dart';
 import 'package:bridge/call_rust/native.dart';
 import 'package:bridge/call_rust/native/system_api.dart';
-import 'package:bridge/call_rust/task.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'package:bridge/call_rust/native/task_api.dart' as task_api;
-
 class RetrieveController with ChangeNotifier {
-  String _searchFlag = "";
-
   final Map<int, bool> _checkMap = {};
 
   late ListenerHandle _untreatedFileListenerHandle;
@@ -19,7 +14,7 @@ class RetrieveController with ChangeNotifier {
 
   late UntreatedVideoData _untreatedVideoData;
 
-  bool _untreatedVideoDataLoading = false;
+  bool _untreatedVideoDataLoading = true;
 
   bool _untreatedFileHasChange = false;
 
@@ -30,11 +25,9 @@ class RetrieveController with ChangeNotifier {
   bool get scanStorageStatus => _scanStorageStatus;
 
   RetrieveController() {
-    _untreatedVideoDataLoading = true;
-    UntreatedVideoData.newInstance().then((untreatedVideoData) {
+    UntreatedVideoData.newInstance().then((untreatedVideoData) async {
       _untreatedVideoData = untreatedVideoData;
-      debugPrint(untreatedVideoData.videos.length.toString());
-      for (var element in untreatedVideoData.videos) {
+      for (var element in await untreatedVideoData.getVideos()) {
         _checkMap[element.id] = false;
       }
       _untreatedVideoDataLoading = false;
@@ -62,9 +55,7 @@ class RetrieveController with ChangeNotifier {
     notifyListeners();
   }
 
-  List<UntreatedVideo> get untreatedVideos => _untreatedVideoData.videos;
-
-/*  void changeCrawlName(int id, String crawlName) async {
+  /*void changeCrawlName(int id, String crawlName) async {
     int index = _untreatedVideos.indexWhere((element) => element.id == id);
     db_api.updateCrawlName(
         id: _untreatedVideos[index].id, crawlName: crawlName);
@@ -80,7 +71,8 @@ class RetrieveController with ChangeNotifier {
       lockParentWindow: true,
     );
     if (path != null) {
-      String? err = await _untreatedVideoData.watchSourcePathStringF(path: path);
+      String? err =
+          await _untreatedVideoData.watchSourcePathStringF(path: path);
       if (err != null) {
         return err;
       } else {
@@ -93,12 +85,13 @@ class RetrieveController with ChangeNotifier {
   }
 
   void unwatchSource(Source source, bool syncDelete) async {
-    await _untreatedVideoData.unwatchSourceF(source: source, syncDelete: syncDelete);
+    await _untreatedVideoData.unwatchSourceF(
+        source: source, syncDelete: syncDelete);
     notifyListeners();
   }
 
-  void changeSearchFiles(String filterFlag) {
-    _searchFlag = filterFlag;
+  set textFilter(String text) {
+    _untreatedVideoData.textFilter = text;
     notifyListeners();
   }
 
@@ -140,18 +133,18 @@ class RetrieveController with ChangeNotifier {
   }
 
   void insertionOfTasks(List<int> targetIds) async {
-    final taskMetas = _untreatedVideoData.videos
-        .where((element) => targetIds.contains(element.id))
-        .map((e) => TaskMetadata(name: e.crawlName, videoId: e.id))
-        .toList();
-
-    await task_api.insertionOfTasks(tasks: taskMetas);
-
-    // _untreatedVideos.removeWhere((element) => targetIds.contains(element.id));
-
-    _checkMap.removeWhere((key, value) => targetIds.contains(key));
     notifyListeners();
   }
+
+  Future<List<UntreatedVideo>> get videos => _untreatedVideoDataLoading
+      ? Future.value([])
+      : _untreatedVideoData.getVideos();
+
+  Future<BigInt> get videosSize => _untreatedVideoDataLoading
+      ? Future.value(BigInt.zero)
+      : _untreatedVideoData.getVideosSize();
+
+  String get textFilter => _untreatedVideoData.textFilter;
 
   get untreatedVideoDataLoading => _untreatedVideoDataLoading;
 
@@ -190,8 +183,6 @@ class RetrieveController with ChangeNotifier {
     _untreatedVideoData.dispose();
     super.dispose();
   }
-
-  get searchFlag => _searchFlag;
 }
 
 enum FileFilter { all, show, hide }

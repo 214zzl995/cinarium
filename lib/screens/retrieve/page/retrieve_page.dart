@@ -8,7 +8,6 @@ import '../../../components/scroll_animator.dart';
 import '../components/search_field.dart';
 import '../controllers/retrieve_controller.dart';
 
-// 如果list 需要有动画可能需要 SliverFadeTransition
 class RetrievePage extends StatelessWidget {
   const RetrievePage({super.key});
 
@@ -18,50 +17,155 @@ class RetrievePage extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: Padding(
         padding: const EdgeInsets.only(top: 5, bottom: 10),
-        child: Column(
-          children: [
-            _buildToolBar(context),
-            Selector<RetrieveController, bool>(
-              selector: (_, controller) => controller.untreatedVideoDataLoading,
-              builder: (context, untreatedVideoDataLoading, child) {
-                final untreatedVideos =
-                    context.read<RetrieveController>().untreatedVideos;
-                return Expanded(
-                  child: ScrollAnimator(
-                    builder: (context, controller, physics) {
-                      return CustomScrollView(
-                        physics: physics,
-                        controller: controller,
-                        slivers: [
-                          _buildTableHeader(context),
-                          SliverFixedExtentList(
-                            delegate: SliverChildBuilderDelegate(
-                              (context, index) {
-                                final file = untreatedVideos[index];
-                                return FileRow(
-                                  untreatedVideo: file,
-                                  doubleTap: false,
-                                  scrollController: controller,
-                                );
-                              },
-                              childCount: untreatedVideos.length,
-                            ),
-                            itemExtent: 55.0,
-                          ),
-                          const SliverToBoxAdapter(
-                            child: SizedBox(height: 80),
-                          ),
+        child: Selector<RetrieveController, bool>(
+          selector: (_, controller) => controller.untreatedVideoDataLoading,
+          builder: (context, loading, child) {
+            return AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                child: loading
+                    ? const Center(
+                        key: ValueKey(1),
+                        child: CircularProgressIndicator(),
+                      )
+                    : Column(
+                        key: const ValueKey(2),
+                        children: [
+                          _buildToolBar(context),
+                          Expanded(child: _buildVideoList(context)),
                         ],
-                      );
-                    },
-                  ),
-                );
-              },
+                      ));
+          },
+        ),
+      ),
+      floatingActionButton: _buildFloatingActionButton(context),
+    );
+  }
+
+  Widget _buildToolBar(BuildContext context) {
+    return Container(
+      height: 50,
+      color: Theme.of(context).colorScheme.surface,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Row(
+                children: [
+                  FutureBuilder(
+                      future: context.read<RetrieveController>().videosSize,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const SizedBox();
+                        }
+                        return Text(
+                          "Total: ${snapshot.data} ",
+                          style: const TextStyle(fontWeight: FontWeight.w500),
+                        );
+                      }),
+                  Selector<RetrieveController, bool>(
+                      builder: (context, status, child) => AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 200),
+                            child: status
+                                ? Padding(
+                                    key: const ValueKey(1),
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Lottie.asset(
+                                      "assets/lottie/system-solid-9-inbox.json",
+                                      width: 20,
+                                      height: 20,
+                                      delegates: LottieDelegates(
+                                        values: [
+                                          ValueDelegate.colorFilter(
+                                            const ['**'],
+                                            value: ColorFilter.mode(
+                                              Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
+                                              BlendMode.srcATop,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ))
+                                : Container(key: const ValueKey(2)),
+                          ),
+                      selector: (context, controller) =>
+                          controller.scanStorageStatus),
+                  Selector<RetrieveController, bool>(
+                      builder: (context, status, child) => status
+                          ? TextButton(
+                              onPressed: () {
+                                // context
+                                //     .read<RetrieveController>()
+                                //     .getUntreatedVideos();
+                              },
+                              child: const Text("reload"))
+                          : Container(),
+                      selector: (context, controller) =>
+                          controller.untreatedFileHasChange)
+                ],
+              ),
+            ),
+            const SearchField(),
+            const SizedBox(
+              width: 20,
             ),
           ],
         ),
       ),
-      floatingActionButton: _buildFloatingActionButton(context),
+    );
+  }
+
+  Widget _buildVideoList(BuildContext context) {
+    return Selector<RetrieveController, String>(
+      selector: (_, controller) => controller.textFilter,
+      builder: (context, _, child) {
+        return FutureBuilder(
+            future: context.read<RetrieveController>().videos,
+            builder: (context, snapshot) {
+              return ScrollAnimator(
+                builder: (context, controller, physics) {
+                  return CustomScrollView(
+                    physics: physics,
+                    controller: controller,
+                    slivers: [
+                      child!,
+                      SliverAnimatedOpacity(
+                        duration: const Duration(milliseconds: 300),
+                        opacity:
+                            snapshot.connectionState == ConnectionState.waiting
+                                ? 0
+                                : 1,
+                        sliver: SliverFixedExtentList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              final file = (snapshot.data ?? [])[index];
+                              return FileRow(
+                                untreatedVideo: file,
+                                doubleTap: false,
+                                scrollController: controller,
+                              );
+                            },
+                            childCount: snapshot.hasData
+                                ? (snapshot.data ?? []).length
+                                : 0,
+                          ),
+                          itemExtent: 55.0,
+                        ),
+                      ),
+                      const SliverToBoxAdapter(
+                        child: SizedBox(height: 80),
+                      ),
+                    ],
+                  );
+                },
+              );
+            });
+      },
+      child: _buildTableHeader(context),
     );
   }
 
@@ -136,108 +240,6 @@ class RetrievePage extends StatelessWidget {
                       style: TextStyle(fontWeight: FontWeight.w500))),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildToolBar(BuildContext context) {
-    return Container(
-      height: 50,
-      color: Theme.of(context).colorScheme.surface,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Row(
-                children: [
-                  Selector<RetrieveController, int>(
-                    selector: (_, controller) =>
-                        controller.untreatedVideos.length,
-                    builder: (context, fileCount, child) {
-                      return Text(
-                        "Total: $fileCount Files",
-                        style: const TextStyle(fontWeight: FontWeight.w500),
-                      );
-                    },
-                  ),
-                  Selector<RetrieveController, bool>(
-                      builder: (context, status, child) => AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 200),
-                            child: status
-                                ? Padding(
-                                    key: const ValueKey(1),
-                                    padding: const EdgeInsets.only(left: 10),
-                                    child: Lottie.asset(
-                                      "assets/lottie/system-solid-9-inbox.json",
-                                      width: 20,
-                                      height: 20,
-                                      delegates: LottieDelegates(
-                                        values: [
-                                          ValueDelegate.colorFilter(
-                                            const ['**'],
-                                            value: ColorFilter.mode(
-                                              Theme.of(context)
-                                                  .colorScheme
-                                                  .primary,
-                                              BlendMode.srcATop,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ))
-                                : Container(key: const ValueKey(2)),
-                          ),
-                      selector: (context, controller) =>
-                          controller.scanStorageStatus),
-                  Selector<RetrieveController, bool>(
-                      builder: (context, status, child) => status
-                          ? TextButton(
-                              onPressed: () {
-                                // context
-                                //     .read<RetrieveController>()
-                                //     .getUntreatedVideos();
-                              },
-                              child: const Text("reload"))
-                          : Container(),
-                      selector: (context, controller) =>
-                          controller.untreatedFileHasChange)
-                ],
-              ),
-            ),
-            const SearchField(),
-            const SizedBox(
-              width: 20,
-            ),
-            // Selector<RetrieveController, List<bool>>(
-            //   selector: (_, controller) => List.of(FileFilter.values)
-            //       .map((e) => e == controller.filterFlag)
-            //       .toList(),
-            //   builder: (context, isSelected, child) {
-            //     return ToggleButtons(
-            //       direction: Axis.horizontal,
-            //       onPressed: (int index) {
-            //         context
-            //             .read<RetrieveController>()
-            //             .changeFilterFiles(FileFilter.values[index], true);
-            //       },
-            //       fillColor: Theme.of(context).colorScheme.primary,
-            //       borderRadius: const BorderRadius.all(Radius.circular(5)),
-            //       selectedColor: Theme.of(context).colorScheme.onPrimary,
-            //       constraints:
-            //           const BoxConstraints(minWidth: 50, minHeight: 35),
-            //       isSelected: [...isSelected],
-            //       children: [
-            //         ...List.of(FileFilter.values)
-            //             .map((e) => Text(e.name))
-            //             .toList()
-            //       ],
-            //     );
-            //   },
-            // ),
-          ],
         ),
       ),
     );
