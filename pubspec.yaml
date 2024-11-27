@@ -21,8 +21,8 @@ dependencies:
   lottie: ^2.3.2
   path: ^1.8.2
   flutter_acrylic: ^1.1.0
-  dynamic_color: ^1.6.3
-  material_color_utilities: ^0.8.0
+  dynamic_color: ^1.7.0
+  material_color_utilities: ^0.11.0
   provider: ^6.0.5
   system_info2: ^3.0.2
   waterfall_flow: any
