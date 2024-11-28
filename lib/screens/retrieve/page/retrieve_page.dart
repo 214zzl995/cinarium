@@ -23,10 +23,25 @@ class RetrievePage extends StatelessWidget {
             return AnimatedSwitcher(
                 duration: const Duration(milliseconds: 200),
                 child: loading
-                    ? const Center(
-                        key: ValueKey(1),
-                        child: CircularProgressIndicator(),
-                      )
+                    ? Center(
+                        key: const ValueKey(1),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Lottie.asset(
+                              "assets/lottie/untreated_video_data_loading.json",
+                              width: 300,
+                              height: 300,
+                            ),
+                            Text(
+                              "Initialization Data ...",
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                            const SizedBox(
+                              height: 200,
+                            )
+                          ],
+                        ))
                     : Column(
                         key: const ValueKey(2),
                         children: [
