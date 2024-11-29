@@ -27,7 +27,7 @@ static STORAGE_SCAN_LISTENER: OnceLock<watch::Sender<bool>> = OnceLock::new();
 pub struct UntreatedVideoDataInner {
     notify: notify::SourceNotify,
     event_tx: tokio::sync::mpsc::Sender<UntreatedVideoEvent>,
-    dispose_tx: broadcast::Sender<()>,
+    pub(crate) dispose_tx: broadcast::Sender<()>,
     pub(crate) videos: Vec<UntreatedVideo>,
     pub text_filter: String,
 }

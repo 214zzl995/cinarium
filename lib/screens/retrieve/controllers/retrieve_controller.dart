@@ -180,7 +180,7 @@ class RetrieveController with ChangeNotifier {
   void dispose() {
     _untreatedFileListenerHandle.cancel();
     _scanStorageListenerHandle.cancel();
-    _untreatedVideoData.dispose();
+    _untreatedVideoData.cancel();
     super.dispose();
   }
 }

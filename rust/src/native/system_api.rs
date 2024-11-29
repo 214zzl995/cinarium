@@ -248,6 +248,11 @@ impl UntreatedVideoData {
     }
 
     #[allow(dead_code)]
+    pub fn cancel(&self) {
+        self.inner.read().dispose_tx.send(()).unwrap();
+    }
+
+    #[allow(dead_code)]
     pub async fn get_videos_size(&self) -> usize {
         self.get_videos().await.len()
     }

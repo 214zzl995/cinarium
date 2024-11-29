@@ -45,7 +45,7 @@ class RetrievePage extends StatelessWidget {
                     : Column(
                         key: const ValueKey(2),
                         children: [
-                          _buildToolBar(context),
+                          // _buildToolBar(context),
                           Expanded(child: _buildVideoList(context)),
                         ],
                       ));

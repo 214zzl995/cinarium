@@ -172,15 +172,19 @@ class HttpPortSetting extends StatelessWidget {
                             final port = textEditingController.text;
                             checkPort(port).then((ok) {
                               if (ok) {
-                                context
-                                    .read<SettingsController>()
-                                    .changePort(int.parse(port));
-                                Navigator.of(buildContext).pop();
+                                if (context.mounted) {
+                                  context
+                                      .read<SettingsController>()
+                                      .changePort(int.parse(port));
+                                  Navigator.of(buildContext).pop();
+                                }
                               }
                             });
                           }
 
                           return AlertDialog(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.surfaceContainer,
                             title: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [

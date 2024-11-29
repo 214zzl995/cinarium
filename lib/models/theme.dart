@@ -103,6 +103,7 @@ class CinariumTheme extends ChangeNotifier {
     _lightColorScheme = ColorScheme.fromSeed(
       seedColor: color!,
       brightness: Brightness.light,
+      // dynamicSchemeVariant: DynamicSchemeVariant.,
     ).harmonized();
 
     _darkColorScheme = ColorScheme.fromSeed(

@@ -22,17 +22,22 @@ class RootPage extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => RootController()),
-        ChangeNotifierProvider(create: (_) => RetrieveController()),
+        ChangeNotifierProvider(
+          create: (_) => RetrieveController(),
+          lazy: false,
+        ),
         ChangeNotifierProvider(create: (_) => HomeController()),
         ChangeNotifierProvider(create: (_) => HttpController()),
-        ChangeNotifierProvider(create: (_) => SettingsController()),
-        ChangeNotifierProvider(create: (_) => PoolController())
+        ChangeNotifierProvider(
+          create: (_) => SettingsController(),
+          lazy: false,
+        ),
+        ChangeNotifierProvider(
+          create: (_) => PoolController(),
+          lazy: false,
+        )
       ],
       builder: (context, _) {
-        //初始化 SettingsController
-        context.read<SettingsController>();
-        context.read<PoolController>();
-
         return Scaffold(
           backgroundColor:
               Theme.of(context).extension<EffectMenuColors>()!.danger,
@@ -74,10 +79,14 @@ class RootPage extends StatelessWidget {
                     color: Theme.of(context).colorScheme.surface,
                     border: Border(
                       top: BorderSide(
-                          color: Theme.of(context).colorScheme.surfaceContainerHigh,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .surfaceContainerHigh,
                           width: 0.3),
                       left: BorderSide(
-                          color: Theme.of(context).colorScheme.surfaceContainerHigh,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .surfaceContainerHigh,
                           width: 0.3),
                     ),
                   ),
@@ -88,31 +97,6 @@ class RootPage extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildDarkSwitch(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(right: 20.0),
-      alignment: Alignment.center,
-      child: Row(
-        children: [
-          Transform.scale(
-              scale: 0.9,
-              child: Switch(
-                value: Theme.of(context).brightness == Brightness.dark,
-                onChanged: (val) {
-                  final theme = context.read<CinariumTheme>();
-                  if (val) {
-                    theme.themeMode = ThemeMode.dark;
-                  } else {
-                    theme.themeMode = ThemeMode.light;
-                  }
-                },
-              )),
-          const Text('Dark'),
-        ],
-      ),
     );
   }
 }
